@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api_capstone
+    image: api_capstone
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+  db:
+    container_name: db_capstone
+    image: postgres:12
+    ports:
+      - 5431:5432
+    env_file:
+      - ./.env
+    healthcheck:
+      test: psql -U $DB_USER $DB || exit 1
+      interval: 1s
+      timeout: 5s
+      retries: 5
+      start_period: 5m
