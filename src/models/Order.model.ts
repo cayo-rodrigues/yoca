@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { string } from "yup";
 import Employee from "./Employee.model";
 
@@ -27,8 +33,9 @@ export default class Order {
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
 
-  @ManyToOne(() => Employee, {
-      eager: true
+  @ManyToOne(() => Employee, (employee) => employee, {
+    eager: true,
   })
-  employee_id: string
+  @JoinColumn({ name: "employee_id" })
+  employee: Employee;
 }
