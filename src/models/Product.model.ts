@@ -35,6 +35,11 @@ export default class Product {
   })
   categories: Category[];
 
+  @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
+    eager: true,
+  })
+  feedbacks: ProductFeedback[];
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
