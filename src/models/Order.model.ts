@@ -1,4 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import Employee from "./Employee.model";
+
+import Bill from "./Bill.model";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -6,7 +17,7 @@ export enum OrderStatus {
   SERVED = "served",
 }
 
-@Entity("Order")
+@Entity("orders")
 export default class Order {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -24,4 +35,23 @@ export default class Order {
 
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
+
+  @ManyToOne(() => Employee, (employee) => employee, {
+    eager: true,
+  })
+  @JoinColumn({ name: "employee_id" })
+  employee: Employee;
+
+  @ManyToOne(() => Bill)
+  bill_id: string;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt: Date;
+
+  @ManyToOne(() => Bill, (bill) => bill)
+  @JoinColumn({ name: "bill_id" })
+  bill: Bill;
 }
