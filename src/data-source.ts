@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { DataSource } from "typeorm";
 
+const host = process.env.IS_COMPOSE ? "host.docker.internal" : "localhost";
+
 const AppDataSource =
   process.env.NODE_ENV === "test"
     ? new DataSource({
@@ -11,6 +13,7 @@ const AppDataSource =
       })
     : new DataSource({
         type: "postgres",
+        host,
         url: process.env.DB_URL,
         synchronize: false,
         logging: true,
@@ -26,6 +29,7 @@ const AppDataSource =
           process.env.NODE_ENV === "production"
             ? ["dist/migrations/*.js"]
             : ["src/migrations/*.ts"],
+        migrationsRun: true,
       });
 
 export default AppDataSource;
