@@ -5,6 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { string } from "yup";
 import Bill from "./Bill.model";
 
 export enum OrderStatus {
@@ -33,5 +34,5 @@ export default class Order {
   total: Number;
 
   @ManyToOne(() => Bill)
-  bill_id: Bill;
+  bill_id: string;
 }
