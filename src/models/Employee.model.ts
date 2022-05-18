@@ -2,12 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { number } from "yup";
-import Group from "./Groups.models";
 
 @Entity("employees")
 class Employee {
