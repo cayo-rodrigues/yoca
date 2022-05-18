@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import Group from "./Groups.model";
 
 @Entity("employees")
 class Employee {
@@ -22,6 +24,9 @@ class Employee {
 
   @Column()
   password: string;
+
+  @ManyToOne(() => Group, (group) => group.access_level)
+  access_level: number;
 
   @CreateDateColumn({ type: "timestamptz" })
   created_at: Date;
