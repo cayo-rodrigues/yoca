@@ -6,11 +6,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
 import Employee from "./Employee.model";
 
 import Bill from "./Bill.model";
+import Product from "./Product.model";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -59,5 +62,13 @@ export default class Order {
   @ManyToOne(() => Bill, (bill) => bill)
   @JoinColumn({ name: "bill_id" })
   bill: Bill;
+
+  @ManyToMany(() => Product, { eager: true })
+  @JoinTable({
+    name: "orders_products",
+    joinColumn: { name: "product_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "order_id", referencedColumnName: "id" },
+  })
+  products: Product[];
 
 }
