@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -33,6 +34,7 @@ export default class Order {
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
 
-  @ManyToOne(() => Bill)
-  bill_id: string;
+  @ManyToOne(() => Bill, (bill) => bill)
+  @JoinColumn({ name: "bill_id" })
+  bill: Bill;
 }
