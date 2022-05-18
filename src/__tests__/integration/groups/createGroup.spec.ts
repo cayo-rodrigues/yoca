@@ -25,7 +25,7 @@ describe(" POST - /groups ", () => {
     await connection.destroy();
   });
 
-  it("Should create a group", async () => {
+  it("Should be able to create a group", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("some-uuid");
 

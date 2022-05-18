@@ -22,7 +22,7 @@ describe(" GET - /groups ", () => {
     await connection.destroy();
   });
 
-  it("Should list all groups", async () => {
+  it("Should be able to list all groups", async () => {
     const createGroupResponse = await request(app)
       .post("/groups")
       .send(mockGroup);

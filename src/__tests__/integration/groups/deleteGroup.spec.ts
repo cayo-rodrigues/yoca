@@ -25,7 +25,7 @@ describe(" DELETE - /groups/:id ", () => {
     await connection.destroy();
   });
 
-  it("Should delete a group", async () => {
+  it("Should be able to delete a group", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("some-uuid");
 
