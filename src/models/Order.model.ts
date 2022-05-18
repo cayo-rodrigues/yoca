@@ -1,13 +1,15 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn
 } from "typeorm";
-import { string } from "yup";
+import Employee from "./Employee.model";
+
 import Bill from "./Bill.model";
 
 export enum OrderStatus {
@@ -35,6 +37,13 @@ export default class Order {
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
 
+
+  @ManyToOne(() => Employee, (employee) => employee, {
+    eager: true,
+  })
+  @JoinColumn({ name: "employee_id" })
+  employee: Employee;
+
   @ManyToOne(() => Bill)
   bill_id: string;
 
@@ -43,4 +52,5 @@ export default class Order {
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
+
 }
