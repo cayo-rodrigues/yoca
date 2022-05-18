@@ -8,16 +8,14 @@ const errorHandler = (
   _: NextFunction
 ) => {
   if (err instanceof AppError) {
-    return res.status(err.statusCode).send({
-      status: err.statusCode,
+    return res.status(err.statusCode).json({
       message: err.message,
     });
   }
 
   console.log(err);
 
-  return res.status(500).send({
-    status: 500,
+  return res.status(500).json({
     message: "Internal server error, please try again later",
   });
 };
