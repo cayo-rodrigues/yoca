@@ -10,7 +10,8 @@ import {
 } from "typeorm";
 import Order from "./Order.model";
 
-@Entity("Bills")
+
+@Entity("bills")
 class Bill {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;

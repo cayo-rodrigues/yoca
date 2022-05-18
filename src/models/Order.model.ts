@@ -5,6 +5,8 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
 import { string } from "yup";
 import Bill from "./Bill.model";
@@ -15,7 +17,7 @@ export enum OrderStatus {
   SERVED = "served",
 }
 
-@Entity("Order")
+@Entity("orders")
 export default class Order {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -33,6 +35,12 @@ export default class Order {
 
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt: Date;
 
   @ManyToOne(() => Bill, (bill) => bill)
   @JoinColumn({ name: "bill_id" })
