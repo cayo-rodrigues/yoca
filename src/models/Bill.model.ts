@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-@Entity("class plural")
+@Entity("bills")
 class Bill {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;

@@ -12,7 +12,8 @@ export enum OrderStatus {
   SERVED = "served",
 }
 
-@Entity("Order")
+
+@Entity("orders")
 export default class Order {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -36,4 +37,5 @@ export default class Order {
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
+
 }
