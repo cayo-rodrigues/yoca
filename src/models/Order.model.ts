@@ -38,6 +38,7 @@ export default class Order {
   total: Number;
 
 
+
   @ManyToOne(() => Employee, (employee) => employee, {
     eager: true,
   })
@@ -47,10 +48,16 @@ export default class Order {
   @ManyToOne(() => Bill)
   bill_id: string;
 
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
+
+
+  @ManyToOne(() => Bill, (bill) => bill)
+  @JoinColumn({ name: "bill_id" })
+  bill: Bill;
 
 }

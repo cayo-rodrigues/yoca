@@ -25,7 +25,7 @@ class Bill {
   @UpdateDateColumn({ type: "timestamptz" })
   updated_at: Date;
 
-  @OneToMany(() => Order, (order) => order.bill_id, {
+  @OneToMany(() => Order, (order) => order, {
     eager: true,
   })
   orders: Order[];
