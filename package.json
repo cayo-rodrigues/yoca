@@ -6,8 +6,14 @@
   "author": "<cayo.rodrigues1914@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts",
-    "test": "jest"
+    "test": "jest",
+    "start": "pm2 start dist/server.js -l dist/logs.txt -i max",
+    "reload": "pm2 reload dist/server.js",
+    "monit": "pm2 monit",
+    "stop": "pm2 stop server",
+    "delete": "pm2 delete server",
+    "dev": "ts-node-dev src/server.ts --ignore-watch ./node_modules",
+    "build": "tsc"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
