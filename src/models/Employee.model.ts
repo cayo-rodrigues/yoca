@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import Group from "./Groups.model";
+import Order from "./Order.model";
 
 @Entity("employees")
 class Employee {

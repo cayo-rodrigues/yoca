@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { string } from "yup";
+import Employee from "./Employee.model";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -24,4 +26,9 @@ export default class Order {
 
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
+
+  @ManyToOne(() => Employee, {
+      eager: true
+  })
+  employee_id: string
 }
