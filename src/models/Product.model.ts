@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import ProductFeedback from "./ProductFeedback.model";
 
 @Entity("products")
 export default class Product {
@@ -25,4 +27,9 @@ export default class Product {
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
+
+  @OneToMany(() => ProductFeedback, (feedback) => feedback, {
+    eager: true
+  })
+  feedbacks: ProductFeedback[]
 }
