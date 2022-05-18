@@ -41,4 +41,14 @@ describe(" POST - /groups ", () => {
       })
     );
   });
+  it("Should not be able to create a group without auth", async () => {
+    const createGroupResponse = await request(app)
+      .post("/groups")
+      .send(mockGroup);
+
+    expect(createGroupResponse.status).toBe(401);
+    expect(createGroupResponse.body).toEqual(
+      expect.objectContaining({ message: "Unauthorized" })
+    );
+  });
 });

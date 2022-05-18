@@ -34,4 +34,15 @@ describe(" GET - /groups ", () => {
       expect.arrayContaining([createGroupResponse.body])
     );
   });
+  it("Should not be able to list groups without auth", async () => {
+    const createGroupResponse = await request(app)
+      .post("/groups")
+      .send(mockGroup);
+    const listGroupsResponse = await request(app).get("/groups");
+
+    expect(listGroupsResponse.status).toBe(401);
+    expect(listGroupsResponse.body).toEqual(
+      expect.objectContaining({ message: "Unauthorized" })
+    );
+  });
 });
