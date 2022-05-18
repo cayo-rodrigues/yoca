@@ -2,9 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import Order from "./Order.model";
+
 
 @Entity("bills")
 class Bill {
@@ -19,6 +24,11 @@ class Bill {
 
   @UpdateDateColumn({ type: "timestamptz" })
   updated_at: Date;
+
+  @OneToMany(() => Order, (order) => order.bill_id, {
+    eager: true,
+  })
+  orders: Order[];
 }
 
 export default Bill;
