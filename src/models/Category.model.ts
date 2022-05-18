@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import Product from "./Product.model";
 
 @Entity("categories")
 export default class Category {
@@ -13,6 +15,9 @@ export default class Category {
 
   @Column({ length: 64, unique: true, name: "name" })
   name: string;
+
+  @ManyToMany(() => Product, { eager: true })
+  products: Product[];
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
