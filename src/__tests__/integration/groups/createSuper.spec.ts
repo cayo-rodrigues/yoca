@@ -6,7 +6,7 @@ import app from "../../../app";
 import * as uuid from "uuid";
 jest.mock("uuid");
 
-describe(" POST - /groups ", () => {
+describe(" POST - /super ", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -17,7 +17,7 @@ describe(" POST - /groups ", () => {
       });
   });
 
-  const mockGroup = {
+  const mockSuper = {
     access_level: 1,
   };
 
@@ -25,30 +25,30 @@ describe(" POST - /groups ", () => {
     await connection.destroy();
   });
 
-  it("Should be able to create a group", async () => {
+  it("Should be able to create a super", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("some-uuid");
 
-    const createGroupResponse = await request(app)
-      .post("/groups")
-      .send(mockGroup);
+    const createSuperResponse = await request(app)
+      .post("/super")
+      .send(mockSuper);
 
-    expect(createGroupResponse.status).toBe(201);
-    expect(createGroupResponse.body).toEqual(
+    expect(createSuperResponse.status).toBe(201);
+    expect(createSuperResponse.body).toEqual(
       expect.objectContaining({
         id: "some-uuid",
         access_level: 1,
       })
     );
   });
-  it("Should not be able to create a group without auth", async () => {
-    const createGroupResponse = await request(app)
-      .post("/groups")
-      .send(mockGroup);
+  it("Should not be able to create another super", async () => {
+    const createSuperResponse = await request(app)
+      .post("/super")
+      .send(mockSuper);
 
-    expect(createGroupResponse.status).toBe(401);
-    expect(createGroupResponse.body).toEqual(
-      expect.objectContaining({ message: "Unauthorized" })
+    expect(createSuperResponse.status).toBe(409);
+    expect(createSuperResponse.body).toEqual(
+      expect.objectContaining({ message: "Super group already exists" })
     );
   });
 });
