@@ -10,7 +10,6 @@ import {
 } from "typeorm";
 import Order from "./Order.model";
 
-
 @Entity("bills")
 class Bill {
   @PrimaryGeneratedColumn("uuid")
