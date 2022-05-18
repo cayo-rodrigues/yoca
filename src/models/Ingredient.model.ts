@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import ProductIngredient from "./ProductsIngredients.model";
 
 @Entity("ingredients")
 export default class Ingredient {
@@ -25,6 +27,12 @@ export default class Ingredient {
 
   @Column({ type: "decimal", precision: 8, scale: 2, name: "amount_max" })
   amountMax: number;
+
+  @OneToMany(
+    () => ProductIngredient,
+    (productIngredient) => productIngredient.ingredient
+  )
+  productIngredient: ProductIngredient[];
 
   @CreateDateColumn({
     name: "created_at",
