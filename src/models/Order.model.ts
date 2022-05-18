@@ -1,17 +1,20 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  CreateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
+import { string } from "yup";
+import Bill from "./Bill.model";
 
 export enum OrderStatus {
   PENDING = "pending",
   READY = "ready",
   SERVED = "served",
 }
-
 
 @Entity("orders")
 export default class Order {
@@ -32,10 +35,12 @@ export default class Order {
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: Number;
 
+  @ManyToOne(() => Bill)
+  bill_id: string;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
-
 }
