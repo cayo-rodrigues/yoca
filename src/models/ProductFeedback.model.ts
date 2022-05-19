@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
@@ -6,6 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 import Product from "./Product.model";
@@ -31,4 +33,8 @@ export default class ProductFeedback {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 }

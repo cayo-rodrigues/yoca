@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 import Ingredient from "./Ingredient.model";
@@ -33,4 +35,8 @@ export default class ProductIngredient {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 }

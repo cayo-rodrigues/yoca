@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   AfterLoad,
   Column,
@@ -6,6 +7,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -19,7 +21,13 @@ class Bill {
   @Column({ type: "boolean", default: false })
   paid: boolean;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0.00 })
+  @Column({
+    name: "total",
+    type: "decimal",
+    precision: 8,
+    scale: 2,
+    default: 0.0,
+  })
   total: number;
 
   @OneToMany(() => Order, (order) => order.bill, {
@@ -32,6 +40,10 @@ class Bill {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 
   @AfterLoad()
   getTotalPrice() {

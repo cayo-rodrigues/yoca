@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   Column,
   Entity,
@@ -6,8 +7,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
+  DeleteDateColumn,
   OneToMany,
   AfterLoad,
 } from "typeorm";
@@ -60,6 +60,10 @@ export default class Order {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 
   @AfterLoad()
   getTotalPrice() {

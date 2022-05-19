@@ -1,8 +1,10 @@
+import { Exclude } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToMany,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -24,4 +26,8 @@ export default class Category {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 }

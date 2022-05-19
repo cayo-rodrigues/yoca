@@ -1,9 +1,11 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 
@@ -24,4 +26,8 @@ export default class GeneralFeedback {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 }

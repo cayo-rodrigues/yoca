@@ -1,9 +1,11 @@
+import { Exclude } from "class-transformer";
 import {
   AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
+  DeleteDateColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -35,6 +37,10 @@ class OrderProduct {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 
   @AfterLoad()
   getTotalPrice() {
