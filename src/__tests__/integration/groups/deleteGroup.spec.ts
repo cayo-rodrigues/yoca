@@ -40,8 +40,6 @@ describe(" DELETE - /groups/:id ", () => {
     expect((await request(app).delete("/groups/some-uuid")).status).toBe(404);
   });
   it("Should not be able to delete a group without auth", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("some-uuid");
 
     const delGroupResponse = await request(app).delete("/groups/some-uuid");
 
