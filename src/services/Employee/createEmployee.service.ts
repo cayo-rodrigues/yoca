@@ -20,13 +20,9 @@ class CreateEmployeeService {
     loggedInUser,
     data,
   }: CreateEmployeeServiceParams): Promise<Employee> {
-    const employeeRepository = AppDataSource.getRepository(Employee);
-
-    if (loggedInUser.accessLevel > 2) {
-      throw new AppError("Unauthorized", 401);
-    }
-
     const { phone, name, email, password, accessLevel } = data;
+
+    const employeeRepository = AppDataSource.getRepository(Employee);
 
     const emailOrPhoneAlreadyExists = await employeeRepository.findOne({
       where: [{ phone }, { email }],
