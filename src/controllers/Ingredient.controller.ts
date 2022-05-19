@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { ICreateIngredient } from "../interfaces/Ingredient.interface";
 import CreateIngredientService from "../services/Ingredients/CreateIngredient.service";
+import ListIngredientsService from "../services/Ingredients/ListIngredients.service";
 
 class IngredientController {
   static async store(req: Request, res: Response) {
@@ -12,7 +13,11 @@ class IngredientController {
     return res.status(201).send(ingredient);
   }
 
-  static async index(req: Request, res: Response) {}
+  static async index(req: Request, res: Response) {
+    const ingredients = await ListIngredientsService.execute();
+
+    return res.send(ingredients);
+  }
 
   static async show(req: Request, res: Response) {}
 
