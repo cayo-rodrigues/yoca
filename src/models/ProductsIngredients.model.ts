@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import Ingredient from "./Ingredient.model";
 import Product from "./Product.model";
@@ -25,4 +27,10 @@ export default class ProductIngredient {
   })
   @JoinColumn({ name: "ingredient_id" })
   ingredient: Ingredient;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt: Date;
 }

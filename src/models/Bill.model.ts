@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
@@ -18,16 +19,24 @@ class Bill {
   @Column({ type: "boolean" })
   paid: boolean;
 
+  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
+  total: number;
+
+  @OneToMany(() => Order, (order) => order, {
+    eager: true,
+  })
+  orders: Order[];
+
   @CreateDateColumn({ type: "timestamptz" })
   created_at: Date;
 
   @UpdateDateColumn({ type: "timestamptz" })
   updated_at: Date;
 
-  @OneToMany(() => Order, (order) => order, {
-    eager: true,
-  })
-  orders: Order[];
+  @AfterLoad()
+  getTotalPrice() {
+    this.total = this.orders.reduce((acc, curr) => acc + curr.total, 0);
+  }
 }
 
 export default Bill;

@@ -11,6 +11,7 @@ import {
 import ProductFeedback from "./ProductFeedback.model";
 import Category from "./Category.model";
 import ProductIngredient from "./ProductsIngredients.model";
+import OrderProduct from "./OrdersProducts.model";
 
 @Entity("products")
 export default class Product {
@@ -45,6 +46,9 @@ export default class Product {
     eager: true,
   })
   feedbacks: ProductFeedback[];
+
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
+  orderProduct: OrderProduct[];
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
