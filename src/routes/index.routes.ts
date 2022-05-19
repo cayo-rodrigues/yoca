@@ -1,8 +1,8 @@
 import { Router } from "express";
 import ensureAuthMiddleware from "../middlewares/ensureAuth.middleware";
-import superRoute from "./super.route";
-import sessionsRoute from "./sessions.route";
-import employeeRoute from "./employee.route";
+import superRoute from "./super.routes";
+import sessionsRoute from "./sessions.routes";
+import employeeRoute from "./employee.routes";
 import ingredientsRoutes from "./ingredients.routes";
 
 const routes = Router();
