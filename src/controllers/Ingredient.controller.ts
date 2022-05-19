@@ -7,7 +7,7 @@ import ShowIngredientService from "../services/Ingredients/ShowIngredient.servic
 
 class IngredientController {
   static async store(req: Request, res: Response) {
-    const ingredientInfo: ICreateIngredient = req.body;
+    const ingredientInfo: ICreateIngredient = req.ingredientInfo;
 
     const ingredient = await CreateIngredientService.execute(ingredientInfo);
 
