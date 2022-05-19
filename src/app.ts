@@ -3,7 +3,9 @@ import express from "express";
 import cors from "cors";
 
 import errorHandler from "./errors/handleError.middleware";
-import router from "./routes";
+
+import routes from "./routes";
+
 
 const app = express();
 
@@ -14,7 +16,7 @@ app.use(
   })
 );
 
-app.use(router);
+app.use(routes);
 
 app.use(errorHandler);
 

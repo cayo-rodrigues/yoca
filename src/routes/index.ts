@@ -3,15 +3,18 @@ import ensureAuthMiddleware from "../middlewares/ensureAuth.middleware";
 import superRoute from "./super.route";
 import sessionsRoute from "./sessions.route";
 import employeeRoute from "./employee.route";
+import ingredientsRoutes from "./ingredients.routes";
 
-const router = Router();
+const routes = Router();
 
-router.use("/super", superRoute);
+routes.use("/super", superRoute);
 
-router.use("/sessions", sessionsRoute);
+routes.use("/sessions", sessionsRoute);
 
-router.use(ensureAuthMiddleware);
+routes.use(ensureAuthMiddleware);
 
-router.use("/employees", employeeRoute);
+routes.use("/employees", employeeRoute);
 
-export default router;
+routes.use("/ingredients", ingredientsRoutes);
+
+export default routes;
