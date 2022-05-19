@@ -22,7 +22,7 @@ class Bill {
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0.00 })
   total: number;
 
-  @OneToMany(() => Order, (order) => order, {
+  @OneToMany(() => Order, (order) => order.bill, {
     eager: true,
   })
   orders: Order[];
