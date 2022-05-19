@@ -12,7 +12,6 @@ import ProductFeedback from "./ProductFeedback.model";
 
 import Category from "./Category.model";
 
-
 @Entity("products")
 export default class Product {
   @PrimaryGeneratedColumn("uuid")
@@ -42,7 +41,7 @@ export default class Product {
   updatedAt: Date;
 
   @OneToMany(() => ProductFeedback, (feedback) => feedback, {
-    eager: true
+    eager: true,
   })
-  feedbacks: ProductFeedback[]
+  feedbacks: ProductFeedback[];
 }

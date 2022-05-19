@@ -28,7 +28,7 @@ class Employee {
   password: string;
 
   @ManyToOne(() => Group, (group) => group.access_level)
-  access_level: number;
+  group: number;
 
   @CreateDateColumn({ type: "timestamptz" })
   created_at: Date;
