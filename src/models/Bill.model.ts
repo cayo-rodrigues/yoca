@@ -13,8 +13,8 @@ import Order from "./Order.model";
 
 @Entity("bills")
 class Bill {
-  @PrimaryGeneratedColumn("uuid")
-  readonly id: string;
+  @PrimaryGeneratedColumn()
+  readonly id: number;
 
   @Column({ type: "boolean", default: false })
   paid: boolean;
