@@ -15,7 +15,7 @@ describe(" GET - /groups ", () => {
   });
 
   const mockGroup = {
-    access_level: 1,
+    access_level: 2,
   };
 
   afterAll(async () => {
@@ -23,10 +23,17 @@ describe(" GET - /groups ", () => {
   });
 
   it("Should be able to list all groups", async () => {
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin",
+    });
     const createGroupResponse = await request(app)
       .post("/groups")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockGroup);
-    const listGroupsResponse = await request(app).get("/groups");
+    const listGroupsResponse = await request(app)
+      .get("/groups")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listGroupsResponse.status).toBe(200);
     expect(listGroupsResponse.body).toHaveProperty("reduce");
@@ -34,11 +41,36 @@ describe(" GET - /groups ", () => {
       expect.arrayContaining([createGroupResponse.body])
     );
   });
-  it("Should not be able to list groups without auth", async () => {
+  it("Should not be able to list groups without sending access_level 1 or 2", async () => {
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin",
+    });
+
+    const withoutAccessUser = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "4002-8922",
+        password: "123456",
+        access_level: 3,
+      });
+
+    const withoutAccessLogin = await request(app).post("/sessions").send({
+      email: "johndoe@email.com",
+      password: "123456",
+    });
+
     const createGroupResponse = await request(app)
       .post("/groups")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockGroup);
-    const listGroupsResponse = await request(app).get("/groups");
+
+    const listGroupsResponse = await request(app)
+      .get("/groups")
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(listGroupsResponse.status).toBe(401);
     expect(listGroupsResponse.body).toEqual(

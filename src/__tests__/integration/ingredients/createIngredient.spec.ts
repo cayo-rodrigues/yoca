@@ -33,14 +33,14 @@ describe("POST - /ingredients", () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("uuid");
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
     expect(createIngredientResponse.status).toBe(201);
@@ -54,7 +54,7 @@ describe("POST - /ingredients", () => {
       })
     );
   });
-  it("Should not be able to create an ingredient without access_level", async () => {
+  it("Should not be able to create an ingredient without sending access_level 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
@@ -78,7 +78,8 @@ describe("POST - /ingredients", () => {
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`).send(mockIngredient)
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
+      .send(mockIngredient);
 
     expect(createIngredientResponse.status).toBe(401);
     expect(createIngredientResponse.body).toEqual(
@@ -88,14 +89,14 @@ describe("POST - /ingredients", () => {
     );
   });
   it("Should not be able to create an ingredient with repeated name", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
     expect(createIngredientResponse.status).toBe(409);

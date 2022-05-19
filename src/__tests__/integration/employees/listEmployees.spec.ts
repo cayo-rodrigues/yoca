@@ -27,14 +27,14 @@ describe(" GET - /employees ", () => {
   });
 
   it("Should be able to list all employees", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
     const listEmployeesResponse = await request(app).get("/employees");
 
@@ -44,9 +44,11 @@ describe(" GET - /employees ", () => {
       expect.arrayContaining([createEmployeeResponse.body])
     );
   });
-  
+
   it("Should not be able to list employees being unregistered user", async () => {
-    const listEmployeesResponse = await request(app).get("/employees");
+    const listEmployeesResponse = await request(app)
+      .get("/employees")
+      .set("Authorization", `Bearer someAleatoryToken`);
 
     expect(listEmployeesResponse.status).toBe(401);
     expect(listEmployeesResponse.body).toEqual(

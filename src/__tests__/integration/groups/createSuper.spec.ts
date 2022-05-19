@@ -18,7 +18,10 @@ describe(" POST - /super ", () => {
   });
 
   const mockSuper = {
-    access_level: 1,
+    name: "testaurant",
+    email: "admin@email.com",
+    phone: "4002-8922",
+    password: "admin",
   };
 
   afterAll(async () => {
@@ -37,6 +40,9 @@ describe(" POST - /super ", () => {
     expect(createSuperResponse.body).toEqual(
       expect.objectContaining({
         id: "some-uuid",
+        name: "testaurant",
+        email: "admin@email.com",
+        phone: "4002-8922",
         access_level: 1,
       })
     );
@@ -48,7 +54,7 @@ describe(" POST - /super ", () => {
 
     expect(createSuperResponse.status).toBe(409);
     expect(createSuperResponse.body).toEqual(
-      expect.objectContaining({ message: "Super group already exists" })
+      expect.objectContaining({ message: "Super user already exists" })
     );
   });
 });

@@ -27,14 +27,14 @@ describe(" GET - /ingredients ", () => {
   });
 
   it("Should be able to list all ingredients", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
     const listIngredientsResponse = await request(app).get("/ingredients");
 
@@ -45,7 +45,7 @@ describe(" GET - /ingredients ", () => {
     );
   });
 
-  it("Should not be able to list ingredients without access_level", async () => {
+  it("Should not be able to list ingredients without sending access_level 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
@@ -61,11 +61,11 @@ describe(" GET - /ingredients ", () => {
         password: "123456",
         access_level: 3,
       });
-    
+
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
       password: "123456",
-    });  
+    });
 
     const listIngredientsResponse = await request(app)
       .get("/ingredients")

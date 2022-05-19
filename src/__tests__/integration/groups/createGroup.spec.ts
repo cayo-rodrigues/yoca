@@ -18,7 +18,7 @@ describe(" POST - /groups ", () => {
   });
 
   const mockGroup = {
-    access_level: 1,
+    access_level: 2,
   };
 
   afterAll(async () => {
@@ -26,24 +26,52 @@ describe(" POST - /groups ", () => {
   });
 
   it("Should be able to create a group", async () => {
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin",
+    });
+
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("some-uuid");
 
     const createGroupResponse = await request(app)
       .post("/groups")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockGroup);
 
     expect(createGroupResponse.status).toBe(201);
     expect(createGroupResponse.body).toEqual(
       expect.objectContaining({
         id: "some-uuid",
-        access_level: 1,
+        access_level: 2,
       })
     );
   });
-  it("Should not be able to create a group without auth", async () => {
+  it("Should not be able to create a group without sending access_level 1 or 2", async () => {
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin",
+    });
+
+    const withoutAccessUser = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "4002-8922",
+        password: "123456",
+        access_level: 3,
+      });
+
+    const withoutAccessLogin = await request(app).post("/sessions").send({
+      email: "johndoe@email.com",
+      password: "123456",
+    });
+
     const createGroupResponse = await request(app)
       .post("/groups")
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send(mockGroup);
 
     expect(createGroupResponse.status).toBe(401);

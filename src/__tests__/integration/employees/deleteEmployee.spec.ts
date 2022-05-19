@@ -33,19 +33,19 @@ describe(" DELETE - /employees/:id ", () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("some-uuid");
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
     const delEmployeeResponse = await request(app)
       .delete("/employees/some-uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delEmployeeResponse.status).toBe(204);
     expect(delEmployeeResponse.body).toHaveLength(0);
@@ -53,10 +53,39 @@ describe(" DELETE - /employees/:id ", () => {
       404
     );
   });
-  it("Should not be able to delete an employee without auth", async () => {
-    const delEmployeeResponse = await request(app).delete(
-      "/employees/some-uuid"
-    );
+  it("Should not be able to delete an employee without sending access_level 1 or 2", async () => {
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin",
+    });
+
+    const withoutAccessUser = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "4002-8922",
+        password: "123456",
+        access_level: 3,
+      });
+
+    const withoutAccessLogin = await request(app).post("/sessions").send({
+      email: "johndoe@email.com",
+      password: "123456",
+    });
+
+    const uuidSpy = jest.spyOn(uuid, "v4");
+    uuidSpy.mockReturnValue("some-uuid");
+
+    const createEmployeeResponse = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockEmployee);
+
+    const delEmployeeResponse = await request(app)
+      .delete("/employees/some-uuid")
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delEmployeeResponse.status).toBe(401);
     expect(delEmployeeResponse.body).toEqual(
@@ -64,14 +93,14 @@ describe(" DELETE - /employees/:id ", () => {
     );
   });
   it("Should not be able to delete an employee without id", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const delEmployeeResponse = await request(app)
       .delete("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delEmployeeResponse.status).toBe(400);
     expect(delEmployeeResponse.body).toEqual(
@@ -79,14 +108,14 @@ describe(" DELETE - /employees/:id ", () => {
     );
   });
   it("Should not be able to delete an employee with unexistent id", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const delEmployeeResponse = await request(app)
       .delete("/employees/some-aleatory-uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delEmployeeResponse.status).toBe(404);
     expect(delEmployeeResponse.body).toEqual(

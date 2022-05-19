@@ -33,19 +33,19 @@ describe(" DELETE - /ingredients/:id ", () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("some-uuid");
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
     const delIngredientResponse = await request(app)
       .delete("/ingredients/some-uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delIngredientResponse.status).toBe(204);
     expect(delIngredientResponse.body).toHaveLength(0);
@@ -53,24 +53,23 @@ describe(" DELETE - /ingredients/:id ", () => {
       404
     );
   });
-  it("Should not be able to delete an ingredient without access_level", async () => {
-    
+  it("Should not be able to delete an ingredient without sending access_level 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
-    
+
     const withoutAccessUser = await request(app)
-    .post("/employees")
-    .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-    .send({
-      name: "John doe",
-      email: "johndoe@email.com",
-      phone: "4002-8922",
-      password: "123456",
-      access_level: 3,
-    });
-    
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "4002-8922",
+        password: "123456",
+        access_level: 3,
+      });
+
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
       password: "123456",
@@ -95,14 +94,14 @@ describe(" DELETE - /ingredients/:id ", () => {
     );
   });
   it("Should not be able to delete an ingredient without id", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const delIngredientResponse = await request(app)
       .delete("/ingredients")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delIngredientResponse.status).toBe(400);
     expect(delIngredientResponse.body).toEqual(
@@ -110,14 +109,14 @@ describe(" DELETE - /ingredients/:id ", () => {
     );
   });
   it("Should not be able to delete an ingredient with unexistent id", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const delIngredientResponse = await request(app)
       .delete("/ingredients/some-aleatory-uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delIngredientResponse.status).toBe(404);
     expect(delIngredientResponse.body).toEqual(

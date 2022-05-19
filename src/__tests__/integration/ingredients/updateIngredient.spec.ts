@@ -41,19 +41,19 @@ describe(" PATCH - /ingredients/:id ", () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("uuid");
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
     });
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
     const updateIngredientResponse = await request(app)
       .patch("/ingredients/uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(ingredientUpdates);
 
     expect(updateIngredientResponse.status).toBe(200);
@@ -67,7 +67,7 @@ describe(" PATCH - /ingredients/:id ", () => {
       })
     );
   });
-  it("Should not be able to update an existing ingredient without access_level", async () => {
+  it("Should not be able to update an existing ingredient without sending access_level 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
