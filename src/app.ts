@@ -6,7 +6,6 @@ import errorHandler from "./errors/handleError.middleware";
 
 import routes from "./routes";
 
-
 const app = express();
 
 app.use(express.json());
