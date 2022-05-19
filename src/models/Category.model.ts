@@ -16,12 +16,12 @@ export default class Category {
   @Column({ length: 64, unique: true, name: "name" })
   name: string;
 
-  @ManyToMany(() => Product, { eager: true })
+  @ManyToMany(() => Product)
   products: Product[];
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
 }

@@ -1,5 +1,4 @@
 import {
-  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -8,23 +7,26 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import Ingredient from "./Ingredient.model";
 import Product from "./Product.model";
 
-@Entity("product_feedbacks")
-@Check('"rating" BETWEEN 1 AND 5')
-export default class ProductFeedback {
+@Entity("products_ingredients")
+export default class ProductIngredient {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 512 })
-  description: string;
+  @Column({ type: "decimal", precision: 8, scale: 2 })
+  amount: number;
 
-  @Column({ type: "int2" })
-  rating: number;
-
-  @ManyToOne(() => Product, (product) => product.feedbacks)
+  @ManyToOne(() => Product, (product) => product.productIngredients)
   @JoinColumn({ name: "product_id" })
   product: Product;
+
+  @ManyToOne(() => Ingredient, (ingredient) => ingredient.productIngredients, {
+    eager: true,
+  })
+  @JoinColumn({ name: "ingredient_id" })
+  ingredient: Ingredient;
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;

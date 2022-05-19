@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
@@ -10,7 +11,6 @@ import {
 } from "typeorm";
 import Order from "./Order.model";
 
-
 @Entity("bills")
 class Bill {
   @PrimaryGeneratedColumn("uuid")
@@ -19,16 +19,24 @@ class Bill {
   @Column({ type: "boolean" })
   paid: boolean;
 
-  @CreateDateColumn({ type: "timestamptz" })
-  created_at: Date;
-
-  @UpdateDateColumn({ type: "timestamptz" })
-  updated_at: Date;
+  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
+  total: number;
 
   @OneToMany(() => Order, (order) => order, {
     eager: true,
   })
   orders: Order[];
+
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
+
+  @AfterLoad()
+  getTotalPrice() {
+    this.total = this.orders.reduce((acc, curr) => acc + curr.total, 0);
+  }
 }
 
 export default Bill;

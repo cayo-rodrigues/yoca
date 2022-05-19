@@ -27,14 +27,14 @@ class Employee {
   @Column()
   password: string;
 
-  @ManyToOne(() => Group, (group) => group.access_level)
-  access_level: number;
+  @ManyToOne(() => Group, (group) => group.accessLevel)
+  group: number;
 
-  @CreateDateColumn({ type: "timestamptz" })
-  created_at: Date;
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
-  updated_at: Date;
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
 }
 
 export default Employee;

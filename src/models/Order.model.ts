@@ -3,14 +3,19 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  AfterLoad,
 } from "typeorm";
 import Employee from "./Employee.model";
 
 import Bill from "./Bill.model";
+import Product from "./Product.model";
+import OrderProduct from "./OrdersProducts.model";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -35,9 +40,7 @@ export default class Order {
   status: OrderStatus;
 
   @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
-  total: Number;
-
-
+  total: number;
 
   @ManyToOne(() => Employee, (employee) => employee, {
     eager: true,
@@ -45,19 +48,24 @@ export default class Order {
   @JoinColumn({ name: "employee_id" })
   employee: Employee;
 
-  @ManyToOne(() => Bill)
-  bill_id: string;
-
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
-
-
   @ManyToOne(() => Bill, (bill) => bill)
   @JoinColumn({ name: "bill_id" })
   bill: Bill;
 
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+  orderProducts: OrderProduct[];
+
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
+
+  @AfterLoad()
+  getTotalPrice() {
+    this.total = this.orderProducts.reduce(
+      (acc, curr) => acc + curr.totalPrice,
+      0
+    );
+  }
 }
