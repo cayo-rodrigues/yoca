@@ -19,26 +19,26 @@ class OrderProduct {
   @Column({ type: "int", default: 1 })
   quantity: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
-  total_price: number;
+  @Column({ type: "decimal", precision: 8, scale: 2, name: "total_price" })
+  totalPrice: number;
 
-  @ManyToOne(() => Order, (order) => order)
+  @ManyToOne(() => Order, (order) => order.orderProducts)
   @JoinColumn({ name: "order_id" })
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product, { eager: true })
+  @ManyToOne(() => Product, (product) => product.orderProducts, { eager: true })
   @JoinColumn({ name: "product_id" })
   product: Product;
 
-  @CreateDateColumn({ type: "timestamptz" })
-  created_at: Date;
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
-  updated_at: Date;
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
 
   @AfterLoad()
   getTotalPrice() {
-    this.total_price = this.product.price * this.quantity;
+    this.totalPrice = this.product.price * this.quantity;
   }
 }
 

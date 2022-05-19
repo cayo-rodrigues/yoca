@@ -40,7 +40,7 @@ export default class Product {
     (productIngredient) => productIngredient.product,
     { eager: true }
   )
-  productIngredient: ProductIngredient[];
+  productIngredients: ProductIngredient[];
 
   @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
     eager: true,
@@ -48,11 +48,11 @@ export default class Product {
   feedbacks: ProductFeedback[];
 
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
-  orderProduct: OrderProduct[];
+  orderProducts: OrderProduct[];
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
 }

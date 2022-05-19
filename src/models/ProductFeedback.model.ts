@@ -22,13 +22,13 @@ export default class ProductFeedback {
   @Column({ type: "int2" })
   rating: number;
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
-
   @ManyToOne(() => Product, (product) => product.feedbacks)
   @JoinColumn({ name: "product_id" })
   product: Product;
+
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
 }

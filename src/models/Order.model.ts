@@ -48,28 +48,23 @@ export default class Order {
   @JoinColumn({ name: "employee_id" })
   employee: Employee;
 
-  @ManyToOne(() => Bill)
-  bill_id: string;
-
   @ManyToOne(() => Bill, (bill) => bill)
   @JoinColumn({ name: "bill_id" })
   bill: Bill;
 
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product, {
-    eager: true,
-  })
-  orderProduct: OrderProduct[];
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+  orderProducts: OrderProduct[];
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
 
   @AfterLoad()
   getTotalPrice() {
-    this.total = this.orderProduct.reduce(
-      (acc, curr) => acc + curr.total_price,
+    this.total = this.orderProducts.reduce(
+      (acc, curr) => acc + curr.totalPrice,
       0
     );
   }

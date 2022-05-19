@@ -13,14 +13,14 @@ class Group {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "int2", unique: true })
-  access_level: number;
+  @Column({ type: "int2", unique: true, name: "access_level" })
+  accessLevel: number;
 
-  @CreateDateColumn({ type: "timestamptz" })
-  created_at: Date;
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
-  updated_at: Date;
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
 }
 
 export default Group;

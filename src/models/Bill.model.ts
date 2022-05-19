@@ -27,11 +27,11 @@ class Bill {
   })
   orders: Order[];
 
-  @CreateDateColumn({ type: "timestamptz" })
-  created_at: Date;
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
-  updated_at: Date;
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  updatedAt: Date;
 
   @AfterLoad()
   getTotalPrice() {
