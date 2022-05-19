@@ -39,7 +39,7 @@ export default class Order {
   })
   status: OrderStatus;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
+  @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0 })
   total: number;
 
   @ManyToOne(() => Employee, (employee) => employee, {
