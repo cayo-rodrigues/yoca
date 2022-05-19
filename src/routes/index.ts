@@ -6,6 +6,7 @@ import employeeRoute from "./employee.route";
 import ingredientsRoutes from "./ingredients.routes";
 import ordersRoutes from "./orders.routes";
 import billsRoutes from "./bills.routes";
+import productsRouter from "./products.routes";
 
 const routes = Router();
 
@@ -22,5 +23,7 @@ routes.use("/orders", ordersRoutes);
 routes.use("/employees", employeeRoute);
 
 routes.use("/ingredients", ingredientsRoutes);
+
+routes.use("/products", productsRouter);
 
 export default routes;
