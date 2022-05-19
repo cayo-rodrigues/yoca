@@ -12,14 +12,21 @@ describe(" GET - /ingredients ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin",
+    });
   });
 
   const mockIngredient = {
     name: "Cenoura",
     measure: "kg",
     amount: 50,
-    amount_max: 100,
-    amount_min: 15,
+    amountMax: 100,
+    amountMin: 15,
   };
 
   afterAll(async () => {
@@ -45,7 +52,7 @@ describe(" GET - /ingredients ", () => {
     );
   });
 
-  it("Should not be able to list ingredients without sending access_level 1 or 2", async () => {
+  it("Should not be able to list ingredients without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
@@ -57,9 +64,9 @@ describe(" GET - /ingredients ", () => {
       .send({
         name: "John doe",
         email: "johndoe@email.com",
-        phone: "4002-8922",
+        phone: "99999999999",
         password: "123456",
-        access_level: 3,
+        accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({

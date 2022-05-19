@@ -15,14 +15,21 @@ describe(" DELETE - /employees/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin",
+    });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "4002-8922",
+    phone: "99999999999",
     password: "123456",
-    access_level: 2,
+    accessLevel: 2,
   };
 
   afterAll(async () => {
@@ -53,7 +60,7 @@ describe(" DELETE - /employees/:id ", () => {
       404
     );
   });
-  it("Should not be able to delete an employee without sending access_level 1 or 2", async () => {
+  it("Should not be able to delete an employee without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin",
@@ -65,9 +72,9 @@ describe(" DELETE - /employees/:id ", () => {
       .send({
         name: "John doe",
         email: "johndoe@email.com",
-        phone: "4002-8922",
+        phone: "99999999999",
         password: "123456",
-        access_level: 3,
+        accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({

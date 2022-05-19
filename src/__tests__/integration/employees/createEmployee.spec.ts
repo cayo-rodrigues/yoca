@@ -15,14 +15,21 @@ describe("POST - /employees", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin",
+    });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "4002-8922",
+    phone: "999999999999",
     password: "123456",
-    access_level: 2,
+    accessLevel: 2,
   };
 
   afterAll(async () => {
@@ -51,8 +58,8 @@ describe("POST - /employees", () => {
           id: "uuid",
           name: "John doe",
           email: "johndoe@email.com",
-          phone: "4002-8922",
-          access_level: 2,
+          phone: "99999999999",
+          accessLevel: 2,
         },
       })
     );
@@ -75,13 +82,13 @@ describe("POST - /employees", () => {
       })
     );
   });
-  it("Should not be able to create an employee with access_level 1", async () => {
+  it("Should not be able to create an employee with accessLevel 1", async () => {
     const mockSuperEmployee = {
       name: "John doe",
       email: "newadmin@email.com",
-      phone: "4002-8922",
+      phone: "99999999999",
       password: "123456",
-      access_level: 1,
+      accessLevel: 1,
     };
 
     const adminLoginResponse = await request(app).post("/sessions").send({
@@ -101,13 +108,13 @@ describe("POST - /employees", () => {
       })
     );
   });
-  it("Should not be able to create an employee without sending access_level 1 or 2", async () => {
+  it("Should not be able to create an employee without sending accessLevel 1 or 2", async () => {
     const withoutAccessEmployee = {
       name: "Jane doe",
       email: "janedoe@email.com",
-      phone: "4002-8922",
+      phone: "99999999999",
       password: "123456",
-      access_level: 3,
+      accessLevel: 3,
     };
 
     const adminLoginResponse = await request(app).post("/sessions").send({
@@ -133,9 +140,9 @@ describe("POST - /employees", () => {
       .send({
         name: "Johnny doe",
         email: "johnnydoe@email.com",
-        phone: "4002-8922",
+        phone: "99999999999",
         password: "123456",
-        access_level: 4,
+        accessLevel: 4,
       });
 
     expect(newEmployeeResponse.status).toBe(401);

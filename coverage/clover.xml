@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1652911013025" clover="3.2.0">
-  <project timestamp="1652911013025" name="All files">
-    <metrics statements="89" coveredstatements="49" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0" elements="93" coveredelements="49" complexity="0" loc="89" ncloc="89" packages="2" files="4" classes="4"/>
+<coverage generated="1652992168043" clover="3.2.0">
+  <project timestamp="1652992168043" name="All files">
+    <metrics statements="87" coveredstatements="49" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0" elements="91" coveredelements="49" complexity="0" loc="87" ncloc="87" packages="2" files="4" classes="4"/>
     <package name="src">
       <metrics statements="53" coveredstatements="35" conditionals="2" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="app.ts" path="/home/victor/Kenzie/Projetos/yoca/src/app.ts">
@@ -65,7 +65,7 @@
       </file>
     </package>
     <package name="src.errors">
-      <metrics statements="36" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <metrics statements="34" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
       <file name="AppError.ts" path="/home/victor/Kenzie/Projetos/yoca/src/errors/AppError.ts">
         <metrics statements="11" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -81,7 +81,7 @@
         <line num="11" count="1" type="stmt"/>
       </file>
       <file name="handleError.middleware.ts" path="/home/victor/Kenzie/Projetos/yoca/src/errors/handleError.middleware.ts">
-        <metrics statements="25" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <metrics statements="23" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -103,10 +103,8 @@
         <line num="19" count="0" type="stmt"/>
         <line num="20" count="0" type="stmt"/>
         <line num="21" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="25" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
       </file>
     </package>
   </project>

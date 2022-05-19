@@ -12,14 +12,21 @@ describe(" GET - /employees ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin",
+    });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "4002-8922",
+    phone: "99999999999",
     password: "123456",
-    access_level: 2,
+    accessLevel: 2,
   };
 
   afterAll(async () => {

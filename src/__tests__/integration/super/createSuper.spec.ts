@@ -20,7 +20,7 @@ describe(" POST - /super ", () => {
   const mockSuper = {
     name: "testaurant",
     email: "admin@email.com",
-    phone: "4002-8922",
+    phone: "99999999999",
     password: "admin",
   };
 
@@ -42,7 +42,7 @@ describe(" POST - /super ", () => {
         id: "some-uuid",
         name: "testaurant",
         email: "admin@email.com",
-        phone: "4002-8922",
+        phone: "99999999999",
         accessLevel: 1,
       })
     );
