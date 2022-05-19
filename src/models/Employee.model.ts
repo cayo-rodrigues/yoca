@@ -1,16 +1,15 @@
+import { Exclude } from "class-transformer";
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import Group from "./Groups.model";
-import Order from "./Order.model";
 
 @Entity("employees")
+@Check('"access_level" BETWEEN 1 AND 5')
 class Employee {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
@@ -24,11 +23,12 @@ class Employee {
   @Column({ length: 164, unique: true })
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 
-  @ManyToOne(() => Group, (group) => group.accessLevel)
-  group: number;
+  @Column({ type: "int2", name: "access_level" })
+  accessLevel: number;
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
