@@ -47,9 +47,12 @@ class CreateEmployeeService {
       accessLevel,
     });
 
-    employeeRepository.save(employee);
+    await employeeRepository.save(employee);
 
     const employeeWithoutPassword = instanceToInstance(employee);
+
+    console.log({ employee });
+    console.log({ employeeWithoutPassword });
 
     return employeeWithoutPassword;
   }
