@@ -48,7 +48,7 @@ export default class Order {
   @JoinColumn({ name: "employee_id" })
   employee: Employee;
 
-  @ManyToOne(() => Bill, (bill) => bill)
+  @ManyToOne(() => Bill, (bill) => bill.orders)
   @JoinColumn({ name: "bill_id" })
   bill: Bill;
 

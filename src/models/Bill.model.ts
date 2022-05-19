@@ -16,13 +16,13 @@ class Bill {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "boolean" })
+  @Column({ type: "boolean", default: false })
   paid: boolean;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
+  @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0.00 })
   total: number;
 
-  @OneToMany(() => Order, (order) => order, {
+  @OneToMany(() => Order, (order) => order.bill, {
     eager: true,
   })
   orders: Order[];
