@@ -20,12 +20,13 @@ class CreateSuperService {
   }: CreateSuperServiceParams): Promise<Employee> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
-    const isSuperUserAlreadyCreated = await employeeRepository.findOne({
-      where: { accessLevel: 1 },
-    });
+    const users = await employeeRepository.find();
 
-    if (isSuperUserAlreadyCreated) {
-      throw new AppError("Super user has alredy been created", 409);
+    if (users.length > 0) {
+      throw new AppError(
+        "Super user has to be created before other users",
+        409
+      );
     }
 
     const superUser = employeeRepository.create({
