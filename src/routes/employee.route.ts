@@ -10,4 +10,6 @@ employeeRoute.post(
   expressYupMiddleware({ schemaValidator: createEmployeeSchema }),
   EmployeesController.store
 );
+employeeRoute.get("/", EmployeesController.index);
+
 export default employeeRoute;
