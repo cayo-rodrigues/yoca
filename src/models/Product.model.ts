@@ -9,8 +9,8 @@ import {
   ManyToMany,
 } from "typeorm";
 import ProductFeedback from "./ProductFeedback.model";
-
 import Category from "./Category.model";
+import ProductIngredient from "./ProductsIngredients.model";
 
 @Entity("products")
 export default class Product {
@@ -34,14 +34,21 @@ export default class Product {
   })
   categories: Category[];
 
+  @OneToMany(
+    () => ProductIngredient,
+    (productIngredient) => productIngredient.product,
+    { eager: true }
+  )
+  productIngredient: ProductIngredient[];
+
+  @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
+    eager: true,
+  })
+  feedbacks: ProductFeedback[];
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
-
-  @OneToMany(() => ProductFeedback, (feedback) => feedback, {
-    eager: true,
-  })
-  feedbacks: ProductFeedback[];
 }

@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { string } from "yup";
 import Product from "./Product.model";
 
 @Entity("product_feedbacks")
@@ -29,7 +28,7 @@ export default class ProductFeedback {
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 
-  @ManyToOne(() => Product, (product) => product)
+  @ManyToOne(() => Product, (product) => product.feedbacks)
   @JoinColumn({ name: "product_id" })
   product: Product;
 }
