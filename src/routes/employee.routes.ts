@@ -2,7 +2,7 @@ import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
 import EmployeesController from "../controllers/Employee.controller";
 import ensureAdminPermissionMiddleware from "../middlewares/ensureAdminPermission.middleware";
-import createEmployeeSchema from "../schemas/createEmployee.schema";
+import createEmployeeSchema from "../schemas/employees/createEmployee.schema";
 
 const employeeRoute = Router();
 
