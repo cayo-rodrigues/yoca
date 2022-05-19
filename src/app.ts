@@ -1,6 +1,7 @@
 import "express-async-errors";
 import express from "express";
 import cors from "cors";
+import billsRoutes from "./routes/bills.routes";
 
 import errorHandler from "./errors/handleError.middleware";
 
@@ -12,6 +13,8 @@ app.use(
     origin: "*",
   })
 );
+
+app.use("/bills", billsRoutes);
 
 app.use(errorHandler);
 
