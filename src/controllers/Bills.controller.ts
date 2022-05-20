@@ -22,9 +22,9 @@ class BillsController {
     const { id } = req.params;
     const { paid } = req.body;
 
-    const updated = await UpdateBillService.execute({ paid, id });
+    const updated = await UpdateBillService.execute({ paid, id: +id });
 
-    return res.status(200).json(updated)
+    return res.status(200).json(updated);
   }
 
   static async delete(req: Request, res: Response) {}
