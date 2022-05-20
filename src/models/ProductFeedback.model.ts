@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
 import Product from "./Product.model";
 
 @Entity("product_feedbacks")

@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
 import ProductIngredient from "./ProductsIngredients.model";
 
 @Entity("ingredients")
