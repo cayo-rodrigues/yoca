@@ -17,9 +17,9 @@ describe(" GET - /employees ", () => {
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "4002-8922",
-    password: "123456",
-    access_level: 2,
+    phone: "999999999999",
+    password: "12345678",
+    accessLevel: 2,
   };
 
   afterAll(async () => {
@@ -27,16 +27,25 @@ describe(" GET - /employees ", () => {
   });
 
   it("Should be able to list all employees", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    await request(app).post("/super").send({
+      name: "testaurant",
       email: "admin@email.com",
-      password: "admin",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
-    const listEmployeesResponse = await request(app).get("/employees");
+
+    const listEmployeesResponse = await request(app)
+      .get("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listEmployeesResponse.status).toBe(200);
     expect(listEmployeesResponse.body).toHaveProperty("reduce");
@@ -44,9 +53,11 @@ describe(" GET - /employees ", () => {
       expect.arrayContaining([createEmployeeResponse.body])
     );
   });
-  
+
   it("Should not be able to list employees being unregistered user", async () => {
-    const listEmployeesResponse = await request(app).get("/employees");
+    const listEmployeesResponse = await request(app)
+      .get("/employees")
+      .set("Authorization", `Bearer someAleatoryToken`);
 
     expect(listEmployeesResponse.status).toBe(401);
     expect(listEmployeesResponse.body).toEqual(

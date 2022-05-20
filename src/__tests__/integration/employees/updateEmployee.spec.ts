@@ -15,14 +15,21 @@ describe(" PATCH - /employees/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "4002-8922",
-    password: "123456",
-    access_level: 2,
+    phone: "999999999999",
+    password: "12345678",
+    accessLevel: 2,
   };
 
   afterAll(async () => {
@@ -35,24 +42,24 @@ describe(" PATCH - /employees/:id ", () => {
       email: "newjohndoe@email.com",
       phone: "8922-4002",
       password: "12345678",
-      access_level: 4,
+      accessLevel: 4,
     };
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValue("uuid");
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
     const updateEmployeeResponse = await request(app)
       .patch("/employees/uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(employeeUpdates);
 
     expect(updateEmployeeResponse.status).toBe(200);
@@ -64,7 +71,7 @@ describe(" PATCH - /employees/:id ", () => {
           name: "New John Doe",
           email: "newjohndoe@email.com",
           phone: "8922-4002",
-          access_level: 4,
+          accessLevel: 4,
         },
       })
     );
@@ -75,17 +82,17 @@ describe(" PATCH - /employees/:id ", () => {
       email: "admin@email.com",
       phone: "8922-4002",
       password: "12345678",
-      access_level: 4,
+      accessLevel: 4,
     };
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const updateEmployeeResponse = await request(app)
       .patch("/employees/uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(employeeUpdates);
 
     expect(updateEmployeeResponse.status).toBe(409);
@@ -95,23 +102,23 @@ describe(" PATCH - /employees/:id ", () => {
       })
     );
   });
-  it("Should not be able to update an existing employee with access_level 1", async () => {
+  it("Should not be able to update an existing employee with accessLevel 1", async () => {
     const employeeUpdates = {
       name: "New John Doe",
       email: "verynewjohndoe@email.com",
       phone: "8922-4002",
       password: "12345678",
-      access_level: 1,
+      accessLevel: 1,
     };
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const updateEmployeeResponse = await request(app)
       .patch("/employees/uuid")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(employeeUpdates);
 
     expect(updateEmployeeResponse.status).toBe(409);
@@ -121,16 +128,38 @@ describe(" PATCH - /employees/:id ", () => {
       })
     );
   });
-  it("Should not be able to update an existing employee without auth", async () => {
+  it("Should not be able to update an existing employee without sending accessLevel 1 or 2", async () => {
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin123",
+    });
+
+    const withoutAccessUser = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "999999999999",
+        password: "12345678",
+        accessLevel: 3,
+      });
+
+    const withoutAccessLogin = await request(app).post("/sessions").send({
+      email: "johndoe@email.com",
+      password: "12345678",
+    });
+
     const employeeUpdates = {
       name: "New John Doe",
       email: "newjohndoe@email.com",
       phone: "8922-4002",
       password: "12345678",
-      access_level: 4,
+      accessLevel: 4,
     };
     const updateEmployeeResponse = await request(app)
       .patch("/employees/uuid")
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send(employeeUpdates);
 
     expect(updateEmployeeResponse.status).toBe(401);

@@ -20,9 +20,9 @@ describe("POST - /employees", () => {
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "4002-8922",
-    password: "123456",
-    access_level: 2,
+    phone: "999999999999",
+    password: "12345678",
+    accessLevel: 2,
   };
 
   afterAll(async () => {
@@ -31,100 +31,108 @@ describe("POST - /employees", () => {
 
   it("Should be able to create an employee", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("uuid");
-
-    const loginResponse = await request(app).post("/sessions").send({
+    uuidSpy.mockReturnValueOnce("super-uuid");
+    await request(app).post("/super").send({
+      name: "testaurant",
       email: "admin@email.com",
-      password: "admin",
+      phone: "+55061940028922",
+      password: "admin123",
     });
+
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin123",
+    });
+    uuidSpy.mockReturnValueOnce("employee-uuid");
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
     expect(createEmployeeResponse.status).toBe(201);
-    expect(createEmployeeResponse.body).toEqual(
-      expect.objectContaining({
-        message: "Employee created",
-        employee: {
-          id: "uuid",
-          name: "John doe",
-          email: "johndoe@email.com",
-          phone: "4002-8922",
-          access_level: 2,
-        },
-      })
-    );
+    expect(createEmployeeResponse.body).toMatchObject({
+      message: "Employee created",
+      employee: {
+        id: "employee-uuid",
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "999999999999",
+        accessLevel: 2,
+      },
+    });
   });
   it("Should not be able to create an employee with repeated email", async () => {
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
     expect(createEmployeeResponse.status).toBe(409);
     expect(createEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Employee with this email/access level already exists",
+        message: "Employee with this email already exists",
       })
     );
   });
-  it("Should not be able to create an employee with access_level 1", async () => {
-    const mockSuperEmployee = {
+  it("Should not be able to create an employee with repeated phone number", async () => {
+    const EmployeeWithRepeatedNumber = {
       name: "John doe",
-      email: "newadmin@email.com",
-      phone: "4002-8922",
-      password: "123456",
-      access_level: 1,
+      email: "johndoe2@email.com",
+      phone: "999999999999",
+      password: "12345678",
+      accessLevel: 2,
     };
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
-      .send(mockSuperEmployee);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(EmployeeWithRepeatedNumber);
 
     expect(createEmployeeResponse.status).toBe(409);
     expect(createEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Employee with this email/access level already exists",
+        message: "Employee with this phone already exists",
       })
     );
   });
-  it("Should not be able to create an employee without sending access_level 1 or 2", async () => {
+  it("Should not be able to create an employee without sending accessLevel 1 or 2", async () => {
     const withoutAccessEmployee = {
       name: "Jane doe",
       email: "janedoe@email.com",
-      phone: "4002-8922",
-      password: "123456",
-      access_level: 3,
+      phone: "12345678910",
+      password: "12345678",
+      accessLevel: 3,
     };
 
-    const loginResponse = await request(app).post("/sessions").send({
+    const uuidSpy = jest.spyOn(uuid, "v4");
+    uuidSpy.mockReturnValueOnce("employee-without-access-uuid");
+
+    const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const withoutAccessEmployeeResponse = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(withoutAccessEmployee);
 
     const withoutAccessEmployeeLogin = await request(app)
       .post("/sessions")
       .send({
         email: "janedoe@email.com",
-        password: "123456",
+        password: "12345678",
       });
 
     const newEmployeeResponse = await request(app)
@@ -133,9 +141,9 @@ describe("POST - /employees", () => {
       .send({
         name: "Johnny doe",
         email: "johnnydoe@email.com",
-        phone: "4002-8922",
-        password: "123456",
-        access_level: 4,
+        phone: "1234567891011",
+        password: "12345678",
+        accessLevel: 4,
       });
 
     expect(newEmployeeResponse.status).toBe(401);
