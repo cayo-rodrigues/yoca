@@ -8,6 +8,7 @@ import sessionsRoutes from "./sessions.routes";
 import employeesRoutes from "./employees.routes";
 import ingredientsRoutes from "./ingredients.routes";
 import generalFeedbackRoutes from "./generalFeedback.routes";
+import productFeedbackRoutes from "./productFeedback.routes";
 
 const routes = Router();
 
@@ -21,5 +22,6 @@ routes.use("/ingredients", ingredientsRoutes);
 routes.use("/products", productsRoutes);
 
 routes.use("/feedbacks/general", generalFeedbackRoutes);
+routes.use("/feedbacks/products", productFeedbackRoutes);
 
 export default routes;
