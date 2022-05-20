@@ -6,7 +6,7 @@ import app from "../../../app";
 import * as uuid from "uuid";
 jest.mock("uuid");
 
-describe("POST - /ingredients", () => {
+describe(" DELETE - /products/:id ", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -25,11 +25,19 @@ describe("POST - /ingredients", () => {
     amountMin: 15,
   };
 
+  const mockProduct = {
+    name: "Pizza",
+    price: 4.99,
+    calories: 300,
+    ingredients: [{ ingredientId: "uuid", amount: "100" }],
+    categories: ["massas"],
+  };
+
   afterAll(async () => {
     await connection.destroy();
   });
 
-  it("Should be able to create an ingredient", async () => {
+  it("Should be able to delete an existing product", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     uuidSpy.mockReturnValueOnce("super-uuid");
 
@@ -45,30 +53,55 @@ describe("POST - /ingredients", () => {
       password: "admin123",
     });
 
+    uuidSpy.mockReturnValueOnce("massas-uuid");
+    await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "massas",
+      });
+
     uuidSpy.mockReturnValueOnce("uuid");
-    const createIngredientResponse = await request(app)
+    await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    expect(createIngredientResponse.status).toBe(201);
-    expect(createIngredientResponse.body).toMatchObject({
-      message: "Ingredient created",
-      ingredient: {
-        id: "uuid",
-        ...mockIngredient,
-      },
-    });
-  });
-  it("Should not be able to create an ingredient without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
+    uuidSpy.mockReturnValueOnce("uuid");
+    const createProductResponse = await request(app)
+      .post("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockProduct);
 
+    const delProductResponse = await request(app)
+      .delete("/products/uuid")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+
+    expect(delProductResponse.status).toBe(200);
+    expect(delProductResponse.body).toHaveLength(0);
+    expect((await request(app).delete("/products/uuid")).status).toBe(404);
+  });
+  it("Should not be able to delete an existing product without sending accessLevel 1 or 2", async () => {
+    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
 
+    uuidSpy.mockReturnValueOnce("some-uuid");
+
+    await request(app)
+      .post("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Batatão",
+        price: 4.99,
+        calories: 300,
+        ingredients: [{ ingredientId: "uuid", amount: "100" }],
+        categories: ["iguarias"],
+      });
+
+    uuidSpy.mockReturnValueOnce("some-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -85,41 +118,14 @@ describe("POST - /ingredients", () => {
       password: "12345678",
     });
 
-    uuidSpy.mockReturnValueOnce("potato-uuid");
-
-    const createIngredientResponse = await request(app)
-      .post("/ingredients")
+    const delProductResponse = await request(app)
+      .delete("/products/some-uuid")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
-      .send({
-        name: "Batata",
-        measure: "kg",
-        amount: 50,
-        amountMax: 100,
-        amountMin: 15,
-      });
 
-    expect(createIngredientResponse.status).toBe(401);
-    expect(createIngredientResponse.body).toEqual(
+    expect(delProductResponse.status).toBe(401);
+    expect(delProductResponse.body).toEqual(
       expect.objectContaining({
         message: "Unauthorized",
-      })
-    );
-  });
-  it("Should not be able to create an ingredient with repeated name", async () => {
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
-    });
-
-    const createIngredientResponse = await request(app)
-      .post("/ingredients")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockIngredient);
-
-    expect(createIngredientResponse.status).toBe(409);
-    expect(createIngredientResponse.body).toEqual(
-      expect.objectContaining({
-        message: "Ingredient already exists, add to its amount instead",
       })
     );
   });

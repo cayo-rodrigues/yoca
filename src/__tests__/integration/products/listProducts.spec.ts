@@ -3,7 +3,7 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-describe(" GET - /ingredients ", () => {
+describe(" GET - /products ", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -26,7 +26,7 @@ describe(" GET - /ingredients ", () => {
     await connection.destroy();
   });
 
-  it("Should be able to list all ingredients", async () => {
+  it("Should be able to list all products", async () => {
     await request(app).post("/super").send({
       name: "testaurant",
       email: "admin@email.com",
@@ -39,22 +39,45 @@ describe(" GET - /ingredients ", () => {
       password: "admin123",
     });
 
-    const createIngredientResponse = await request(app)
+    const ingredientResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
-    const listIngredientsResponse = await request(app)
-      .get("/ingredients")
+
+    await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "massas",
+      });
+
+    const createProductResponse = await request(app)
+      .post("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            ingredientId: ingredientResponse.body.ingredient.id,
+            amount: "100",
+          },
+        ],
+        categories: ["massas"],
+      });
+    const listProductsResponse = await request(app)
+      .get("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(listIngredientsResponse.status).toBe(200);
-    expect(listIngredientsResponse.body).toHaveProperty("reduce");
-    expect(listIngredientsResponse.body).toEqual(
-      expect.arrayContaining([createIngredientResponse.body.ingredient])
+    expect(listProductsResponse.status).toBe(200);
+    expect(listProductsResponse.body).toHaveProperty("reduce");
+    expect(listProductsResponse.body).toEqual(
+      expect.arrayContaining([createProductResponse.body.product])
     );
   });
 
-  it("Should not be able to list ingredients without sending accessLevel 1 or 2", async () => {
+  it("Should not be able to list products without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -76,12 +99,12 @@ describe(" GET - /ingredients ", () => {
       password: "12345678",
     });
 
-    const listIngredientsResponse = await request(app)
-      .get("/ingredients")
+    const listProductsResponse = await request(app)
+      .get("/products")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
-    expect(listIngredientsResponse.status).toBe(401);
-    expect(listIngredientsResponse.body).toEqual(
+    expect(listProductsResponse.status).toBe(401);
+    expect(listProductsResponse.body).toEqual(
       expect.objectContaining({ message: "Unauthorized" })
     );
   });
