@@ -56,9 +56,13 @@ describe(" DELETE - /employees/:id ", () => {
 
     expect(delEmployeeResponse.status).toBe(204);
     expect(delEmployeeResponse.body).toHaveLength(0);
-    expect((await request(app).delete("/employees/some-uuid")).status).toBe(
-      404
-    );
+    expect(
+      (
+        await request(app)
+          .delete("/employees/some-uuid")
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      ).status
+    ).toBe(404);
   });
   it("Should not be able to delete an employee without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({

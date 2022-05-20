@@ -67,10 +67,10 @@ describe(" PATCH - /categories/:id ", () => {
   it("Should not be able to update category without accessLevel 1 or 2", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
-        email: "admin@email.com",
-        password: "admin123",
+      email: "admin@email.com",
+      password: "admin123",
     });
-    
+
     uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
@@ -109,11 +109,12 @@ describe(" PATCH - /categories/:id ", () => {
       .send(categoryUpdates);
 
     expect(updateOneCategoryResponse.status).toBe(409);
-    expect(updateOneCategoryResponse.body).toEqual(expect.objectContaining({
-        message: "Category with this name already exists"
-    }))
-
-  })
+    expect(updateOneCategoryResponse.body).toEqual(
+      expect.objectContaining({
+        message: "Category with this name already exists",
+      })
+    );
+  });
   it("Should not be able to update one category with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",

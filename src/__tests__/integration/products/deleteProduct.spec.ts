@@ -75,11 +75,17 @@ describe(" DELETE - /products/:id ", () => {
 
     const delProductResponse = await request(app)
       .delete("/products/uuid")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delProductResponse.status).toBe(200);
     expect(delProductResponse.body).toHaveLength(0);
-    expect((await request(app).delete("/products/uuid")).status).toBe(404);
+    expect(
+      (
+        await request(app)
+          .delete("/products/uuid")
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      ).status
+    ).toBe(404);
   });
   it("Should not be able to delete an existing product without sending accessLevel 1 or 2", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
@@ -120,7 +126,7 @@ describe(" DELETE - /products/:id ", () => {
 
     const delProductResponse = await request(app)
       .delete("/products/some-uuid")
-      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delProductResponse.status).toBe(401);
     expect(delProductResponse.body).toEqual(
