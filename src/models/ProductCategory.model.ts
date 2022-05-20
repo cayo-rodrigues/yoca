@@ -1,33 +1,30 @@
 import {
-  Check,
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  Column,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
+  OneToMany,
 } from "typeorm";
-
+import Category from "./Category.model";
 import Product from "./Product.model";
 
-@Entity("product_feedbacks")
-@Check('"rating" BETWEEN 1 AND 5')
-export default class ProductFeedback {
+@Entity("products_categories")
+export default class ProductCategory {
   @PrimaryGeneratedColumn("uuid")
-  readonly id: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  rating: number;
+  id: string;
 
   @Column({ name: "product_id" })
   productId: string;
 
-  @ManyToOne(() => Product, (product) => product.id)
+  @Column({ name: "category_id" })
+  categoryId: string;
+
+  @OneToMany(() => Category, (Category) => Category.id)
+  category: Category;
+
+  @OneToMany(() => Product, (Product) => Product.id)
   product: Product;
 
   @CreateDateColumn({ name: "created_at" })

@@ -19,15 +19,19 @@ export default class ProductIngredient {
   @Column({ type: "decimal", precision: 8, scale: 2 })
   amount: number;
 
-  @ManyToOne(() => Product, (product) => product.productIngredients)
-  @JoinColumn({ name: "product_id" })
+  @ManyToOne(() => Product, (product) => product.id)
   product: Product;
+
+  @Column({ name: "product_id" })
+  productId: string;
 
   @ManyToOne(() => Ingredient, (ingredient) => ingredient.productIngredients, {
     eager: true,
   })
-  @JoinColumn({ name: "ingredient_id" })
   ingredient: Ingredient;
+
+  @Column({ name: "ingredient_id" })
+  ingredientId: string;
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;

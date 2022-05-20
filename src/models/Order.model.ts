@@ -30,18 +30,11 @@ export default class Order {
   @Column()
   total: number;
 
-  @ManyToOne(() => Employee, (employee) => employee, {
-    eager: true,
-  })
-  @JoinColumn({ name: "employee_id" })
-  employee: Employee;
+  @Column({ name: "employee_id" })
+  employeeId: string;
 
-  @ManyToOne(() => Bill, (bill) => bill.orders)
-  @JoinColumn({ name: "bill_id" })
-  bill: Bill;
-
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
-  orderProducts: OrderProduct[];
+  @Column({ name: "bill_id" })
+  billId: string;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
@@ -51,12 +44,4 @@ export default class Order {
 
   @DeleteDateColumn({ name: "deleted_at" })
   deletedAt: Date;
-
-  // @AfterLoad()
-  // getTotalPrice() {
-  //   this.total = this.orderProducts.reduce(
-  //     (acc, curr) => acc + curr.totalPrice,
-  //     0
-  //   );
-  // }
 }

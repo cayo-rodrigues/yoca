@@ -20,6 +20,7 @@ export class CreateOrdersProductsTable1653066757956
           {
             name: "quantity",
             type: "integer",
+            default: 1,
           },
           {
             name: "total_price",

@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -14,19 +15,19 @@ export default class Ingredient {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ unique: true, length: 164 })
+  @Column()
   name: string;
 
-  @Column({ length: 3 })
+  @Column()
   measure: string;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
+  @Column()
   amount: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "amount_min" })
+  @Column({ name: "amount_min" })
   amountMin: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "amount_max" })
+  @Column({ name: "amount_max" })
   amountMax: number;
 
   @OneToMany(
@@ -35,9 +36,12 @@ export default class Ingredient {
   )
   productIngredients: ProductIngredient[];
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: "deleted_at" })
+  deletedAt: Date;
 }

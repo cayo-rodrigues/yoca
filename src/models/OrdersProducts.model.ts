@@ -2,6 +2,7 @@ import {
   AfterLoad,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -17,30 +18,32 @@ class OrderProduct {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "int", default: 1 })
+  @Column()
   quantity: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "total_price" })
+  @Column({ name: "total_price" })
   totalPrice: number;
 
-  @ManyToOne(() => Order, (order) => order.orderProducts)
-  @JoinColumn({ name: "order_id" })
+  @ManyToOne(() => Order, (order) => order.id)
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderProducts, { eager: true })
-  @JoinColumn({ name: "product_id" })
+  @Column({ name: "order_id" })
+  orderId: string;
+
+  @ManyToOne(() => Product, { eager: true })
   product: Product;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @Column({ name: "product_id" })
+  productId: string;
+
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 
-  @AfterLoad()
-  getTotalPrice() {
-    this.totalPrice = this.product.price * this.quantity;
-  }
+  @DeleteDateColumn({ name: "deleted_at" })
+  deletedAt: Date;
 }
 
 export default OrderProduct;

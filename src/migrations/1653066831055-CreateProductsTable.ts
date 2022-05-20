@@ -34,10 +34,6 @@ export class CreateProductsTable1653066831055 implements MigrationInterface {
             scale: 2,
           },
           {
-            name: "category_id",
-            type: "uuid",
-          },
-          {
             name: "created_at",
             type: "timestamp",
             default: "now()",

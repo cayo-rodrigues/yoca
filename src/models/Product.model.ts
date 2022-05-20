@@ -19,37 +19,14 @@ export default class Product {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 164, unique: true })
+  @Column()
   name: string;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
+  @Column()
   price: number;
 
-  @Column({ type: "decimal", precision: 11, scale: 2 })
+  @Column()
   calories: number;
-
-  @ManyToMany(() => Category, { eager: true })
-  @JoinTable({
-    name: "products_categories",
-    joinColumn: { name: "product_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "category_id", referencedColumnName: "id" },
-  })
-  categories: Category[];
-
-  @OneToMany(
-    () => ProductIngredient,
-    (productIngredient) => productIngredient.product,
-    { eager: true }
-  )
-  productIngredients: ProductIngredient[];
-
-  @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
-    eager: true,
-  })
-  feedbacks: ProductFeedback[];
-
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
-  orderProducts: OrderProduct[];
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;

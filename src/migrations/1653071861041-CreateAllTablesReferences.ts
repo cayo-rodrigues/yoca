@@ -45,16 +45,6 @@ export class CreateAllTablesReferences1653071861041
     );
 
     await queryRunner.createForeignKey(
-      "products",
-      new TableForeignKey({
-        name: "categoriesFK",
-        columnNames: ["category_id"],
-        referencedColumnNames: ["id"],
-        referencedTableName: "categories",
-      })
-    );
-
-    await queryRunner.createForeignKey(
       "product_feedbacks",
       new TableForeignKey({
         name: "productsFK",
@@ -110,7 +100,6 @@ export class CreateAllTablesReferences1653071861041
     await queryRunner.dropForeignKey("orders", "billsFK");
     await queryRunner.dropForeignKey("orders_products", "ordersFK");
     await queryRunner.dropForeignKey("orders_products", "productsFK");
-    await queryRunner.dropForeignKey("products", "categoriesFK");
     await queryRunner.dropForeignKey("product_feedbacks", "productsFK");
     await queryRunner.dropForeignKey("products_ingredients", "productsFK");
     await queryRunner.dropForeignKey("products_ingredients", "ingredientsFK");
