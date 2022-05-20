@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { IBaseIngredient } from "../interfaces/Ingredient.interface";
 import CreateIngredientService from "../services/Ingredients/CreateIngredient.service";
+import DeleteIngredientService from "../services/Ingredients/DeleteIngredient.service";
 import ListIngredientsService from "../services/Ingredients/ListIngredients.service";
 import ShowIngredientService from "../services/Ingredients/ShowIngredient.service";
 import UpdateIngredientService from "../services/Ingredients/UpdateIngredient.service";
@@ -41,7 +42,13 @@ class IngredientController {
     return res.send({ message: "Ingredient updated", updatedIngredient });
   }
 
-  static async delete(req: Request, res: Response) {}
+  static async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await DeleteIngredientService.execute({ id });
+
+    return res.status(204).send();
+  }
 }
 
 export default IngredientController;

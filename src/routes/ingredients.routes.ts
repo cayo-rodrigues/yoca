@@ -28,5 +28,6 @@ ingredientsRoutes.patch(
   expressYupMiddleware({ schemaValidator: updateIngredientSchema }),
   IngredientController.update
 );
+ingredientsRoutes.delete("/:id", IngredientController.delete);
 
 export default ingredientsRoutes;
