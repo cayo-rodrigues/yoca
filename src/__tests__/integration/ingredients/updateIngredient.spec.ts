@@ -15,13 +15,6 @@ describe(" PATCH - /ingredients/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin",
-    });
   });
 
   const mockIngredient = {
@@ -46,12 +39,21 @@ describe(" PATCH - /ingredients/:id ", () => {
 
   it("Should be able to update an existing ingredient", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("uuid");
+    uuidSpy.mockReturnValueOnce("super-uuid");
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
+
+    uuidSpy.mockReturnValueOnce("uuid");
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
@@ -64,42 +66,42 @@ describe(" PATCH - /ingredients/:id ", () => {
       .send(ingredientUpdates);
 
     expect(updateIngredientResponse.status).toBe(200);
-    expect(updateIngredientResponse.body).toEqual(
-      expect.objectContaining({
-        message: "Ingredient updated",
-        ingredient: {
-          id: "uuid",
-          ...ingredientUpdates,
-        },
-      })
-    );
+    expect(updateIngredientResponse.body).toMatchObject({
+      message: "Ingredient updated",
+      ingredient: {
+        id: "uuid",
+        ...ingredientUpdates,
+      },
+    });
   });
   it("Should not be able to update an existing ingredient without sending accessLevel 1 or 2", async () => {
+    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
-
+    
+    uuidSpy.mockReturnValueOnce("some-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "John doe",
         email: "johndoe@email.com",
-        phone: "99999999999",
-        password: "123456",
+        phone: "999999999999",
+        password: "12345678",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "123456",
+      password: "12345678",
     });
 
     const updateIngredientResponse = await request(app)
       .patch("/ingredients/uuid")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
-      .send(ingredientUpdates);
+      .send(mockIngredient);
 
     expect(updateIngredientResponse.status).toBe(401);
     expect(updateIngredientResponse.body).toEqual(

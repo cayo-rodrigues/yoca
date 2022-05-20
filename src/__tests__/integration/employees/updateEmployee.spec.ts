@@ -20,15 +20,15 @@ describe(" PATCH - /employees/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin",
+      password: "admin123",
     });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "99999999999",
-    password: "123456",
+    phone: "999999999999",
+    password: "12345678",
     accessLevel: 2,
   };
 
@@ -49,7 +49,7 @@ describe(" PATCH - /employees/:id ", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
@@ -87,7 +87,7 @@ describe(" PATCH - /employees/:id ", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const updateEmployeeResponse = await request(app)
@@ -113,7 +113,7 @@ describe(" PATCH - /employees/:id ", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const updateEmployeeResponse = await request(app)
@@ -131,7 +131,7 @@ describe(" PATCH - /employees/:id ", () => {
   it("Should not be able to update an existing employee without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const withoutAccessUser = await request(app)
@@ -140,14 +140,14 @@ describe(" PATCH - /employees/:id ", () => {
       .send({
         name: "John doe",
         email: "johndoe@email.com",
-        phone: "99999999999",
-        password: "123456",
+        phone: "999999999999",
+        password: "12345678",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "123456",
+      password: "12345678",
     });
 
     const employeeUpdates = {

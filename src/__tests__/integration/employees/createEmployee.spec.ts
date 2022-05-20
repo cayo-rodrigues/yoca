@@ -15,20 +15,13 @@ describe("POST - /employees", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin",
-    });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
     phone: "999999999999",
-    password: "123456",
+    password: "12345678",
     accessLevel: 2,
   };
 
@@ -38,12 +31,19 @@ describe("POST - /employees", () => {
 
   it("Should be able to create an employee", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("uuid");
+    uuidSpy.mockReturnValueOnce("super-uuid");
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
+    uuidSpy.mockReturnValueOnce("employee-uuid");
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
@@ -51,23 +51,21 @@ describe("POST - /employees", () => {
       .send(mockEmployee);
 
     expect(createEmployeeResponse.status).toBe(201);
-    expect(createEmployeeResponse.body).toEqual(
-      expect.objectContaining({
-        message: "Employee created",
-        employee: {
-          id: "uuid",
-          name: "John doe",
-          email: "johndoe@email.com",
-          phone: "99999999999",
-          accessLevel: 2,
-        },
-      })
-    );
+    expect(createEmployeeResponse.body).toMatchObject({
+      message: "Employee created",
+      employee: {
+        id: "employee-uuid",
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "999999999999",
+        accessLevel: 2,
+      },
+    });
   });
   it("Should not be able to create an employee with repeated email", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
@@ -78,33 +76,33 @@ describe("POST - /employees", () => {
     expect(createEmployeeResponse.status).toBe(409);
     expect(createEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Employee with this email/access level already exists",
+        message: "Employee with this email already exists",
       })
     );
   });
-  it("Should not be able to create an employee with accessLevel 1", async () => {
-    const mockSuperEmployee = {
+  it("Should not be able to create an employee with repeated phone number", async () => {
+    const EmployeeWithRepeatedNumber = {
       name: "John doe",
-      email: "newadmin@email.com",
-      phone: "99999999999",
-      password: "123456",
-      accessLevel: 1,
+      email: "johndoe2@email.com",
+      phone: "999999999999",
+      password: "12345678",
+      accessLevel: 2,
     };
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockSuperEmployee);
+      .send(EmployeeWithRepeatedNumber);
 
     expect(createEmployeeResponse.status).toBe(409);
     expect(createEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Employee with this email/access level already exists",
+        message: "Employee with this phone already exists",
       })
     );
   });
@@ -112,14 +110,17 @@ describe("POST - /employees", () => {
     const withoutAccessEmployee = {
       name: "Jane doe",
       email: "janedoe@email.com",
-      phone: "99999999999",
-      password: "123456",
+      phone: "12345678910",
+      password: "12345678",
       accessLevel: 3,
     };
 
+    const uuidSpy = jest.spyOn(uuid, "v4");
+    uuidSpy.mockReturnValueOnce("employee-without-access-uuid");
+
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const withoutAccessEmployeeResponse = await request(app)
@@ -131,7 +132,7 @@ describe("POST - /employees", () => {
       .post("/sessions")
       .send({
         email: "janedoe@email.com",
-        password: "123456",
+        password: "12345678",
       });
 
     const newEmployeeResponse = await request(app)
@@ -140,8 +141,8 @@ describe("POST - /employees", () => {
       .send({
         name: "Johnny doe",
         email: "johnnydoe@email.com",
-        phone: "99999999999",
-        password: "123456",
+        phone: "1234567891011",
+        password: "12345678",
         accessLevel: 4,
       });
 

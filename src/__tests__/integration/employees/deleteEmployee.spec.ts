@@ -20,15 +20,15 @@ describe(" DELETE - /employees/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin",
+      password: "admin123",
     });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "99999999999",
-    password: "123456",
+    phone: "999999999999",
+    password: "12345678",
     accessLevel: 2,
   };
 
@@ -38,12 +38,12 @@ describe(" DELETE - /employees/:id ", () => {
 
   it("Should be able to delete an employee", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("some-uuid");
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
+    uuidSpy.mockReturnValueOnce("some-uuid");
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
@@ -63,8 +63,11 @@ describe(" DELETE - /employees/:id ", () => {
   it("Should not be able to delete an employee without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
+
+    const uuidSpy = jest.spyOn(uuid, "v4");
+    uuidSpy.mockReturnValueOnce("some-uuid");
 
     const withoutAccessUser = await request(app)
       .post("/employees")
@@ -72,18 +75,17 @@ describe(" DELETE - /employees/:id ", () => {
       .send({
         name: "John doe",
         email: "johndoe@email.com",
-        phone: "99999999999",
-        password: "123456",
+        phone: "999999999999",
+        password: "12345678",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "123456",
+      password: "12345678",
     });
 
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("some-uuid");
+    uuidSpy.mockReturnValueOnce("delete-employee-uuid");
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
@@ -102,7 +104,7 @@ describe(" DELETE - /employees/:id ", () => {
   it("Should not be able to delete an employee without id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const delEmployeeResponse = await request(app)
@@ -117,7 +119,7 @@ describe(" DELETE - /employees/:id ", () => {
   it("Should not be able to delete an employee with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const delEmployeeResponse = await request(app)

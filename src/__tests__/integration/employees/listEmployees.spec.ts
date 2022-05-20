@@ -12,20 +12,13 @@ describe(" GET - /employees ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin",
-    });
   });
 
   const mockEmployee = {
     name: "John doe",
     email: "johndoe@email.com",
-    phone: "99999999999",
-    password: "123456",
+    phone: "999999999999",
+    password: "12345678",
     accessLevel: 2,
   };
 
@@ -34,16 +27,25 @@ describe(" GET - /employees ", () => {
   });
 
   it("Should be able to list all employees", async () => {
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin",
+      password: "admin123",
     });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
-    const listEmployeesResponse = await request(app).get("/employees");
+
+    const listEmployeesResponse = await request(app)
+      .get("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listEmployeesResponse.status).toBe(200);
     expect(listEmployeesResponse.body).toHaveProperty("reduce");
