@@ -20,4 +20,7 @@ employeesRoutes.get("/", EmployeesController.index);
 
 employeesRoutes.get("/:id", EmployeesController.show);
 
+
+employeesRoutes.delete("/:id", EmployeesController.delete);
+
 export default employeesRoutes;
