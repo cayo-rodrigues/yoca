@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "start": "pm2 start dist/src/server.js -l dist/logs.txt -i max",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
     "reload": "pm2 reload dist/src/server.js",
     "monit": "pm2 monit",
     "stop": "pm2 stop server",
