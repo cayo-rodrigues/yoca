@@ -16,4 +16,9 @@ employeeRoute.post(
   EmployeesController.store
 );
 
+employeeRoute.use(ensureAdminPermissionMiddleware);
+
+employeeRoute.get("/", EmployeesController.index);
+
+employeeRoute.get("/:id", EmployeesController.show);
 export default employeeRoute;

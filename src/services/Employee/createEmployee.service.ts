@@ -5,21 +5,15 @@ import { hash } from "bcryptjs";
 import { instanceToInstance } from "class-transformer";
 
 interface CreateEmployeeServiceParams {
-  loggedInUser: Employee;
-  data: {
-    phone: string;
-    name: string;
-    email: string;
-    password: string;
-    accessLevel: number;
-  };
+  phone: string;
+  name: string;
+  email: string;
+  password: string;
+  accessLevel: number;
 }
 
 class CreateEmployeeService {
-  static async execute({
-    loggedInUser,
-    data,
-  }: CreateEmployeeServiceParams): Promise<Employee> {
+  static async execute(data: CreateEmployeeServiceParams): Promise<Employee> {
     const { phone, name, email, password, accessLevel } = data;
 
     const employeeRepository = AppDataSource.getRepository(Employee);
