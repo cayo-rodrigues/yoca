@@ -6,10 +6,6 @@ import createEmployeeSchema from "../schemas/employees/createEmployee.schema";
 
 const employeeRoute = Router();
 
-employeeRoute.get("/", EmployeesController.index);
-
-employeeRoute.use(ensureAdminPermissionMiddleware);
-
 employeeRoute.post(
   "/",
   expressYupMiddleware({ schemaValidator: createEmployeeSchema }),
@@ -21,4 +17,7 @@ employeeRoute.use(ensureAdminPermissionMiddleware);
 employeeRoute.get("/", EmployeesController.index);
 
 employeeRoute.get("/:id", EmployeesController.show);
+
+employeeRoute.delete("/:id", EmployeesController.delete);
+
 export default employeeRoute;

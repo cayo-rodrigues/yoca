@@ -29,8 +29,6 @@ const ensureAuthMiddleware = async (
 
     const decoded = jwt.verify(token, process.env.SECRET || "default");
 
-    console.log({ decoded });
-
     const { id } = decoded as IDecoded;
 
     const employeeRepository = AppDataSource.getRepository(Employee);
