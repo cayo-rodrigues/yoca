@@ -23,11 +23,11 @@ const AppDataSource =
             : false,
         entities:
           process.env.NODE_ENV === "production"
-            ? ["dist/models/*.js"]
+            ? ["dist/src/models/*.js"]
             : ["src/models/*.ts"],
         migrations:
           process.env.NODE_ENV === "production"
-            ? ["dist/migrations/*.js"]
+            ? ["dist/src/migrations/*.js"]
             : ["src/migrations/*.ts"],
         migrationsRun: true,
       });
