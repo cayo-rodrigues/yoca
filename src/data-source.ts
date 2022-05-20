@@ -14,7 +14,10 @@ const AppDataSource =
     : new DataSource({
         type: "postgres",
         host,
-        url: process.env.DB_URL,
+        url:
+          process.env.NODE_ENV === "production"
+            ? process.env.DATABASE_URL
+            : process.env.DB_URL,
         synchronize: false,
         logging: true,
         ssl:
