@@ -1,5 +1,25 @@
 import { Router } from "express";
 
-const router = Router();
+import ensureAuthMiddleware from "../middlewares/ensureAuth.middleware";
 
-export default router;
+import productsRoutes from "./products.routes";
+import superRoutes from "./super.routes";
+import sessionsRoutes from "./sessions.routes";
+import employeeRoutes from "./employee.routes";
+import ingredientsRoutes from "./ingredients.routes";
+import generalFeedbackRoutes from "./generalFeedback.routes";
+
+const routes = Router();
+
+routes.use("/super", superRoutes);
+routes.use("/sessions", sessionsRoutes);
+
+routes.use(ensureAuthMiddleware);
+
+routes.use("/employees", employeeRoutes);
+routes.use("/ingredients", ingredientsRoutes);
+routes.use("/products", productsRoutes);
+
+routes.use("/feedbacks/general", generalFeedbackRoutes);
+
+export default routes;
