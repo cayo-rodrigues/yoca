@@ -31,6 +31,7 @@ class UpdateEmployeeService {
         { phone, id: Not(id) },
         { email, id: Not(id) },
       ],
+      withDeleted: true,
     });
 
     if (emailOrPhoneAlreadyExists) {

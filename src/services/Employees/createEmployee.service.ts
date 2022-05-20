@@ -13,6 +13,7 @@ class CreateEmployeeService {
 
     const emailOrPhoneAlreadyExists = await employeeRepository.findOne({
       where: [{ phone }, { email }],
+      withDeleted: true,
     });
 
     if (emailOrPhoneAlreadyExists?.email === email) {
