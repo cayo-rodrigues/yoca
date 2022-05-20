@@ -47,7 +47,7 @@ export default class Product {
   })
   feedbacks: ProductFeedback[];
 
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
   orderProducts: OrderProduct[];
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })

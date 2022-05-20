@@ -39,7 +39,13 @@ export default class Order {
   })
   status: OrderStatus;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0 })
+  @Column({
+    name: "total",
+    type: "decimal",
+    precision: 8,
+    scale: 2,
+    default: 0,
+  })
   total: number;
 
   @ManyToOne(() => Employee, (employee) => employee, {
@@ -52,7 +58,7 @@ export default class Order {
   @JoinColumn({ name: "bill_id" })
   bill: Bill;
 
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct)
   orderProducts: OrderProduct[];
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
@@ -60,12 +66,4 @@ export default class Order {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
-
-  @AfterLoad()
-  getTotalPrice() {
-    this.total = this.orderProducts.reduce(
-      (acc, curr) => acc + curr.totalPrice,
-      0
-    );
-  }
 }

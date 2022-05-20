@@ -22,13 +22,19 @@ class OrderProduct {
   @Column({ type: "decimal", precision: 8, scale: 2, name: "total_price" })
   totalPrice: number;
 
-  @ManyToOne(() => Order, (order) => order.orderProducts)
+  @ManyToOne(() => Order)
   @JoinColumn({ name: "order_id" })
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderProducts, { eager: true })
+  @ManyToOne(() => Product)
   @JoinColumn({ name: "product_id" })
   product: Product;
+
+  @Column({ name: "order_id" })
+  orderId: string;
+
+  @Column({ name: "product_id" })
+  productId: string;
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
@@ -36,10 +42,10 @@ class OrderProduct {
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
 
-  @AfterLoad()
-  getTotalPrice() {
-    this.totalPrice = this.product.price * this.quantity;
-  }
+  // @AfterLoad()
+  // getTotalPrice() {
+  //   this.totalPrice = this.product.price * this.quantity;
+  // }
 }
 
 export default OrderProduct;

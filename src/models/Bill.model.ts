@@ -19,12 +19,16 @@ class Bill {
   @Column({ type: "boolean", default: false })
   paid: boolean;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0.00 })
+  @Column({
+    name: "total",
+    type: "decimal",
+    precision: 8,
+    scale: 2,
+    default: 0.0,
+  })
   total: number;
 
-  @OneToMany(() => Order, (order) => order.bill, {
-    eager: true,
-  })
+  @OneToMany(() => Order, (order) => order.bill)
   orders: Order[];
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
@@ -32,11 +36,6 @@ class Bill {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
-
-  @AfterLoad()
-  getTotalPrice() {
-    this.total = this.orders.reduce((acc, curr) => acc + curr.total, 0);
-  }
 }
 
 export default Bill;
