@@ -3,6 +3,9 @@ import { expressYupMiddleware } from "express-yup-middleware";
 
 import EmployeesController from "../controllers/Employee.controller";
 
+
+const employeesRoutes = Router();
+
 employeesRoutes.post(
   "/",
   expressYupMiddleware({ schemaValidator: createEmployeeSchema }),
@@ -10,5 +13,7 @@ employeesRoutes.post(
 );
 
 employeesRoutes.get("/", EmployeesController.index);
+
+employeesRoutes.get("/:id", EmployeesController.show);
 
 export default employeesRoutes;

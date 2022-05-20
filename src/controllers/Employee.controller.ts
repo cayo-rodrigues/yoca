@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import CreateEmployeeService from "../services/Employees/CreateEmployee.service";
 import ListAllEmployeesService from "../services/Employees/ListAllEmployees.service";
+import showEmployeeService from "../services/Employees/ShowEmployee.service";
 
 export default class EmployeesController {
   static async store(req: Request, res: Response) {
@@ -20,7 +21,14 @@ export default class EmployeesController {
     res.status(200).json(employees);
   }
 
-  static async show(req: Request, res: Response) {}
+  static async show(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const employee = await showEmployeeService.execute(id);
+
+    res.status(200).json(employee);
+  }
+
 
   static async update(req: Request, res: Response) {}
 
