@@ -3,19 +3,19 @@ import { expressYupMiddleware } from "express-yup-middleware";
 import { GeneralFeedbackController } from "../controllers/GeneralFeedbacks.controller";
 import createGeneralFeedbackSchema from "../schemas/generalFeedback/createFeedback.schema";
 
-const generalFeedbackRoute = Router();
+const generalFeedbackRoutes = Router();
 
-generalFeedbackRoute.post(
+generalFeedbackRoutes.post(
   "/",
   expressYupMiddleware({ schemaValidator: createGeneralFeedbackSchema }),
   GeneralFeedbackController.store
 );
-generalFeedbackRoute.get("/", GeneralFeedbackController.index);
+generalFeedbackRoutes.get("/", GeneralFeedbackController.index);
 
-generalFeedbackRoute.get("/:id", GeneralFeedbackController.indexOne);
+generalFeedbackRoutes.get("/:id", GeneralFeedbackController.indexOne);
 
-generalFeedbackRoute.delete("/:id", GeneralFeedbackController.remove);
+generalFeedbackRoutes.delete("/:id", GeneralFeedbackController.remove);
 
-generalFeedbackRoute.patch("/:id", GeneralFeedbackController.update);
+generalFeedbackRoutes.patch("/:id", GeneralFeedbackController.update);
 
-export default generalFeedbackRoute;
+export default generalFeedbackRoutes;

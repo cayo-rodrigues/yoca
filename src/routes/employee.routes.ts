@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
 import EmployeesController from "../controllers/Employee.controller";
-import createEmployeeSchema from "../schemas/createEmployee.schema";
+import createEmployeeSchema from "../schemas/employees/createEmployee.schema";
 
-const employeeRoute = Router();
+const employeeRoutes = Router();
 
-employeeRoute.post(
+employeeRoutes.post(
   "/",
   expressYupMiddleware({ schemaValidator: createEmployeeSchema }),
   EmployeesController.store
 );
-employeeRoute.get("/", EmployeesController.index);
+employeeRoutes.get("/", EmployeesController.index);
 
-export default employeeRoute;
+export default employeeRoutes;

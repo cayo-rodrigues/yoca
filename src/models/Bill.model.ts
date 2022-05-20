@@ -3,23 +3,28 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
 import Order from "./Order.model";
 
 @Entity("bills")
 class Bill {
-  @PrimaryGeneratedColumn("uuid")
-  readonly id: string;
+  @PrimaryGeneratedColumn("increment", { type: "bigint" })
+  readonly id: number;
 
   @Column({ type: "boolean", default: false })
   paid: boolean;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2, default: 0.00 })
+  @Column({
+    name: "total",
+    type: "decimal",
+    precision: 8,
+    scale: 2,
+    default: 0.0,
+  })
   total: number;
 
   @OneToMany(() => Order, (order) => order.bill, {
