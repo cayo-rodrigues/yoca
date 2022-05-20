@@ -3,8 +3,12 @@ import { expressYupMiddleware } from "express-yup-middleware";
 
 import EmployeesController from "../controllers/Employee.controller";
 
+import ensureAdminPermissionMiddleware from "../middlewares/ensureAdminPermission.middleware";
+
 
 const employeesRoutes = Router();
+
+employeesRoutes.use(ensureAdminPermissionMiddleware);
 
 employeesRoutes.post(
   "/",
