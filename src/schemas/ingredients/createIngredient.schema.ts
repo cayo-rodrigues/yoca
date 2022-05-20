@@ -9,23 +9,19 @@ const createIngredientSchema = {
         name: yup
           .string()
           .max(164, "name field has a max of 164 characters")
-          .required("name field is required")
-          .transform((value: string) => value.toLowerCase().trim()),
+          .required("name field is required"),
         measure: yup
           .string()
           .max(3, "measure field has a max of 3 characters")
-          .required("measure field is required")
-          .transform((value: string) => value.toLowerCase().trim()),
+          .required("measure field is required"),
         amount: yup
           .number()
           .positive("amount field can't be negative")
-          .required("amount field is required")
-          .transform((value: number) => roundToTwo(value)),
+          .required("amount field is required"),
         amountMax: yup
           .number()
           .positive("amountMax field can't be negative")
-          .required("amountMax field is required")
-          .transform((value: number) => roundToTwo(value)),
+          .required("amountMax field is required"),
         amountMin: yup
           .number()
           .positive("amountMin field can't be negative")
@@ -33,8 +29,7 @@ const createIngredientSchema = {
           .lessThan(
             yup.ref("amountMax"),
             "amountMin should be less than amountMax"
-          )
-          .transform((value: number) => roundToTwo(value)),
+          ),
       }),
       validateOptions: {
         abortEarly: false,
