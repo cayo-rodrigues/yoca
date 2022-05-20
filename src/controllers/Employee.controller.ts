@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
-import CreateEmployeeService from "../services/Employee/createEmployee.service";
-import ListAllEmployeesService from "../services/Employee/ListAllEmployees.service";
+import CreateEmployeeService from "../services/Employees/CreateEmployee.service";
+import deleteEmployeeService from "../services/Employees/DeleteEmployee.service";
+import ListAllEmployeesService from "../services/Employees/ListAllEmployees.service";
+import showEmployeeService from "../services/Employees/ShowEmployee.service";
+import updateEmployeeService from "../services/Employees/UpdateEmployee.service";
 
 export default class EmployeesController {
   static async store(req: Request, res: Response) {
     const data = req.body;
-    const loggedInUser = req.user;
 
-    const employee = await CreateEmployeeService.execute({
-      loggedInUser,
-      data,
-    });
+    const employee = await CreateEmployeeService.execute(data);
 
     res.status(201).json({
       message: "Employee created",
@@ -21,12 +20,36 @@ export default class EmployeesController {
   static async index(req: Request, res: Response) {
     const employees = await ListAllEmployeesService.execute();
 
-    res.status(201).json(employees);
+    res.status(200).json(employees);
   }
 
-  static async show(req: Request, res: Response) {}
+  static async show(req: Request, res: Response) {
+    const { id } = req.params;
 
-  static async update(req: Request, res: Response) {}
+    const employee = await showEmployeeService.execute(id);
 
-  static async delete(req: Request, res: Response) {}
+    res.status(200).json(employee);
+  }
+
+  static async update(req: Request, res: Response) {
+    const updateData = req.body;
+    const loggedUser = req.user;
+    const { id } = req.params;
+
+    const employee = await updateEmployeeService.execute({
+      id,
+      updateData,
+      loggedUser,
+    });
+
+    res.status(200).json(employee);
+  }
+
+  static async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await deleteEmployeeService.execute(id);
+
+    res.status(204).json();
+  }
 }
