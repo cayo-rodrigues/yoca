@@ -11,7 +11,7 @@ class UpdateIngredientService {
     amountMin,
     measure,
     name,
-  }: IBaseIngredientFull): Promise<any> {
+  }: IBaseIngredientFull): Promise<Ingredient> {
     const ingredientRepo = AppDataSource.getRepository(Ingredient);
 
     const updatedIngredient = await ingredientRepo
