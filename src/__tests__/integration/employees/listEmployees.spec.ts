@@ -50,7 +50,7 @@ describe(" GET - /employees ", () => {
     expect(listEmployeesResponse.status).toBe(200);
     expect(listEmployeesResponse.body).toHaveProperty("reduce");
     expect(listEmployeesResponse.body).toEqual(
-      expect.arrayContaining([createEmployeeResponse.body])
+      expect.arrayContaining([createEmployeeResponse.body.employee])
     );
   });
 

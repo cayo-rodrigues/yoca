@@ -98,8 +98,6 @@ describe("POST - /ingredients", () => {
         amountMin: 15,
       });
 
-    console.log(createIngredientResponse);
-
     expect(createIngredientResponse.status).toBe(401);
     expect(createIngredientResponse.body).toEqual(
       expect.objectContaining({
