@@ -45,6 +45,9 @@ const ensureAuthMiddleware = async (
 
     next();
   } catch (err) {
+    if (err instanceof AppError) {
+      throw new AppError(err.message, 401);
+    }
     throw new AppError("Invalid token", 401);
   }
 };
