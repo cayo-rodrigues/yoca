@@ -3,14 +3,7 @@ import AppError from "../../errors/AppError";
 import Employee from "../../models/Employee.model";
 import { hash } from "bcryptjs";
 import { instanceToInstance } from "class-transformer";
-
-interface CreateEmployeeServiceParams {
-  phone: string;
-  name: string;
-  email: string;
-  password: string;
-  accessLevel: number;
-}
+import { CreateEmployeeServiceParams } from "../../interfaces/Employee.interface";
 
 class CreateEmployeeService {
   static async execute(data: CreateEmployeeServiceParams): Promise<Employee> {

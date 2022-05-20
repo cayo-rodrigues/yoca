@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import CreateEmployeeService from "../services/Employee/createEmployee.service";
-import deleteEmployeeService from "../services/Employee/deleteEmployee.service";
-import ListAllEmployeesService from "../services/Employee/ListAllEmployees.service";
-import showEmployeeService from "../services/Employee/showEmployee.service";
+import CreateEmployeeService from "../services/Employees/createEmployee.service";
+import deleteEmployeeService from "../services/Employees/deleteEmployee.service";
+import ListAllEmployeesService from "../services/Employees/ListAllEmployees.service";
+import showEmployeeService from "../services/Employees/showEmployee.service";
+import updateEmployeeService from "../services/Employees/updateEmployee.service";
 
 export default class EmployeesController {
   static async store(req: Request, res: Response) {
@@ -30,7 +31,19 @@ export default class EmployeesController {
     res.status(200).json(employee);
   }
 
-  static async update(req: Request, res: Response) {}
+  static async update(req: Request, res: Response) {
+    const updateData = req.body;
+    const loggedUser = req.user;
+    const { id } = req.params;
+
+    const employee = await updateEmployeeService.execute({
+      id,
+      updateData,
+      loggedUser,
+    });
+
+    res.status(200).json(employee);
+  }
 
   static async delete(req: Request, res: Response) {
     const { id } = req.params;
