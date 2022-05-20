@@ -53,7 +53,13 @@ describe(" DELETE - /categories/:id ", () => {
 
     expect(delOneCategoryResponse.status).toBe(200);
     expect(delOneCategoryResponse.body).toHaveLength(0);
-    expect((await request(app).delete("/categories/uuid")).status).toBe(404);
+    expect(
+      (
+        await request(app)
+          .delete("/categories/uuid")
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      ).status
+    ).toBe(404);
   });
 
   it("Should not be able to delete category without accessLevel 1 or 2", async () => {

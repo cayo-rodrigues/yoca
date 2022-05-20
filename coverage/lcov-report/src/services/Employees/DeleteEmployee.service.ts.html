@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/services/GeneralFeedbacks/updateGeneralFeedback.service.ts</title>
+    <title>Code coverage report for src/services/Employees/DeleteEmployee.service.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/services/GeneralFeedbacks</a> updateGeneralFeedback.service.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/services/Employees</a> DeleteEmployee.service.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">36% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/20</span>
+                <span class='fraction'>9/25</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/20</span>
+                <span class='fraction'>9/25</span>
             </div>
         
             
@@ -83,46 +83,61 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import AppDataSource from "../../data-source";
+import Employee from "../../models/Employee.model";
 import AppError from "../../errors/AppError";
-import { IGeneralFeedback } from "../../interfaces/GeneralFeedback.interface";
-import GeneralFeedback from "../../models/GeneralFeedback.model";
 &nbsp;
-export default class UpdateGeneralFeedback {
-  static async <span class="fstat-no" title="function not covered" >execute(id: string, feedback: IGeneralFeedback) {</span>
-<span class="cstat-no" title="statement not covered" >    const generalFeedbackRepository =</span>
-<span class="cstat-no" title="statement not covered" >      AppDataSource.getRepository(GeneralFeedback);</span>
-<span class="cstat-no" title="statement not covered" >    const updatedFeedback = await generalFeedbackRepository.preload({</span>
-<span class="cstat-no" title="statement not covered" >      id,</span>
-<span class="cstat-no" title="statement not covered" >      ...feedback,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    if (!feedback) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new AppError("General Feedback not found", 404);</span>
+class deleteEmployeeService {
+  static async <span class="fstat-no" title="function not covered" >execute(id: string): Promise&lt;void&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const employeeRepository = AppDataSource.getRepository(Employee);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const employee = await employeeRepository.findOne({ where: { id } });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (!employee) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new AppError("Employee with this id not found", 404);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    await generalFeedbackRepository.save(updatedFeedback as IGeneralFeedback);</span>
-<span class="cstat-no" title="statement not covered" >    return updatedFeedback;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (employee.accessLevel === 1) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new AppError("Super user cannot be deleted", 405);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await employeeRepository.softDelete(id);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 }
+&nbsp;
+export default deleteEmployeeService;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

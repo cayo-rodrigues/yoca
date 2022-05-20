@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/schemas/createEmployee.schema.ts</title>
+    <title>Code coverage report for src/schemas/ingredients/updateIngredient.schema.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/schemas</a> createEmployee.schema.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/schemas/ingredients</a> updateIngredient.schema.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -85,7 +85,23 @@
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -109,26 +125,34 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as yup from "yup";
 &nbsp;
-const createEmployeeSchema = {
+const updateIngredientSchema = {
   schema: {
-    user: {
-      yupSchema: yup.object().shape({
-        id: yup.string().uuid().required(),
-      }),
-    },
     body: {
       yupSchema: yup.object().shape({
-        name: yup.string().max(164).required(),
-        phone: yup.string().min(11).max(15).required(),
-        email: yup.string().email().max(164).required(),
-        password: yup.string().min(8).required(),
-        accessLevel: yup.number().min(2).max(5).required(),
+        name: yup.string().max(164, "name field has a max of 164 characters"),
+        measure: yup.string().max(3, "measure field has a max of 3 characters"),
+        amount: yup.number().positive("amount field can't be negative"),
+        amountMax: yup
+          .number()
+          .positive("amountMax field can't be negative")
+          .required("Field amountMax is required when updating ingredient"),
+        amountMin: yup
+          .number()
+          .positive("amountMin field can't be negative")
+          .lessThan(
+            yup.ref("amountMax"),
+            "amountMin should be less than amountMax"
+          )
+          .required("Field amountMin is required when updating ingredient"),
       }),
+      validateOptions: {
+        abortEarly: false,
+      },
     },
   },
 };
 &nbsp;
-export default createEmployeeSchema;
+export default updateIngredientSchema;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -136,16 +160,16 @@ export default createEmployeeSchema;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu May 19 2022 21:33:33 GMT-0300 (Horário Padrão de Brasília)
+                at Fri May 20 2022 17:23:09 GMT-0300 (Horário Padrão de Brasília)
             </div>
-        <script src="../../prettify.js"></script>
+        <script src="../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../sorter.js"></script>
-        <script src="../../block-navigation.js"></script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
     </body>
 </html>
     
