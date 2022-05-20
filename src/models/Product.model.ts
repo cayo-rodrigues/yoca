@@ -8,6 +8,7 @@ import {
   JoinTable,
   ManyToMany,
 } from "typeorm";
+
 import ProductFeedback from "./ProductFeedback.model";
 import Category from "./Category.model";
 import ProductIngredient from "./ProductsIngredients.model";

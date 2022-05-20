@@ -1,4 +1,3 @@
-import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
@@ -7,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
+import { Exclude } from "class-transformer";
 
 @Entity("employees")
 @Check('"access_level" BETWEEN 1 AND 5')

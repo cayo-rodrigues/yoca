@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+
 import Ingredient from "./Ingredient.model";
 import Product from "./Product.model";
 

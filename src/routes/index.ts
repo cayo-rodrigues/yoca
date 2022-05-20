@@ -2,24 +2,24 @@ import { Router } from "express";
 
 import ensureAuthMiddleware from "../middlewares/ensureAuth.middleware";
 
-import productsRouter from "./products.routes";
-import superRoute from "./super.route";
-import sessionsRoute from "./sessions.route";
-import employeeRoute from "./employee.route";
+import productsRoutes from "./products.routes";
+import superRoutes from "./super.routes";
+import sessionsRoutes from "./sessions.routes";
+import employeeRoutes from "./employee.routes";
 import ingredientsRoutes from "./ingredients.routes";
-import generalFeedbackRoute from "./generalFeedback.route";
+import generalFeedbackRoutes from "./generalFeedback.routes";
 
 const routes = Router();
 
-routes.use("/super", superRoute);
-routes.use("/sessions", sessionsRoute);
+routes.use("/super", superRoutes);
+routes.use("/sessions", sessionsRoutes);
 
 routes.use(ensureAuthMiddleware);
 
-routes.use("/employees", employeeRoute);
+routes.use("/employees", employeeRoutes);
 routes.use("/ingredients", ingredientsRoutes);
-routes.use("/products", productsRouter);
+routes.use("/products", productsRoutes);
 
-routes.use("/feedbacks/general", generalFeedbackRoute);
+routes.use("/feedbacks/general", generalFeedbackRoutes);
 
 export default routes;

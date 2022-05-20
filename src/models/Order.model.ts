@@ -6,15 +6,13 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
   OneToMany,
   AfterLoad,
 } from "typeorm";
+
 import Employee from "./Employee.model";
 
 import Bill from "./Bill.model";
-import Product from "./Product.model";
 import OrderProduct from "./OrdersProducts.model";
 
 export enum OrderStatus {

@@ -36,7 +36,7 @@ class CreateSuperService {
       accessLevel: 1,
     });
 
-    employeeRepository.save(superUser);
+    await employeeRepository.save(superUser);
 
     const superUserWithoutPassword = instanceToInstance(superUser);
 
