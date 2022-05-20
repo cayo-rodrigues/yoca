@@ -1,10 +1,10 @@
 import AppDataSource from "../../data-source";
 import Ingredient from "../../models/Ingredient.model";
-import { ICreateIngredient } from "../../interfaces/Ingredient.interface";
+import { IBaseIngredient } from "../../interfaces/Ingredient.interface";
 import AppError from "../../errors/AppError";
 
 class CreateIngredientService {
-  static async execute(ingredientInfo: ICreateIngredient): Promise<Ingredient> {
+  static async execute(ingredientInfo: IBaseIngredient): Promise<Ingredient> {
     const ingredientRepo = AppDataSource.getRepository(Ingredient);
 
     const existingIngredient = await ingredientRepo.findOne({
