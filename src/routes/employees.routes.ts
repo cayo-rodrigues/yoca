@@ -5,6 +5,8 @@ import EmployeesController from "../controllers/Employee.controller";
 
 import ensureAdminPermissionMiddleware from "../middlewares/ensureAdminPermission.middleware";
 
+import createEmployeeSchema from "../schemas/employees/updateEmployee.schema";
+import updateEmployeeSchema from "../schemas/employees/updateEmployee.schema";
 
 const employeesRoutes = Router();
 
@@ -20,6 +22,11 @@ employeesRoutes.get("/", EmployeesController.index);
 
 employeesRoutes.get("/:id", EmployeesController.show);
 
+employeesRoutes.patch(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: updateEmployeeSchema }),
+  EmployeesController.update
+);
 
 employeesRoutes.delete("/:id", EmployeesController.delete);
 

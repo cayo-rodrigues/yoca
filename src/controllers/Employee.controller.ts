@@ -3,6 +3,7 @@ import CreateEmployeeService from "../services/Employees/CreateEmployee.service"
 import deleteEmployeeService from "../services/Employees/DeleteEmployee.service";
 import ListAllEmployeesService from "../services/Employees/ListAllEmployees.service";
 import showEmployeeService from "../services/Employees/ShowEmployee.service";
+import updateEmployeeService from "../services/Employees/UpdateEmployee.service";
 
 export default class EmployeesController {
   static async store(req: Request, res: Response) {
@@ -26,6 +27,20 @@ export default class EmployeesController {
     const { id } = req.params;
 
     const employee = await showEmployeeService.execute(id);
+
+    res.status(200).json(employee);
+  }
+
+  static async update(req: Request, res: Response) {
+    const updateData = req.body;
+    const loggedUser = req.user;
+    const { id } = req.params;
+
+    const employee = await updateEmployeeService.execute({
+      id,
+      updateData,
+      loggedUser,
+    });
 
     res.status(200).json(employee);
   }
