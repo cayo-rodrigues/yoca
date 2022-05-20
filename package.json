@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "start": "pm2 start dist/server.js -l dist/logs.txt -i max",
-    "reload": "pm2 reload dist/server.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
+    "reload": "pm2 reload dist/src/server.js",
     "monit": "pm2 monit",
     "stop": "pm2 stop server",
     "delete": "pm2 delete server",
@@ -29,6 +29,7 @@
     "pm2": "^5.2.0",
     "reflect-metadata": "^0.1.13",
     "swagger-ui-express": "^4.4.0",
+    "ts-node": "^10.7.0",
     "typeorm": "^0.3.6",
     "uuid": "^8.3.2",
     "yup": "^0.32.11"

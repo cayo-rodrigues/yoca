@@ -14,7 +14,10 @@ const AppDataSource =
     : new DataSource({
         type: "postgres",
         host,
-        url: process.env.DB_URL,
+        url:
+          process.env.NODE_ENV === "production"
+            ? process.env.DATABASE_URL
+            : process.env.DB_URL,
         synchronize: false,
         logging: true,
         ssl:
@@ -23,11 +26,11 @@ const AppDataSource =
             : false,
         entities:
           process.env.NODE_ENV === "production"
-            ? ["dist/models/*.js"]
+            ? ["dist/src/models/*.js"]
             : ["src/models/*.ts"],
         migrations:
           process.env.NODE_ENV === "production"
-            ? ["dist/migrations/*.js"]
+            ? ["dist/src/migrations/*.js"]
             : ["src/migrations/*.ts"],
         migrationsRun: true,
       });
