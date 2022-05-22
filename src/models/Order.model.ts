@@ -50,8 +50,10 @@ export default class Order {
   @JoinColumn({ name: "bill_id" })
   bill: Bill;
 
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
-  orderProducts: OrderProduct[];
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, {
+    eager: true,
+  })
+  products: OrderProduct[];
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
@@ -61,9 +63,6 @@ export default class Order {
 
   @AfterLoad()
   getTotalPrice() {
-    this.total = this.orderProducts.reduce(
-      (acc, curr) => acc + curr.totalPrice,
-      0
-    );
+    this.total = this.products.reduce((acc, curr) => acc + curr.totalPrice, 0);
   }
 }

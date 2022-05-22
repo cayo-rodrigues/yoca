@@ -23,13 +23,17 @@ class OrderProduct {
   @Column({ type: "decimal", precision: 8, scale: 2, name: "total_price" })
   totalPrice: number;
 
-  @ManyToOne(() => Order, (order) => order.orderProducts)
-  @JoinColumn({ name: "order_id" })
+  @ManyToOne(() => Order)
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderProducts, { eager: true })
-  @JoinColumn({ name: "product_id" })
+  @ManyToOne(() => Product, { eager: true })
   product: Product;
+
+  @Column()
+  productId: string;
+
+  @Column()
+  orderId: string;
 
   @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
