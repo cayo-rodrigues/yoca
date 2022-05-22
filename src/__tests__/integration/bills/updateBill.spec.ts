@@ -3,9 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
-
 describe(" UPDATE - /bills/:id ", () => {
   let connection: DataSource;
 
@@ -26,8 +23,6 @@ describe(" UPDATE - /bills/:id ", () => {
   });
 
   it("Should be able to update one bill", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
 
     await request(app).post("/super").send({
       name: "testaurant",
@@ -40,8 +35,6 @@ describe(" UPDATE - /bills/:id ", () => {
       email: "admin@email.com",
       password: "admin123",
     });
-
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const waiterResponse = await request(app)
       .post("/employees")
@@ -58,14 +51,13 @@ describe(" UPDATE - /bills/:id ", () => {
       email: "johnnydoe@email.com",
       password: "12345678",
     });
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const billResponse = await request(app)
       .post("/bills")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     const updateBillResponse = await request(app)
-      .patch("/bills/uuid")
+      .patch("/bills/1")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`)
       .send(mockBillUpdate);
 
@@ -77,14 +69,11 @@ describe(" UPDATE - /bills/:id ", () => {
   });
 
   it("Should not be able to update one bill with accessLevel greater than 3", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
-
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
 
     const waiterResponse = await request(app)
       .post("/employees")
@@ -96,7 +85,6 @@ describe(" UPDATE - /bills/:id ", () => {
         password: "12345678",
         accessLevel: 4,
       });
-    uuidSpy.mockReturnValueOnce("some-uuid");
 
     const billResponse = await request(app)
       .post("/bills")
@@ -107,7 +95,7 @@ describe(" UPDATE - /bills/:id ", () => {
     });
 
     const updateBillResponse = await request(app)
-      .patch("/bills/some-uuid")
+      .patch("/bills/1")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`)
       .send(mockBillUpdate);
 
@@ -123,7 +111,7 @@ describe(" UPDATE - /bills/:id ", () => {
     });
 
     const updateBillResponse = await request(app)
-      .patch("/bills/unexistent-uuid")
+      .patch("/bills/3")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(updateBillResponse.status).toBe(404);

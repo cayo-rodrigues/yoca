@@ -3,9 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
-
 describe(" GET - /bills/:id ", () => {
   let connection: DataSource;
 
@@ -22,8 +19,6 @@ describe(" GET - /bills/:id ", () => {
   });
 
   it("Should be able to list one bill", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
 
     await request(app).post("/super").send({
       name: "testaurant",
@@ -36,8 +31,6 @@ describe(" GET - /bills/:id ", () => {
       email: "admin@email.com",
       password: "admin123",
     });
-
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const waiterResponse = await request(app)
       .post("/employees")
@@ -54,14 +47,13 @@ describe(" GET - /bills/:id ", () => {
       email: "johnnydoe@email.com",
       password: "12345678",
     });
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const billResponse = await request(app)
       .post("/bills")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     const listOneBillResponse = await request(app)
-      .get("/bills/uuid")
+      .get("/bills/1")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listOneBillResponse.status).toBe(200);
@@ -72,14 +64,11 @@ describe(" GET - /bills/:id ", () => {
   });
 
   it("Should not be able to list one bill with accessLevel greater than 4", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
-
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
 
     const waiterResponse = await request(app)
       .post("/employees")
@@ -98,7 +87,7 @@ describe(" GET - /bills/:id ", () => {
     });
 
     const listBillResponse = await request(app)
-      .get("/bills/uuid")
+      .get("/bills/1")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listBillResponse.status).toBe(401);
@@ -113,7 +102,7 @@ describe(" GET - /bills/:id ", () => {
     });
 
     const listOneBillResponse = await request(app)
-      .get("/bills/unexistent-uuid")
+      .get("/bills/6")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listOneBillResponse.status).toBe(404);

@@ -55,7 +55,7 @@ describe("POST - /bills", () => {
     expect(billResponse.body).toMatchObject({
       message: "Bill created",
       bill: {
-        id: "bigserial",
+        id: 1,
         paid: false,
         total: 0.0,
         orders: [],

@@ -3,9 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
-
 describe(" DELETE - /bills/:id ", () => {
   let connection: DataSource;
 
@@ -22,8 +19,6 @@ describe(" DELETE - /bills/:id ", () => {
   });
 
   it("Should be able to delete one bill", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
 
     await request(app).post("/super").send({
       name: "testaurant",
@@ -36,7 +31,6 @@ describe(" DELETE - /bills/:id ", () => {
       email: "admin@email.com",
       password: "admin123",
     });
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const waiterResponse = await request(app)
       .post("/employees")
@@ -54,14 +48,12 @@ describe(" DELETE - /bills/:id ", () => {
       password: "12345678",
     });
 
-    uuidSpy.mockReturnValueOnce("uuid");
-
     const billResponse = await request(app)
       .post("/bills")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     const delOneBillResponse = await request(app)
-      .delete("/bills/uuid")
+      .delete("/bills/1")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(delOneBillResponse.status).toBe(200);
@@ -76,13 +68,11 @@ describe(" DELETE - /bills/:id ", () => {
   });
 
   it("Should not be able to delete bill with accessLevel greater than 3", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const waiterResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -94,8 +84,6 @@ describe(" DELETE - /bills/:id ", () => {
         accessLevel: 4,
       });
 
-    uuidSpy.mockReturnValueOnce("some-uuid");
-
     const billResponse = await request(app)
       .post("/bills")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
@@ -106,7 +94,7 @@ describe(" DELETE - /bills/:id ", () => {
     });
 
     const delCategoriesResponse = await request(app)
-      .delete("/bills/some-uuid")
+      .delete("/bills/2")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(delCategoriesResponse.status).toBe(401);
@@ -121,7 +109,7 @@ describe(" DELETE - /bills/:id ", () => {
     });
 
     const delOneBillResponse = await request(app)
-      .delete("/bills/aleatory-uuid")
+      .delete("/bills/9")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delOneBillResponse.status).toBe(404);
