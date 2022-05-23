@@ -12,7 +12,9 @@ class BillsController {
   }
 
   static async index(req: Request, res: Response) {
-    const bills = await ListBillsService.execute();
+    const listUnpaid = !!req.query.unpaid;
+
+    const bills = await ListBillsService.execute({ listUnpaid });
 
     return res.status(200).json(bills);
   }
