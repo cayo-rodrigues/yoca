@@ -1,13 +1,13 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-
-import { Exclude } from "class-transformer";
 
 @Entity("employees")
 @Check('"access_level" BETWEEN 1 AND 5')
@@ -36,6 +36,10 @@ class Employee {
 
   @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  deletedAt: Date;
 }
 
 export default Employee;

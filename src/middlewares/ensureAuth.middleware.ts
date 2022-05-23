@@ -29,8 +29,6 @@ const ensureAuthMiddleware = async (
 
     const decoded = jwt.verify(token, process.env.SECRET || "default");
 
-    console.log({ decoded });
-
     const { id } = decoded as IDecoded;
 
     const employeeRepository = AppDataSource.getRepository(Employee);
@@ -47,6 +45,9 @@ const ensureAuthMiddleware = async (
 
     next();
   } catch (err) {
+    if (err instanceof AppError) {
+      throw new AppError(err.message, 401);
+    }
     throw new AppError("Invalid token", 401);
   }
 };

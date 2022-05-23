@@ -1,7 +1,12 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
+<<<<<<< HEAD:src/migrations/1652995373564-initialMigration.ts
+export class initialMigration1652995373564 implements MigrationInterface {
+    name = 'initialMigration1652995373564'
+=======
 export class initialMigration1652995403530 implements MigrationInterface {
     name = 'initialMigration1652995403530'
+>>>>>>> dc15a0410632d4f539a50712b3a702f4d955e845:src/migrations/1652995403530-initialMigration.ts
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "employees" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(164) NOT NULL, "phone" character varying(15) NOT NULL, "email" character varying(164) NOT NULL, "password" character varying NOT NULL, "access_level" smallint NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "UQ_cbc362d1c574464a63d3acc3ead" UNIQUE ("phone"), CONSTRAINT "UQ_765bc1ac8967533a04c74a9f6af" UNIQUE ("email"), CONSTRAINT "CHK_9f210fcb59a27290211cd41cbe" CHECK ("access_level" BETWEEN 1 AND 5), CONSTRAINT "PK_b9535a98350d5b26e7eb0c26af4" PRIMARY KEY ("id"))`);

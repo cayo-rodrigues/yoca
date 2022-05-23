@@ -50,7 +50,7 @@ describe(" GET - /ingredients ", () => {
     expect(listIngredientsResponse.status).toBe(200);
     expect(listIngredientsResponse.body).toHaveProperty("reduce");
     expect(listIngredientsResponse.body).toEqual(
-      expect.arrayContaining([createIngredientResponse.body])
+      expect.arrayContaining([createIngredientResponse.body.ingredient])
     );
   });
 

@@ -58,7 +58,13 @@ describe(" DELETE - /ingredients/:id ", () => {
 
     expect(delIngredientResponse.status).toBe(204);
     expect(delIngredientResponse.body).toHaveLength(0);
-    expect((await request(app).delete("/ingredients/uuid")).status).toBe(404);
+    expect(
+      (
+        await request(app)
+          .delete("/ingredients/uuid")
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      ).status
+    ).toBe(404);
   });
   it("Should not be able to delete an ingredient without sending accessLevel 1 or 2", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
