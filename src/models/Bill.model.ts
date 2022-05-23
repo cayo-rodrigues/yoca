@@ -23,10 +23,10 @@ class Bill {
   @Column()
   total: number;
 
-  // @OneToMany(() => Order, (order) => order.billId, {
-  //   eager: true,
-  // })
-  // orders: Order[];
+  @OneToMany(() => Order, (order) => order.bill, {
+    eager: true,
+  })
+  orders: Order[];
 
   @CreateDateColumn()
   createdAt: Date;
@@ -36,7 +36,7 @@ class Bill {
 
   @Exclude()
   @DeleteDateColumn()
-  deletedAd: Date;
+  deletedAt: Date;
 }
 
 export default Bill;
