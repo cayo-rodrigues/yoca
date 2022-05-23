@@ -1,13 +1,16 @@
 import AppDataSource from "../../data-source";
+import { IListBills } from "../../interfaces/Bills.interface";
 import Bill from "../../models/Bill.model";
 
 class ListBillsService {
-  static async execute(): Promise<Bill[]> {
+  static async execute({ listUnpaid }: IListBills): Promise<Bill[]> {
     const billsRepository = AppDataSource.getRepository(Bill);
 
-    const bills = billsRepository.find();
+    if (listUnpaid) {
+      return await billsRepository.findBy({ paid: false });
+    }
 
-    return bills;
+    return await billsRepository.find();
   }
 }
 
