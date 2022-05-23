@@ -28,7 +28,7 @@ export default class ProductFeedback {
   @Column()
   productId: string;
 
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.name)
   product: Product;
 
   @CreateDateColumn()
