@@ -1,23 +1,12 @@
 import { In } from "typeorm";
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { ICreateOrder } from "../../interfaces/Orders.interface";
 import Bill from "../../models/Bill.model";
 import Employee from "../../models/Employee.model";
 import Order from "../../models/Order.model";
 import OrderProduct from "../../models/OrdersProducts.model";
 import Product from "../../models/Product.model";
-
-interface OrderProductObj {
-  quantity: number;
-  productId: string;
-}
-
-interface CreateOrderServiceParams {
-  ordersProducts: OrderProductObj[];
-  table: string;
-  employeeId: string;
-  billId: number;
-}
 
 class CreateOrderService {
   static async execute({
@@ -25,7 +14,7 @@ class CreateOrderService {
     table,
     employeeId,
     billId,
-  }: CreateOrderServiceParams): Promise<Order> {
+  }: ICreateOrder): Promise<Order> {
     const orderRepo = AppDataSource.getRepository(Order);
     const productsRepo = AppDataSource.getRepository(Product);
     const employeeRepo = AppDataSource.getRepository(Employee);

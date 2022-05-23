@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
+import { ICreateOrder } from "../interfaces/Orders.interface";
 import CreateOrderService from "../services/Orders/CreateOrder.service";
 import ListOrdersService from "../services/Orders/ListOrders.service";
 
 class OrdersController {
   static async store(req: Request, res: Response) {
-    const orderInfo = req.body;
+    const orderInfo: ICreateOrder = req.body;
 
     const order = await CreateOrderService.execute(orderInfo);
 
