@@ -36,7 +36,7 @@ class Bill {
 
   @Exclude()
   @DeleteDateColumn()
-  deletedAd: Date;
+  deletedAt: Date;
 }
 
 export default Bill;

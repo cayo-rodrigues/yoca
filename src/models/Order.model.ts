@@ -35,7 +35,7 @@ export default class Order {
   employeeId: string;
 
   @Column()
-  billId: string;
+  billId: number;
 
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, {
     eager: true,

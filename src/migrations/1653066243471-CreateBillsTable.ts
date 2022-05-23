@@ -8,7 +8,7 @@ export class CreateBillsTable1653066243471 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "bigint",
+            type: "bigserial",
             isPrimary: true,
             generationStrategy: "increment",
           },
