@@ -32,20 +32,6 @@ class CreateOrderService {
       throw new AppError("Invalid list of ids", 400);
     }
 
-    // THERE'S GOTTA BE A BETTER WAY
-    const summarizedOrdersProducts = productsIds.map((id) => {
-      const occurrencies = ordersProducts.filter(
-        ({ productId }) => productId == id
-      );
-
-      const totalQuantity = occurrencies.reduce(
-        (acc, curr) => acc + curr.quantity,
-        0
-      );
-
-      return { productId: id, quantity: totalQuantity };
-    });
-
     const employee = await employeeRepo.findOneBy({
       id: employeeId,
     });
@@ -72,7 +58,7 @@ class CreateOrderService {
 
     await orderRepo.save(order);
 
-    summarizedOrdersProducts.forEach(async ({ productId, quantity }) => {
+    ordersProducts.forEach(async ({ productId, quantity }) => {
       const orderProduct = orderProductRepo.create({
         orderId: order.id,
         productId,
