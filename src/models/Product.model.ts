@@ -13,6 +13,8 @@ import ProductFeedback from "./ProductFeedback.model";
 import Category from "./Category.model";
 import ProductIngredient from "./ProductsIngredients.model";
 import OrderProduct from "./OrdersProducts.model";
+import { Exclude, Expose } from "class-transformer";
+import Ingredient from "./Ingredient.model";
 
 @Entity("products")
 export default class Product {
@@ -28,9 +30,16 @@ export default class Product {
   @Column()
   calories: number;
 
-  @CreateDateColumn({ name: "created_at" })
+  @OneToMany(
+    () => ProductIngredient,
+    (ProductIngredient) => ProductIngredient.product,
+    { eager: true }
+  )
+  productIngredients: ProductIngredient[];
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

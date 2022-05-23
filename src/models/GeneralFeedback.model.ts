@@ -20,10 +20,10 @@ export default class GeneralFeedback {
   @Column()
   rating: number;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @DeleteDateColumn()

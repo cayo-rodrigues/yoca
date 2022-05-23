@@ -15,10 +15,10 @@ export default class ProductCategory {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ name: "product_id" })
+  @Column()
   productId: string;
 
-  @Column({ name: "category_id" })
+  @Column()
   categoryId: string;
 
   @OneToMany(() => Category, (Category) => Category.id)
@@ -27,12 +27,12 @@ export default class ProductCategory {
   @OneToMany(() => Product, (Product) => Product.id)
   product: Product;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }

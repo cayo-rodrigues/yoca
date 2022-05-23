@@ -31,25 +31,25 @@ export class CreateOrdersTable1653066650601 implements MigrationInterface {
             scale: 2,
           },
           {
-            name: "employee_id",
+            name: "employeeId",
             type: "uuid",
           },
           {
-            name: "bill_id",
+            name: "billId",
             type: "bigint",
           },
           {
-            name: "created_at",
+            name: "createdAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "updated_at",
+            name: "updatedAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "deleted_at",
+            name: "deletedAt",
             type: "timestamp",
             isNullable: true,
             default: null,

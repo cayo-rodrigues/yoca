@@ -26,16 +26,11 @@ class Bill {
   })
   orders: Order[];
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
-
-  @AfterLoad()
-  getTotalPrice() {
-    this.total = this.orders.reduce((acc, curr) => acc + curr.total, 0);
-  }
 }
 
 export default Bill;

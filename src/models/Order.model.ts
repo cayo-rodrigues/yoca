@@ -30,18 +30,18 @@ export default class Order {
   @Column()
   total: number;
 
-  @Column({ name: "employee_id" })
+  @Column()
   employeeId: string;
 
-  @Column({ name: "bill_id" })
+  @Column()
   billId: string;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }

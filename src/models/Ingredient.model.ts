@@ -24,10 +24,10 @@ export default class Ingredient {
   @Column()
   amount: number;
 
-  @Column({ name: "amount_min" })
+  @Column()
   amountMin: number;
 
-  @Column({ name: "amount_max" })
+  @Column()
   amountMax: number;
 
   @OneToMany(
@@ -36,12 +36,12 @@ export default class Ingredient {
   )
   productIngredients: ProductIngredient[];
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }

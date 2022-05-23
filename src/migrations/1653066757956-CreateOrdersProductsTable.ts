@@ -23,32 +23,32 @@ export class CreateOrdersProductsTable1653066757956
             default: 1,
           },
           {
-            name: "total_price",
+            name: "totalPrice",
             type: "decimal",
             precision: 8,
             scale: 2,
             default: 0,
           },
           {
-            name: "order_id",
+            name: "orderId",
             type: "uuid",
           },
           {
-            name: "product_id",
+            name: "productId",
             type: "uuid",
           },
           {
-            name: "created_at",
+            name: "createdAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "updated_at",
+            name: "updatedAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "deleted_at",
+            name: "deletedAt",
             type: "timestamp",
             isNullable: true,
             default: null,

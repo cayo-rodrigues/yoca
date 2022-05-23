@@ -8,7 +8,7 @@ export class CreateAllTablesReferences1653071861041
       "orders",
       new TableForeignKey({
         name: "employeesFK",
-        columnNames: ["employee_id"],
+        columnNames: ["employeeId"],
         referencedColumnNames: ["id"],
         referencedTableName: "employees",
       })
@@ -18,7 +18,7 @@ export class CreateAllTablesReferences1653071861041
       "orders",
       new TableForeignKey({
         name: "billsFK",
-        columnNames: ["bill_id"],
+        columnNames: ["billId"],
         referencedColumnNames: ["id"],
         referencedTableName: "bills",
       })
@@ -28,7 +28,7 @@ export class CreateAllTablesReferences1653071861041
       "orders_products",
       new TableForeignKey({
         name: "ordersFK",
-        columnNames: ["order_id"],
+        columnNames: ["orderId"],
         referencedColumnNames: ["id"],
         referencedTableName: "orders",
       })
@@ -38,7 +38,7 @@ export class CreateAllTablesReferences1653071861041
       "orders_products",
       new TableForeignKey({
         name: "productsFK",
-        columnNames: ["product_id"],
+        columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
       })
@@ -48,7 +48,7 @@ export class CreateAllTablesReferences1653071861041
       "product_feedbacks",
       new TableForeignKey({
         name: "productsFK",
-        columnNames: ["product_id"],
+        columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
       })
@@ -58,7 +58,7 @@ export class CreateAllTablesReferences1653071861041
       "products_ingredients",
       new TableForeignKey({
         name: "productsFK",
-        columnNames: ["product_id"],
+        columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
       })
@@ -68,7 +68,7 @@ export class CreateAllTablesReferences1653071861041
       "products_ingredients",
       new TableForeignKey({
         name: "ingredientsFK",
-        columnNames: ["ingredient_id"],
+        columnNames: ["ingredientId"],
         referencedColumnNames: ["id"],
         referencedTableName: "ingredients",
       })
@@ -78,7 +78,7 @@ export class CreateAllTablesReferences1653071861041
       "products_categories",
       new TableForeignKey({
         name: "productsFK",
-        columnNames: ["product_id"],
+        columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
       })
@@ -88,7 +88,7 @@ export class CreateAllTablesReferences1653071861041
       "products_categories",
       new TableForeignKey({
         name: "categoriesFK",
-        columnNames: ["category_id"],
+        columnNames: ["categoryId"],
         referencedColumnNames: ["id"],
         referencedTableName: "categories",
       })

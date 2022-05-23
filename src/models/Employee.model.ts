@@ -31,19 +31,19 @@ class Employee {
   @Column()
   password: string;
 
-  @Column({ name: "access_level" })
+  @Column()
   accessLevel: number;
 
   @OneToMany(() => Order, (Order) => Order.employeeId)
   orders: Order[];
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }
 

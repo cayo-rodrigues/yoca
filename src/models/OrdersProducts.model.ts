@@ -21,28 +21,28 @@ class OrderProduct {
   @Column()
   quantity: number;
 
-  @Column({ name: "total_price" })
+  @Column()
   totalPrice: number;
 
   @ManyToOne(() => Order, (order) => order.id)
   order: Order;
 
-  @Column({ name: "order_id" })
+  @Column()
   orderId: string;
 
-  @ManyToOne(() => Product, { eager: true })
+  @ManyToOne(() => Product, (product) => product.id)
   product: Product;
 
-  @Column({ name: "product_id" })
+  @Column()
   productId: string;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }
 

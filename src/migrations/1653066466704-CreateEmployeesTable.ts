@@ -38,21 +38,21 @@ export class CreateEmployeesTable1653066466704 implements MigrationInterface {
             type: "varchar",
           },
           {
-            name: "access_level",
+            name: "accessLevel",
             type: "int2",
           },
           {
-            name: "created_at",
+            name: "createdAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "updated_at",
+            name: "updatedAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "deleted_at",
+            name: "deletedAt",
             type: "timestamp",
             isNullable: true,
             default: null,

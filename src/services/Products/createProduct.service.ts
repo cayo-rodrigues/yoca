@@ -23,15 +23,15 @@ class CreateProductService {
 
     await productsRepo.save(product);
 
-    // ingredients.forEach(async (ingredient) => {
-    //   const productIngredient = productsIngredientsRepo.create({
-    //     ingredientId: ingredient.id,
-    //     productId: product.id,
-    //     amount: ingredient.amount,
-    //   });
+    ingredients.forEach(async (ingredient) => {
+      const productIngredient = productsIngredientsRepo.create({
+        ingredientId: ingredient.id,
+        productId: product.id,
+        amount: ingredient.amount,
+      });
 
-    //   await productsIngredientsRepo.save(productIngredient);
-    // });
+      await productsIngredientsRepo.save(productIngredient);
+    });
 
     categories.forEach(async (category) => {
       const productCategory = productsCategoriesRepo.create({

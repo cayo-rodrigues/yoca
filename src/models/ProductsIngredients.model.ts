@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -16,26 +17,27 @@ export default class ProductIngredient {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
+  @Column()
   amount: number;
 
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product)
   product: Product;
 
-  @Column({ name: "product_id" })
+  @Column()
   productId: string;
 
-  @ManyToOne(() => Ingredient, (ingredient) => ingredient.productIngredients, {
-    eager: true,
-  })
+  @ManyToOne(() => Ingredient, (ingredient) => ingredient.productIngredients)
   ingredient: Ingredient;
 
-  @Column({ name: "ingredient_id" })
+  @Column()
   ingredientId: string;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

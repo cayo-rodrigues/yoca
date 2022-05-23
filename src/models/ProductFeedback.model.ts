@@ -24,18 +24,17 @@ export default class ProductFeedback {
   @Column()
   rating: number;
 
-  @Column({ name: "product_id" })
+  @Column()
   productId: string;
 
   @ManyToOne(() => Product, (product) => product.id)
   product: Product;
-
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }

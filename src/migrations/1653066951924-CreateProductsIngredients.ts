@@ -24,25 +24,25 @@ export class CreateProductsIngredients1653066951924
             scale: 2,
           },
           {
-            name: "product_id",
+            name: "productId",
             type: "uuid",
           },
           {
-            name: "ingredient_id",
+            name: "ingredientId",
             type: "uuid",
           },
           {
-            name: "created_at",
+            name: "createdAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "updated_at",
+            name: "updatedAt",
             type: "timestamp",
             default: "now()",
           },
           {
-            name: "deleted_at",
+            name: "deletedAt",
             type: "timestamp",
             isNullable: true,
             default: null,
