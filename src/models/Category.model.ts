@@ -1,20 +1,21 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
-import Product from "./Product.model";
+import ProductCategory from "./ProductCategory.model";
 
 @Entity("categories")
 export default class Category {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
+
+  @OneToMany(() => ProductCategory, (productCategory) => productCategory.category)
+  products: ProductCategory[];
 
   @Column()
   name: string;

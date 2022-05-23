@@ -11,6 +11,7 @@ import generalFeedbackRoutes from "./generalFeedback.routes";
 import ordersRoutes from "./orders.routes";
 import billsRoutes from "./bills.routes";
 import productFeedbackRoutes from "./productFeedback.routes";
+import categoriesRoutes from "./categories.routes";
 
 const routes = Router();
 
@@ -23,6 +24,7 @@ routes.use("/feedbacks/products", productFeedbackRoutes);
 routes.use(ensureAuthMiddleware);
 
 routes.use("/employees", employeesRoutes);
+routes.use("/categories", categoriesRoutes);
 routes.use("/ingredients", ingredientsRoutes);
 routes.use("/products", productsRoutes);
 routes.use("/orders", ordersRoutes);
