@@ -8,7 +8,7 @@ import UpdateProductFeedback from "../services/ProductFeedback/updateGeneralFeed
 
 export class ProductFeedbackController {
   static async store(req: Request, res: Response) {
-    const feedback = req.body;
+    const feedback: IProductFeedback = req.body;
     const newFeedback = await CreateProductFeedback.execute(feedback);
     return res.status(201).json({
       message: "Product Feedback created",
@@ -31,7 +31,7 @@ export class ProductFeedbackController {
   }
   static async update(req: Request, res: Response) {
     const { id } = req.params;
-    const feeedback = req.body as IProductFeedback;
+    const feeedback: IProductFeedback = req.body;
     const updatedFeedback = await UpdateProductFeedback.execute(id, feeedback);
     return res.status(200).json({
       message: "Product Feedback updated",
