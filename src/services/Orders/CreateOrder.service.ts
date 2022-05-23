@@ -62,27 +62,27 @@ class CreateOrderService {
       throw new AppError("Bill not found", 404);
     }
 
-    // const order = orderRepo.create({
-    //   table,
-    //   employeeId,
-    //   billId,
-    //   total: 0,
-    // });
+    const order = orderRepo.create({
+      table,
+      employeeId,
+      billId,
+      status: "pending"
+    });
 
-    // await orderRepo.save(order);
+    await orderRepo.save(order);
 
-    // summarizedOrdersProducts.forEach(async ({ productId, quantity }) => {
-    //   const orderProduct = orderProductRepo.create({
-    //     orderId: order.id,
-    //     productId,
-    //     totalPrice: 0,
-    //     quantity,
-    //   });
+    summarizedOrdersProducts.forEach(async ({ productId, quantity }) => {
+      const orderProduct = orderProductRepo.create({
+        orderId: order.id,
+        productId,
+        totalPrice: 0,
+        quantity,
+      });
 
-    //   await orderProductRepo.save(orderProduct);
-    // });
+      await orderProductRepo.save(orderProduct);
+    });
 
-    // return order;
+    return order;
   }
 }
 

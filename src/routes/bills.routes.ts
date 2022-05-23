@@ -5,6 +5,7 @@ const billsRoutes = Router();
 
 billsRoutes.post("/", BillsController.store);
 billsRoutes.get("/", BillsController.index);
+billsRoutes.get("/:id", BillsController.show);
 billsRoutes.patch("/:id", BillsController.update);
 billsRoutes.delete("/:id", BillsController.delete);
 
