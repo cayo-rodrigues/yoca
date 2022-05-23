@@ -16,6 +16,7 @@ import Product from "./Product.model";
 
 @Entity("orders_products")
 class OrderProduct {
+  @Exclude()
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
@@ -25,21 +26,25 @@ class OrderProduct {
   @Column()
   totalPrice: number;
 
+  @Exclude()
   @Column()
   productId: string;
 
+  @Exclude()
   @Column()
   orderId: string;
 
   @ManyToOne(() => Order)
   order: Order;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, { eager: true })
   product: Product;
 
+  @Exclude()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn()
   updatedAt: Date;
 
