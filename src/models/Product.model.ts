@@ -35,7 +35,7 @@ export default class Product {
     (ProductIngredient) => ProductIngredient.product,
     { eager: true }
   )
-  productIngredients: ProductIngredient[];
+  ingredients: ProductIngredient[];
 
   @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
     eager: true,

@@ -27,17 +27,17 @@ export class CreateGeneralFeedbacksTable1653066533081
           },
           {
             name: "createdAt",
-            type: "timestamp",
+            type: "text",
             default: "now()",
           },
           {
             name: "updatedAt",
-            type: "timestamp",
+            type: "text",
             default: "now()",
           },
           {
             name: "deletedAt",
-            type: "timestamp",
+            type: "text",
             isNullable: true,
             default: null,
           },

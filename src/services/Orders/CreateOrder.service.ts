@@ -14,7 +14,7 @@ class CreateOrderService {
     table,
     employeeId,
     billId,
-  }: ICreateOrder): Promise<Order> {
+  }: ICreateOrder) {
     const orderRepo = AppDataSource.getRepository(Order);
     const productsRepo = AppDataSource.getRepository(Product);
     const employeeRepo = AppDataSource.getRepository(Employee);

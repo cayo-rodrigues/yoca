@@ -41,6 +41,9 @@ export default class Order {
   @Column()
   billId: number;
 
+  @ManyToOne(() => Bill)
+  bill: Bill;
+
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, {
     eager: true,
   })
