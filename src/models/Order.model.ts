@@ -8,7 +8,6 @@ import {
   UpdateDateColumn,
   OneToMany,
   AfterLoad,
-  DeleteDateColumn,
 } from "typeorm";
 
 import Employee from "./Employee.model";
@@ -16,32 +15,54 @@ import Employee from "./Employee.model";
 import Bill from "./Bill.model";
 import OrderProduct from "./OrdersProducts.model";
 
+export enum OrderStatus {
+  PENDING = "pending",
+  READY = "ready",
+  SERVED = "served",
+}
+
 @Entity("orders")
 export default class Order {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({ name: "table", type: "varchar", length: "3" })
   table: string;
 
-  @Column()
-  status: string;
+  @Column({
+    name: "status",
+    type: "enum",
+    enum: OrderStatus,
+    default: OrderStatus.PENDING,
+  })
+  status: OrderStatus;
 
-  @Column()
+  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
   total: number;
 
-  @Column()
-  employeeId: string;
+  @ManyToOne(() => Employee, (employee) => employee, {
+    eager: true,
+  })
+  @JoinColumn({ name: "employee_id" })
+  employee: Employee;
 
-  @Column()
-  billId: string;
+  @ManyToOne(() => Bill, (bill) => bill.orders)
+  @JoinColumn({ name: "bill_id" })
+  bill: Bill;
 
-  @CreateDateColumn()
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, {
+    eager: true,
+  })
+  products: OrderProduct[];
+
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @AfterLoad()
+  getTotalPrice() {
+    this.total = this.products.reduce((acc, curr) => acc + curr.totalPrice, 0);
+  }
 }

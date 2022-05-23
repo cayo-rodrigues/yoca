@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
@@ -43,7 +44,8 @@ class Employee {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @Exclude()
+  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
   deletedAt: Date;
 }
 

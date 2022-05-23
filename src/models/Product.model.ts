@@ -37,7 +37,12 @@ export default class Product {
   )
   productIngredients: ProductIngredient[];
 
-  @CreateDateColumn()
+  @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
+    eager: true,
+  })
+  feedbacks: ProductFeedback[];
+
+  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
   createdAt: Date;
 
   @UpdateDateColumn()

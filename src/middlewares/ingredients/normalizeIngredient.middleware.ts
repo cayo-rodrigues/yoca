@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ICreateIngredient } from "../../interfaces/Ingredient.interface";
+import { IBaseIngredient } from "../../interfaces/Ingredient.interface";
 import { normalizeTextInput, roundToTwo } from "../../utils";
 
 const normalizeIngredientMiddleware = (
@@ -7,7 +7,7 @@ const normalizeIngredientMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, measure, amount, amountMax, amountMin }: ICreateIngredient =
+  const { name, measure, amount, amountMax, amountMin }: IBaseIngredient =
     req.body;
 
   const normalizedIngredient = {
