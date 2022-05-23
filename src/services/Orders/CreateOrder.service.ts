@@ -14,7 +14,7 @@ class CreateOrderService {
     table,
     employeeId,
     billId,
-  }: ICreateOrder): Promise<Order> {
+  }: ICreateOrder) {
     const orderRepo = AppDataSource.getRepository(Order);
     const productsRepo = AppDataSource.getRepository(Product);
     const employeeRepo = AppDataSource.getRepository(Employee);
@@ -66,8 +66,7 @@ class CreateOrderService {
       table,
       employeeId,
       billId,
-      status: "pending",
-      total: 0,
+      status: "pending"
     });
 
     await orderRepo.save(order);

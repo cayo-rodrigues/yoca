@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import CreateProductService from "../services/Products/createProduct.service";
 import ListProductsService from "../services/Products/listProducts.service";
+import ListOneProductService from "../services/Products/listOneProduct.service";
+import DeleteProductService from "../services/Products/deleteProduct.service";
+import UpdateProductService from "../services/Products/updateProduct.service";
 
 export default class ProductsController {
   static async store(req: Request, res: Response) {
@@ -23,9 +26,35 @@ export default class ProductsController {
     return res.json(products);
   }
 
-  static async show(req: Request, res: Response) {}
+  static async show(req: Request, res: Response) {
+    const { id } = req.params;
 
-  static async update(req: Request, res: Response) {}
+    const product = await ListOneProductService.execute({ id });
 
-  static async delete(req: Request, res: Response) {}
+    return res.json(product);
+  }
+
+  static async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const { name, price, calories, ingredients, categories } = req.body;
+
+    const productUpdated = UpdateProductService.execute({
+      id,
+      name,
+      price,
+      calories,
+      ingredients,
+      categories,
+    });
+
+    return res.json({ message: "Product updated", product: productUpdated });
+  }
+
+  static async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await DeleteProductService.execute({ id });
+
+    return res.status(204).json();
+  }
 }
