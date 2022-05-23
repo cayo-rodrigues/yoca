@@ -48,21 +48,26 @@ class CreateOrderService {
       throw new AppError("Bill not found", 404);
     }
 
+    const orderTotalPrice = products.reduce(
+      (acc, curr, idx) => acc + curr.price * ordersProducts[idx].quantity,
+      0
+    );
+
     const order = orderRepo.create({
       table,
       employeeId,
       billId,
-      total: 0,
+      total: orderTotalPrice,
       status: "pending",
     });
 
     await orderRepo.save(order);
 
-    ordersProducts.forEach(async ({ productId, quantity }) => {
+    ordersProducts.forEach(async ({ productId, quantity }, index) => {
       const orderProduct = orderProductRepo.create({
         orderId: order.id,
         productId,
-        totalPrice: 0,
+        totalPrice: products[index].price * quantity,
         quantity,
       });
 
