@@ -12,36 +12,25 @@ import Order from "./Order.model";
 
 @Entity("bills")
 class Bill {
-  @PrimaryGeneratedColumn("increment", { type: "bigint" })
+  @PrimaryGeneratedColumn()
   readonly id: number;
 
-  @Column({ type: "boolean", default: false })
+  @Column()
   paid: boolean;
 
-  @Column({
-    name: "total",
-    type: "decimal",
-    precision: 8,
-    scale: 2,
-    default: 0.0,
-  })
+  @Column()
   total: number;
 
-  @OneToMany(() => Order, (order) => order.bill, {
+  @OneToMany(() => Order, (order) => order.billId, {
     eager: true,
   })
   orders: Order[];
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
-
-  @AfterLoad()
-  getTotalPrice() {
-    this.total = this.orders.reduce((acc, curr) => acc + curr.total, 0);
-  }
 }
 
 export default Bill;

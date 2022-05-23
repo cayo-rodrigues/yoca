@@ -5,6 +5,12 @@ export interface ICreateProduct {
   name: string;
   price: number;
   calories: number;
-  ingredients: Ingredient[];
-  categories: Category[];
+  ingredients: {
+    id: string;
+    amount: number;
+  }[];
+  categories: {
+    id: string;
+    amount: number;
+  }[];
 }

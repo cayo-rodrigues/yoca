@@ -14,7 +14,7 @@ export default class ProductsController {
       categories,
     });
 
-    return res.json({ message: "Product created", product });
+    return res.status(201).json({ message: "Product created", product });
   }
 
   static async index(req: Request, res: Response) {

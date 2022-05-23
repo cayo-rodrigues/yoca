@@ -2,6 +2,7 @@ import {
   Check,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -17,19 +18,23 @@ export default class ProductFeedback {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 512 })
+  @Column()
   description: string;
 
-  @Column({ type: "int2" })
+  @Column()
   rating: number;
 
-  @ManyToOne(() => Product, (product) => product.feedbacks)
-  @JoinColumn({ name: "product_id" })
-  product: Product;
+  @Column()
+  productId: string;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @ManyToOne(() => Product, (product) => product.id)
+  product: Product;
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
