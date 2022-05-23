@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
@@ -29,12 +30,14 @@ export default class ProductFeedback {
 
   @ManyToOne(() => Product, (product) => product.id)
   product: Product;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt: Date;
 }

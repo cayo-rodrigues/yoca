@@ -54,12 +54,6 @@ export class CreateIngredientsTable1653066599808 implements MigrationInterface {
             type: "timestamp",
             default: "now()",
           },
-          {
-            name: "deletedAt",
-            type: "timestamp",
-            isNullable: true,
-            default: null,
-          },
         ],
       })
     );

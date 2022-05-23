@@ -20,17 +20,17 @@ export default class ProductIngredient {
   @Column()
   amount: number;
 
-  @ManyToOne(() => Product)
-  product: Product;
-
   @Column()
   productId: string;
+
+  @Column()
+  ingredientId: string;
 
   @ManyToOne(() => Ingredient, (ingredient) => ingredient.productIngredients)
   ingredient: Ingredient;
 
-  @Column()
-  ingredientId: string;
+  @ManyToOne(() => Product)
+  product: Product;
 
   @CreateDateColumn()
   createdAt: Date;

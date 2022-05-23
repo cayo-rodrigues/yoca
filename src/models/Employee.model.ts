@@ -10,7 +10,6 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { Exclude } from "class-transformer";
 import Order from "./Order.model";
 
 @Entity("employees")
@@ -35,8 +34,8 @@ class Employee {
   @Column()
   accessLevel: number;
 
-  @OneToMany(() => Order, (Order) => Order.employeeId)
-  orders: Order[];
+  // @OneToMany(() => Order, (Order) => Order.employeeId)
+  // orders: Order[];
 
   @CreateDateColumn()
   createdAt: Date;
@@ -45,7 +44,7 @@ class Employee {
   updatedAt: Date;
 
   @Exclude()
-  @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
+  @DeleteDateColumn()
   deletedAt: Date;
 }
 

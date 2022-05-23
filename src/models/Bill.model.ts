@@ -1,7 +1,9 @@
+import { Exclude } from "class-transformer";
 import {
   AfterLoad,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -21,16 +23,20 @@ class Bill {
   @Column()
   total: number;
 
-  @OneToMany(() => Order, (order) => order.billId, {
-    eager: true,
-  })
-  orders: Order[];
+  // @OneToMany(() => Order, (order) => order.billId, {
+  //   eager: true,
+  // })
+  // orders: Order[];
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAd: Date;
 }
 
 export default Bill;
