@@ -33,10 +33,10 @@ class CreateProductService {
       await productsIngredientsRepo.save(productIngredient);
     });
 
-    categories.forEach(async (category) => {
+    categories.forEach(async (categoryId) => {
       const productCategory = productsCategoriesRepo.create({
         productId: product.id,
-        categoryId: category.id,
+        categoryId,
       });
 
       await productsCategoriesRepo.save(productCategory);
