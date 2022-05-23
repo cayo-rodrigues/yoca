@@ -15,7 +15,8 @@ import Employee from "./Employee.model";
 
 import Bill from "./Bill.model";
 import OrderProduct from "./OrdersProducts.model";
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
+import { IOrderProducts } from "../interfaces/Orders.interface";
 
 @Entity("orders")
 export default class Order {
@@ -44,10 +45,29 @@ export default class Order {
   @ManyToOne(() => Bill)
   bill: Bill;
 
+  @Exclude()
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, {
     eager: true,
   })
-  products: OrderProduct[];
+  orderProducts: OrderProduct[];
+
+  @Expose({ name: "products" })
+  getProducts(): IOrderProducts[] {
+    return this.orderProducts?.map(({ quantity, totalPrice, product }) => ({
+      quantity,
+      totalPrice,
+      product: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        calories: product.calories,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+        ingredients: product.ingredients,
+        feedbacks: product.feedbacks,
+      },
+    }));
+  }
 
   @CreateDateColumn()
   createdAt: Date;
