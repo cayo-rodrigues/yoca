@@ -34,7 +34,7 @@ class OrderProduct {
   @ManyToOne(() => Order)
   order: Order;
 
-  @ManyToOne(() => Product, { eager: true })
+  @ManyToOne(() => Product)
   product: Product;
 
   @CreateDateColumn()

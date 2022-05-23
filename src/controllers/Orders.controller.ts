@@ -1,3 +1,4 @@
+import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 import { ICreateOrder } from "../interfaces/Orders.interface";
 import CreateOrderService from "../services/Orders/CreateOrder.service";
@@ -9,12 +10,12 @@ class OrdersController {
 
     const order = await CreateOrderService.execute(orderInfo);
 
-    return res.status(201).send(order);
+    return res.status(201).send(instanceToPlain(order));
   }
 
   static async index(req: Request, res: Response) {
     const orders = await ListOrdersService.execute();
-    return res.send(orders);
+    return res.send(instanceToPlain(orders));
   }
 
   static async show(req: Request, res: Response) {}

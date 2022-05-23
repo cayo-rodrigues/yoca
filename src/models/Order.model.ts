@@ -31,8 +31,12 @@ export default class Order {
   @Column()
   total: number;
 
+  @Exclude()
   @Column()
   employeeId: string;
+
+  @ManyToOne(() => Employee, { eager: true })
+  employee: Employee;
 
   @Column()
   billId: number;
