@@ -1,7 +1,9 @@
+import { Exclude } from "class-transformer";
 import {
   AfterLoad,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -17,17 +19,11 @@ class OrderProduct {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "int", default: 1 })
+  @Column()
   quantity: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "total_price" })
+  @Column()
   totalPrice: number;
-
-  @ManyToOne(() => Order)
-  order: Order;
-
-  @ManyToOne(() => Product, { eager: true })
-  product: Product;
 
   @Column()
   productId: string;
@@ -35,16 +31,21 @@ class OrderProduct {
   @Column()
   orderId: string;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @ManyToOne(() => Order)
+  order: Order;
+
+  @ManyToOne(() => Product, { eager: true })
+  product: Product;
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @AfterLoad()
-  getTotalPrice() {
-    this.totalPrice = this.product.price * this.quantity;
-  }
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
 
 export default OrderProduct;

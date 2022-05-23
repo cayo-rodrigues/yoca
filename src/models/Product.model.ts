@@ -42,7 +42,7 @@ export default class Product {
   })
   feedbacks: ProductFeedback[];
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()

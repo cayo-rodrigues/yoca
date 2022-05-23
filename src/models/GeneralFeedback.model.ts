@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
@@ -26,6 +27,7 @@ export default class GeneralFeedback {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt: Date;
 }
