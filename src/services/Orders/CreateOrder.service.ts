@@ -64,8 +64,9 @@ class CreateOrderService {
 
     const order = orderRepo.create({
       table,
-      employee,
-      bill,
+      employeeId,
+      billId,
+      status: "pending",
       total: 0,
     });
 
