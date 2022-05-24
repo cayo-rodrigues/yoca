@@ -1,7 +1,10 @@
 import { Router } from "express";
 import BillsController from "../controllers/Bills.controller";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 
 const billsRoutes = Router();
+
+billsRoutes.use(verifyAccessLevelMiddleware(3));
 
 billsRoutes.post("/", BillsController.store);
 billsRoutes.get("/", BillsController.index);
