@@ -1,11 +1,18 @@
 import * as yup from "yup";
+import { MAX_DECIMAL } from "../../utils";
 
 const updateProductSchema = {
   schema: {
     body: {
       yupSchema: yup.object().shape({
         name: yup.string().max(164, "name field has a max of 164 characters"),
-        price: yup.number().positive("price field must be a positive number"),
+        price: yup
+          .number()
+          .max(
+            MAX_DECIMAL,
+            "price field can't have more than 10 digits in total (including decimal places)"
+          )
+          .positive("price field must be a positive number"),
         calories: yup
           .number()
           .positive("calories field must be a positive number"),
