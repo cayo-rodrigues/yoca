@@ -7,30 +7,36 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  ManyToOne,
 } from "typeorm";
 import Category from "./Category.model";
 import Product from "./Product.model";
 
 @Entity("products_categories")
 export default class ProductCategory {
+  @Exclude()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Exclude()
   @Column()
   productId: string;
 
+  @Exclude()
   @Column()
   categoryId: string;
 
-  @OneToMany(() => Category, (Category) => Category.id)
+  @ManyToOne(() => Category, { eager: true })
   category: Category;
 
-  @OneToMany(() => Product, (Product) => Product.id)
+  @ManyToOne(() => Product)
   product: Product;
 
+  @Exclude()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn()
   updatedAt: Date;
 

@@ -65,6 +65,7 @@ export default class Order {
         updatedAt: product.updatedAt,
         ingredients: product.ingredients,
         feedbacks: product.feedbacks,
+        categories: product.categories,
       },
     }));
   }
