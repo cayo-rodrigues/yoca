@@ -21,11 +21,7 @@ class OrdersController {
 
   static async show(req: Request, res: Response) {}
 
-  static async update(req: Request, res: Response) {}
-
-  static async delete(req: Request, res: Response) {}
-
-  static async updateStatus(req: Request, res: Response) {
+  static async update(req: Request, res: Response) {
     const { status } = req.body;
     const { id } = req.params;
 
@@ -33,6 +29,8 @@ class OrdersController {
 
     return res.status(201).send(instanceToPlain(orderUpdated));
   }
+
+  static async delete(req: Request, res: Response) {}
 }
 
 export default OrdersController;
