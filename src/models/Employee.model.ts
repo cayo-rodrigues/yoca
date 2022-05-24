@@ -13,7 +13,6 @@ import {
 import Order from "./Order.model";
 
 @Entity("employees")
-@Check('"access_level" BETWEEN 1 AND 5')
 class Employee {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
