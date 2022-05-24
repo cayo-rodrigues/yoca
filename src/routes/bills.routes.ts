@@ -6,18 +6,25 @@ import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 const billsRoutes = Router();
 
-billsRoutes.use(verifyAccessLevelMiddleware(3));
+billsRoutes.post("/", verifyAccessLevelMiddleware(3), BillsController.store);
+billsRoutes.get("/", verifyAccessLevelMiddleware(3), BillsController.index);
 
-billsRoutes.post("/", BillsController.store);
-billsRoutes.get("/", BillsController.index);
-
-billsRoutes.use(
+billsRoutes.get(
   "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
+  expressYupMiddleware({ schemaValidator: validateUUIDSchema }),
+  verifyAccessLevelMiddleware(3),
+  BillsController.show
 );
-
-billsRoutes.get("/:id", BillsController.show);
-billsRoutes.patch("/:id", BillsController.update);
-billsRoutes.delete("/:id", BillsController.delete);
+billsRoutes.patch(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: validateUUIDSchema }),
+  verifyAccessLevelMiddleware(3),
+  BillsController.update
+);
+billsRoutes.delete(
+  "/:id",
+  verifyAccessLevelMiddleware(2),
+  BillsController.delete
+);
 
 export default billsRoutes;

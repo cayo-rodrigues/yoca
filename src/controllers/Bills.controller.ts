@@ -1,6 +1,7 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 import CreateBillService from "../services/Bills/createBill.service";
+import DeleteBillService from "../services/Bills/deleteBill.service";
 import ListBillsService from "../services/Bills/listBills.service";
 import ShowBillService from "../services/Bills/showBill.service";
 import UpdateBillService from "../services/Bills/updateBill.service";
@@ -37,7 +38,13 @@ class BillsController {
     return res.status(200).json(instanceToPlain(updated));
   }
 
-  static async delete(req: Request, res: Response) {}
+  static async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await DeleteBillService.execute({ id: +id });
+
+    return res.status(204).send();
+  }
 }
 
 export default BillsController;
