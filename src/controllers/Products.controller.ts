@@ -41,7 +41,7 @@ export default class ProductsController {
     const { id, name, price, calories, ingredients, categories } =
       req.updateProductInfos;
 
-    const productUpdated = UpdateProductService.execute({
+    const productUpdated = await UpdateProductService.execute({
       id,
       name,
       price,
