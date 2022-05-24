@@ -4,6 +4,7 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
+import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe(" PATCH - /products/:id ", () => {
@@ -43,6 +44,10 @@ describe(" PATCH - /products/:id ", () => {
     ],
     categories: ["massas", "veganos"],
   };
+  
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();

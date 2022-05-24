@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { clearDB } from "../../connection";
 
 describe(" GET - /bills ", () => {
   let connection: DataSource;
@@ -13,6 +14,10 @@ describe(" GET - /bills ", () => {
         console.error("Error during Data Source initialization", err);
       });
   });
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();

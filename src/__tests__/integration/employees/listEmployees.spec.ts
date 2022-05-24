@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { clearDB } from "../../connection";
 
 describe(" GET - /employees ", () => {
   let connection: DataSource;
@@ -21,6 +22,10 @@ describe(" GET - /employees ", () => {
     password: "12345678",
     accessLevel: 2,
   };
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();

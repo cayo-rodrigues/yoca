@@ -4,6 +4,7 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
+import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe("GET - /orders/pending", () => {
@@ -44,6 +45,10 @@ describe("GET - /orders/pending", () => {
     billId: 1,
     employeeId: "waiter-uuid",
   };
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();
