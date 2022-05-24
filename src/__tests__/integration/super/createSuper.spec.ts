@@ -3,9 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
-
 describe(" POST - /super ", () => {
   let connection: DataSource;
 
@@ -29,23 +26,20 @@ describe(" POST - /super ", () => {
   });
 
   it("Should be able to create a super", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("some-uuid");
-
     const createSuperResponse = await request(app)
       .post("/super")
       .send(mockSuper);
 
     expect(createSuperResponse.status).toBe(201);
-    expect(createSuperResponse.body).toEqual(
-      expect.objectContaining({
-        id: "some-uuid",
+    expect(createSuperResponse.body).toMatchObject({
+      message: "Super user created",
+      superUser: {
         name: "testaurant",
         email: "admin@email.com",
         phone: "999999999999",
         accessLevel: 1,
-      })
-    );
+      },
+    });
   });
   it("Should not be able to create another super", async () => {
     const createSuperResponse = await request(app)

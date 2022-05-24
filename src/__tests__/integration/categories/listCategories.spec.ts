@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { clearDB } from "../../connection";
 
 describe(" GET - /categories ", () => {
   let connection: DataSource;
@@ -17,6 +18,10 @@ describe(" GET - /categories ", () => {
   const mockCategory = {
     name: "veganos",
   };
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();

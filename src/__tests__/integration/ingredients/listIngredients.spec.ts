@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { clearDB } from "../../connection";
 
 describe(" GET - /ingredients ", () => {
   let connection: DataSource;
@@ -21,6 +22,10 @@ describe(" GET - /ingredients ", () => {
     amountMax: 100,
     amountMin: 15,
   };
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();
