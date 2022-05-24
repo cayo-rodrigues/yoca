@@ -26,17 +26,17 @@ export class CreateBillsTable1653066243471 implements MigrationInterface {
           },
           {
             name: "createdAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "updatedAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "deletedAt",
-            type: "text",
+            type: "timestamptz",
             isNullable: true,
             default: null,
           },

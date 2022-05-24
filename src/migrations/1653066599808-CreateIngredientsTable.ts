@@ -46,12 +46,12 @@ export class CreateIngredientsTable1653066599808 implements MigrationInterface {
           },
           {
             name: "createdAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "updatedAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
         ],
