@@ -7,7 +7,7 @@ import UpdateProductService from "../services/Products/updateProduct.service";
 
 export default class ProductsController {
   static async store(req: Request, res: Response) {
-    const { name, price, calories, ingredients, categories } = req.body;
+    const { name, price, calories, ingredients, categories } = req.productInfo;
 
     const product = await CreateProductService.execute({
       name,
