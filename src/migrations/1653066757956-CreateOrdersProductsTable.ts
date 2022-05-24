@@ -36,6 +36,7 @@ export class CreateOrdersProductsTable1653066757956
           {
             name: "productId",
             type: "uuid",
+            isNullable: true,
           },
           {
             name: "createdAt",

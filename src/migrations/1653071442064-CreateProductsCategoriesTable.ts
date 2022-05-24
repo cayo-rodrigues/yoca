@@ -20,10 +20,12 @@ export class CreateProductsCategoriesTable1653071442064
           {
             name: "productId",
             type: "uuid",
+            isNullable: true,
           },
           {
             name: "categoryId",
             type: "uuid",
+            isNullable: true,
           },
           {
             name: "createdAt",
