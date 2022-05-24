@@ -5,6 +5,7 @@ import ListAllCategoriesService from "../services/Categories/ListAllCategories.s
 import ListOneCategoryService from "../services/Categories/ListOneCategory.service";
 import UpdateCategoryService from "../services/Categories/UpdateCategory.service";
 import DeleteCategoryService from "../services/Categories/DeleteCategory.service";
+import { instanceToPlain } from "class-transformer";
 
 export default class CategoriesController {
   static async store(req: Request, res: Response) {
@@ -14,14 +15,14 @@ export default class CategoriesController {
 
     res.status(201).json({
       message: "Category created",
-      category,
+      category: instanceToPlain(category),
     });
   }
 
   static async index(req: Request, res: Response) {
     const categories = await ListAllCategoriesService.execute();
 
-    res.status(200).json(categories);
+    res.status(200).json(instanceToPlain(categories));
   }
 
   static async show(req: Request, res: Response) {
@@ -29,7 +30,7 @@ export default class CategoriesController {
 
     const category = await ListOneCategoryService.execute(id);
 
-    res.status(200).json(category);
+    res.status(200).json(instanceToPlain(category));
   }
 
   static async update(req: Request, res: Response) {
@@ -40,7 +41,7 @@ export default class CategoriesController {
 
     res.status(200).json({
       message: "Category updated",
-      category,
+      category: instanceToPlain(category),
     });
   }
 

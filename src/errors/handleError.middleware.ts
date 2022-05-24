@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "./AppError";
+import "express-async-errors";
 
 const errorHandler = (
   err: Error,

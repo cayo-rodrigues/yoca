@@ -25,21 +25,17 @@ categoriesRoutes.post(
   CategoriesController.store
 );
 
-// categoriesRoutes.use(
-//   expressYupMiddleware({ schemaValidator: validateUUIDSchema })
-// );
+categoriesRoutes.use(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
+);
 
 categoriesRoutes.patch(
   "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema }),
   expressYupMiddleware({ schemaValidator: updateCategorySchema }),
   CategoriesController.update
 );
 
-categoriesRoutes.delete(
-  "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema }),
-  CategoriesController.delete
-);
+categoriesRoutes.delete("/:id", CategoriesController.delete);
 
 export default categoriesRoutes;

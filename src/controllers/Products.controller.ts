@@ -4,6 +4,7 @@ import ListProductsService from "../services/Products/listProducts.service";
 import ListOneProductService from "../services/Products/listOneProduct.service";
 import DeleteProductService from "../services/Products/deleteProduct.service";
 import UpdateProductService from "../services/Products/updateProduct.service";
+import { instanceToPlain } from "class-transformer";
 
 export default class ProductsController {
   static async store(req: Request, res: Response) {
@@ -17,13 +18,15 @@ export default class ProductsController {
       categories,
     });
 
-    return res.status(201).json({ message: "Product created", product });
+    return res
+      .status(201)
+      .json({ message: "Product created", product: instanceToPlain(product) });
   }
 
   static async index(req: Request, res: Response) {
     const products = await ListProductsService.execute();
 
-    return res.json(products);
+    return res.json(instanceToPlain(products));
   }
 
   static async show(req: Request, res: Response) {
@@ -31,14 +34,14 @@ export default class ProductsController {
 
     const product = await ListOneProductService.execute({ id });
 
-    return res.json(product);
+    return res.json(instanceToPlain(product));
   }
 
   static async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const { name, price, calories, ingredients, categories } = req.body;
+    const { id, name, price, calories, ingredients, categories } =
+      req.updateProductInfos;
 
-    const productUpdated = UpdateProductService.execute({
+    const productUpdated = await UpdateProductService.execute({
       id,
       name,
       price,
@@ -47,7 +50,10 @@ export default class ProductsController {
       categories,
     });
 
-    return res.json({ message: "Product updated", product: productUpdated });
+    return res.json({
+      message: "Product updated",
+      product: instanceToPlain(productUpdated),
+    });
   }
 
   static async delete(req: Request, res: Response) {

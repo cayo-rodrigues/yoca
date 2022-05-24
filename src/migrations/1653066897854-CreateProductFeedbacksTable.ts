@@ -20,7 +20,6 @@ export class CreateProductFeedbacksTable1653066897854
           {
             name: "description",
             type: "text",
-            isUnique: true,
           },
           {
             name: "rating",
@@ -32,17 +31,17 @@ export class CreateProductFeedbacksTable1653066897854
           },
           {
             name: "createdAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "updatedAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "deletedAt",
-            type: "text",
+            type: "timestamptz",
             isNullable: true,
             default: null,
           },

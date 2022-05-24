@@ -42,17 +42,17 @@ export class CreateEmployeesTable1653066466704 implements MigrationInterface {
           },
           {
             name: "createdAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "updatedAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "deletedAt",
-            type: "text",
+            type: "timestamptz",
             isNullable: true,
             default: null,
           },

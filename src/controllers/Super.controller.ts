@@ -1,3 +1,4 @@
+import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 import CreateSuperService from "../services/Super/CreateSuper.service";
 
@@ -9,7 +10,7 @@ export default class Controller {
 
     res.status(201).json({
       message: "Super user created",
-      superUser,
+      superUser: instanceToPlain(superUser),
     });
   }
 }

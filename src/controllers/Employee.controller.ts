@@ -1,3 +1,4 @@
+import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 import CreateEmployeeService from "../services/Employees/CreateEmployee.service";
 import deleteEmployeeService from "../services/Employees/DeleteEmployee.service";
@@ -13,14 +14,14 @@ export default class EmployeesController {
 
     res.status(201).json({
       message: "Employee created",
-      employee,
+      employee: instanceToPlain(employee),
     });
   }
 
   static async index(req: Request, res: Response) {
     const employees = await ListAllEmployeesService.execute();
 
-    res.status(200).json(employees);
+    res.status(200).json(instanceToPlain(employees));
   }
 
   static async show(req: Request, res: Response) {
@@ -28,7 +29,7 @@ export default class EmployeesController {
 
     const employee = await showEmployeeService.execute(id);
 
-    res.status(200).json(employee);
+    res.status(200).json(instanceToPlain(employee));
   }
 
   static async update(req: Request, res: Response) {
@@ -42,7 +43,7 @@ export default class EmployeesController {
       loggedUser,
     });
 
-    res.status(200).json(employee);
+    res.status(200).json(instanceToPlain(employee));
   }
 
   static async delete(req: Request, res: Response) {

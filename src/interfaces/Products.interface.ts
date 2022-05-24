@@ -15,6 +15,11 @@ export interface ICreateProduct {
   categories: string[];
 }
 
-export interface IUpdateProduct extends ICreateProduct {
+export interface IUpdateProduct {
   id: string;
+  name?: string;
+  price?: number;
+  calories?: number;
+  ingredients?: ICreateProductIngredients[];
+  categories?: string[];
 }

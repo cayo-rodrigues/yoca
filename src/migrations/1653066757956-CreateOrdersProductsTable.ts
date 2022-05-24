@@ -39,17 +39,17 @@ export class CreateOrdersProductsTable1653066757956
           },
           {
             name: "createdAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "updatedAt",
-            type: "text",
+            type: "timestamptz",
             default: "now()",
           },
           {
             name: "deletedAt",
-            type: "text",
+            type: "timestamptz",
             isNullable: true,
             default: null,
           },
