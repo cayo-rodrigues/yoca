@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { In } from "typeorm";
+import { In, Not } from "typeorm";
 
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
@@ -18,9 +18,12 @@ const verifyProductToUpdateInfosMiddleware = async (
 
   const { id, name, ingredients, categories } = req.updateProductInfos;
 
-  const [nameUnavailable] = (await productsRepo.find()).filter(
-    (product) => product.name === name && product.id !== id
-  );
+  const nameUnavailable = await productsRepo.findOne({
+    where: {
+      name,
+      id: Not(id),
+    },
+  });
 
   if (nameUnavailable) {
     throw new AppError("Product name already in use", 409);
