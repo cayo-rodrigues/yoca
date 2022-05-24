@@ -118,6 +118,10 @@ class CreateOrderService {
       0
     );
 
+    bill.total = +bill.total + orderTotalPrice;
+
+    await billsRepo.save(bill)
+
     const order = orderRepo.create({
       table,
       employeeId,
