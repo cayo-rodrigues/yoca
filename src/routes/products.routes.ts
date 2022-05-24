@@ -2,14 +2,17 @@ import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
 
 import ProductsController from "../controllers/Products.controller";
-import verifyIdProductParamsMiddleware from "../middlewares/products/verifyIdProductParams.middleware";
 
-import verifyProductInfosAndNormalize from "../middlewares/products/verifyProductInfosAndNormalize.middleware";
 import createProductSchema from "../schemas/products/createProduct.schema";
 import updateProductSchema from "../schemas/products/updateProduct.schema";
-
-import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 import validateUUIDSchema from "../schemas/validateUUID.schema";
+
+import verifyIdProductParamsMiddleware from "../middlewares/products/verifyIdProductParams.middleware";
+import verifyProductInfosMiddleware from "../middlewares/products/verifyProductInfos.middleware";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
+import normalizeProductMiddleware from "../middlewares/products/normalizeProduct.middleware";
+import normalizeProductToUpdateMiddleware from "../middlewares/products/normalizeProductToUpdate.middleware";
+import verifyProductToUpdateInfosMiddleware from "../middlewares/products/verifyProductToUpdateInfos.middleware";
 
 const productsRoutes = Router();
 
@@ -17,7 +20,8 @@ productsRoutes.post(
   "/",
   verifyAccessLevelMiddleware(2),
   expressYupMiddleware({ schemaValidator: createProductSchema }),
-  verifyProductInfosAndNormalize,
+  normalizeProductMiddleware,
+  verifyProductInfosMiddleware,
   ProductsController.store
 );
 productsRoutes.get("/", ProductsController.index);
@@ -34,6 +38,8 @@ productsRoutes.patch(
   "/:id",
   verifyAccessLevelMiddleware(2),
   expressYupMiddleware({ schemaValidator: updateProductSchema }),
+  normalizeProductToUpdateMiddleware,
+  verifyProductToUpdateInfosMiddleware,
   ProductsController.update
 );
 

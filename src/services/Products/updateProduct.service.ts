@@ -22,7 +22,7 @@ class UpdateProductService {
       throw new AppError("Product not found", 404);
     }
 
-    if (ingredients.length) {
+    if (ingredients?.length) {
       const productsIngredientsRepo =
         AppDataSource.getRepository(ProductIngredient);
 
@@ -50,7 +50,7 @@ class UpdateProductService {
       });
     }
 
-    if (categories.length) {
+    if (categories?.length) {
       const productsCategoriesRepo =
         AppDataSource.getRepository(ProductCategory);
 

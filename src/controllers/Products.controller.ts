@@ -38,8 +38,8 @@ export default class ProductsController {
   }
 
   static async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const { name, price, calories, ingredients, categories } = req.body;
+    const { id, name, price, calories, ingredients, categories } =
+      req.updateProductInfos;
 
     const productUpdated = UpdateProductService.execute({
       id,
