@@ -12,9 +12,9 @@ const verifyAccessLevelMiddleware =
       loggedInUser.accessLevel <= accessLevels
     ) {
       next();
+    } else {
+      throw new AppError("You don't have permission to access this route", 401);
     }
-
-    throw new AppError("You don't have permission to access this route", 401);
   };
 
 export default verifyAccessLevelMiddleware;

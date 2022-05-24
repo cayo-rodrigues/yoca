@@ -9,6 +9,7 @@ import createProductSchema from "../schemas/products/createProduct.schema";
 import updateProductSchema from "../schemas/products/updateProduct.schema";
 
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
+import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 const productsRoutes = Router();
 
@@ -22,6 +23,11 @@ productsRoutes.post(
 productsRoutes.get("/", ProductsController.index);
 
 productsRoutes.use(verifyIdProductParamsMiddleware);
+
+productsRoutes.use(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
+);
 
 productsRoutes.get("/:id", ProductsController.show);
 productsRoutes.patch(

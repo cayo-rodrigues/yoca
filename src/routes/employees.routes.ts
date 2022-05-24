@@ -8,6 +8,7 @@ import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middle
 
 import createEmployeeSchema from "../schemas/employees/updateEmployee.schema";
 import updateEmployeeSchema from "../schemas/employees/updateEmployee.schema";
+import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 const employeesRoutes = Router();
 
@@ -20,6 +21,11 @@ employeesRoutes.post(
 );
 
 employeesRoutes.get("/", EmployeesController.index);
+
+employeesRoutes.use(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
+);
 
 employeesRoutes.get("/:id", EmployeesController.show);
 
