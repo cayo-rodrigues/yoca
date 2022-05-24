@@ -3,6 +3,7 @@ import { expressYupMiddleware } from "express-yup-middleware";
 import OrdersController from "../controllers/Orders.controller";
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 import createOrderSchema from "../schemas/orders/createOrder.schema";
+import updateOrderSchema from "../schemas/orders/updateOrder.schema";
 
 const ordersRoutes = Router();
 
@@ -13,7 +14,11 @@ ordersRoutes.post(
   OrdersController.store
 );
 ordersRoutes.get("", verifyAccessLevelMiddleware(4), OrdersController.index);
-ordersRoutes.patch("/:id", OrdersController.update);
+ordersRoutes.patch(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: updateOrderSchema }),
+  OrdersController.update
+);
 ordersRoutes.delete(
   "/:id",
   verifyAccessLevelMiddleware(4),
