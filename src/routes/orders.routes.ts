@@ -11,5 +11,6 @@ ordersRoutes.post(
   OrdersController.store
 );
 ordersRoutes.get("", OrdersController.index);
+ordersRoutes.patch("/status/:id", OrdersController.updateStatus);
 
 export default ordersRoutes;

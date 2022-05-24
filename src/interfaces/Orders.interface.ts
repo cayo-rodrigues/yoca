@@ -12,6 +12,11 @@ export interface ICreateOrder {
   billId: number;
 }
 
+export interface IUpdateStatusReq {
+  status: string;
+  id: string;
+}
+
 export interface IIngredientsArray {
   ingredientId: string;
   amount: number;

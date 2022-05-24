@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { ICreateOrder } from "../interfaces/Orders.interface";
 import CreateOrderService from "../services/Orders/CreateOrder.service";
 import ListOrdersService from "../services/Orders/ListOrders.service";
+import UpdateOrderStatusService from "../services/Orders/UpdateOrderStatus.service";
 
 class OrdersController {
   static async store(req: Request, res: Response) {
@@ -23,6 +24,15 @@ class OrdersController {
   static async update(req: Request, res: Response) {}
 
   static async delete(req: Request, res: Response) {}
+
+  static async updateStatus(req: Request, res: Response) {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    const orderUpdated = await UpdateOrderStatusService.execute({ status, id });
+
+    return res.status(201).send(instanceToPlain(orderUpdated));
+  }
 }
 
 export default OrdersController;
