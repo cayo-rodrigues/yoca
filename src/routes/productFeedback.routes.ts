@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
 import { ProductFeedbackController } from "../controllers/ProductFeedbacks.controller";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 import createProductFeedbackSchema from "../schemas/productFeedback/createFeedback.schema";
 import validateUUIDSchema from "../schemas/validateUUID.schema";
 
@@ -19,6 +20,8 @@ productFeedbackRoutes.use(
 );
 
 productFeedbackRoutes.get("/:id", ProductFeedbackController.indexOne);
+
+productFeedbackRoutes.use("/:id", verifyAccessLevelMiddleware(2));
 
 productFeedbackRoutes.delete("/:id", ProductFeedbackController.remove);
 
