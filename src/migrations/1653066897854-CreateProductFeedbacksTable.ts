@@ -20,7 +20,6 @@ export class CreateProductFeedbacksTable1653066897854
           {
             name: "description",
             type: "text",
-            isUnique: true,
           },
           {
             name: "rating",
