@@ -11,11 +11,13 @@ export interface CreateEmployeeServiceParams {
 export interface UpdateEmployeeServiceParams {
   id: string;
   loggedUser: Employee;
-  updateData: {
-    phone?: string;
-    name?: string;
-    email?: string;
-    password?: string;
-    accessLevel?: number;
-  };
+  updateData: UpdateEmployeeData;
+}
+
+export interface UpdateEmployeeData {
+  phone?: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  accessLevel?: number;
 }

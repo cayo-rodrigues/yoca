@@ -13,8 +13,6 @@ class DeleteCategoryService {
     }
 
     await categoryRepository.delete(id);
-
-    return;
   }
 }
 

@@ -1,5 +1,6 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
+
 import { ICreateOrder } from "../interfaces/Orders.interface";
 import CreateOrderService from "../services/Orders/CreateOrder.service";
 import DeleteOrderService from "../services/Orders/DeleteOrder.service";
@@ -8,19 +9,28 @@ import UpdateOrderStatusService from "../services/Orders/UpdateOrderStatus.servi
 
 class OrdersController {
   static async store(req: Request, res: Response) {
-    const orderInfo: ICreateOrder = req.body;
+    const { billId, employeeId, ordersProducts, table }: ICreateOrder =
+      req.body;
 
-    const order = await CreateOrderService.execute(orderInfo);
+    const order = await CreateOrderService.execute({
+      billId,
+      employeeId,
+      ordersProducts,
+      table,
+    });
 
-    return res.status(201).send(instanceToPlain(order));
+    return res.status(201).json(order);
   }
 
   static async index(req: Request, res: Response) {
     const orders = await ListOrdersService.execute();
-    return res.send(instanceToPlain(orders));
+
+    return res.json(instanceToPlain(orders));
   }
 
-  static async show(req: Request, res: Response) {}
+  static async show(req: Request, res: Response) {
+    // TODO
+  }
 
   static async update(req: Request, res: Response) {
     const { status } = req.body;
@@ -28,7 +38,12 @@ class OrdersController {
 
     const orderUpdated = await UpdateOrderStatusService.execute({ status, id });
 
-    return res.status(201).send(instanceToPlain(orderUpdated));
+    return res
+      .status(201)
+      .json({
+        message: "Order status updated",
+        order: instanceToPlain(orderUpdated),
+      });
   }
 
   static async delete(req: Request, res: Response) {

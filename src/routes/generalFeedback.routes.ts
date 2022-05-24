@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
-import { GeneralFeedbackController } from "../controllers/GeneralFeedbacks.controller";
+
+import GeneralFeedbackController from "../controllers/GeneralFeedbacks.controller";
+
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
+
 import createGeneralFeedbackSchema from "../schemas/generalFeedback/createFeedback.schema";
 import validateUUIDSchema from "../schemas/validateUUID.schema";
 
@@ -19,12 +22,12 @@ generalFeedbackRoutes.use(
   expressYupMiddleware({ schemaValidator: validateUUIDSchema })
 );
 
-generalFeedbackRoutes.get("/:id", GeneralFeedbackController.indexOne);
+generalFeedbackRoutes.get("/:id", GeneralFeedbackController.show);
 
 generalFeedbackRoutes.use("/:id", verifyAccessLevelMiddleware(2));
 
-generalFeedbackRoutes.delete("/:id", GeneralFeedbackController.remove);
-
 generalFeedbackRoutes.patch("/:id", GeneralFeedbackController.update);
+
+generalFeedbackRoutes.delete("/:id", GeneralFeedbackController.delete);
 
 export default generalFeedbackRoutes;

@@ -7,6 +7,7 @@ export default class UpdateGeneralFeedback {
   static async execute(id: string, feedback: IGeneralFeedback) {
     const generalFeedbackRepository =
       AppDataSource.getRepository(GeneralFeedback);
+
     const updatedFeedback = await generalFeedbackRepository.preload({
       id,
       ...feedback,
@@ -14,7 +15,9 @@ export default class UpdateGeneralFeedback {
     if (!feedback) {
       throw new AppError("General Feedback not found", 404);
     }
+
     await generalFeedbackRepository.save(updatedFeedback as IGeneralFeedback);
+
     return updatedFeedback;
   }
 }

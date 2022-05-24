@@ -7,7 +7,7 @@ interface DeleteIngredientServiceParams {
 }
 
 class DeleteIngredientService {
-  static async execute({ id }: DeleteIngredientServiceParams): Promise<any> {
+  static async execute({ id }: DeleteIngredientServiceParams): Promise<void> {
     const ingredientRepo = AppDataSource.getRepository(Ingredient);
 
     const ingredientExists = await ingredientRepo.findOne({ where: { id } });

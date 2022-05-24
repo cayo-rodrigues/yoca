@@ -13,7 +13,7 @@ class AuthenticateService {
   static async execute({
     email,
     password,
-  }: AuthenticateServiceParams): Promise<any> {
+  }: AuthenticateServiceParams): Promise<string> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
     const employee = await employeeRepository.findOne({ where: { email } });

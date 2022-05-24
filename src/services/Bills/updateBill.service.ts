@@ -4,7 +4,7 @@ import { BillUpdateReq } from "../../interfaces/Bills.interface";
 import Bill from "../../models/Bill.model";
 
 class UpdateBillService {
-  static async execute({ paid, id }: BillUpdateReq): Promise<any> {
+  static async execute({ paid, id }: BillUpdateReq): Promise<Bill> {
     const billsRepository = AppDataSource.getRepository(Bill);
 
     const bill = await billsRepository.findOne({ where: { id } });
@@ -17,10 +17,7 @@ class UpdateBillService {
 
     await billsRepository.update(bill.id, { paid });
 
-    return {
-      message: "Bill updated",
-      bill,
-    };
+    return bill;
   }
 }
 

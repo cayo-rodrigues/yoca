@@ -6,7 +6,9 @@ export interface CreateCategoryServiceParams {
 
 export interface UpdateCategoryServiceParams {
   id: string;
-  updateData: {
-    name?: string;
-  };
+  updateData: UpdateCategoryData;
+}
+
+export interface UpdateCategoryData {
+  name?: string;
 }

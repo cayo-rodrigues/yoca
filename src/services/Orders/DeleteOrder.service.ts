@@ -3,7 +3,7 @@ import AppError from "../../errors/AppError";
 import Order from "../../models/Order.model";
 
 class DeleteOrderService {
-  static async execute(id: string): Promise<any> {
+  static async execute(id: string): Promise<void> {
     const orderRepo = AppDataSource.getRepository(Order);
 
     const order = await orderRepo.findOne({ where: { id } });
@@ -13,8 +13,6 @@ class DeleteOrderService {
     }
 
     await orderRepo.softDelete(id);
-
-    return;
   }
 }
 

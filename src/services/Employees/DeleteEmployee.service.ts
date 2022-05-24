@@ -17,8 +17,6 @@ class deleteEmployeeService {
     }
 
     await employeeRepository.softDelete(id);
-
-    return;
   }
 }
 
