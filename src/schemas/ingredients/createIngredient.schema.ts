@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import { roundToTwo } from "../../utils";
+import { MAX_DECIMAL, roundToTwo } from "../../utils";
 
 const createIngredientSchema = {
   schema: {
@@ -16,14 +16,26 @@ const createIngredientSchema = {
           .required("measure field is required"),
         amount: yup
           .number()
+          .max(
+            MAX_DECIMAL,
+            "amount field can't have more than 10 digits in total (including decimal places)"
+          )
           .positive("amount field can't be negative")
           .required("amount field is required"),
         amountMax: yup
           .number()
+          .max(
+            MAX_DECIMAL,
+            "amountMax field can't have more than 10 digits in total (including decimal places)"
+          )
           .positive("amountMax field can't be negative")
           .required("amountMax field is required"),
         amountMin: yup
           .number()
+          .max(
+            MAX_DECIMAL,
+            "amountMin field can't have more than 10 digits in total (including decimal places)"
+          )
           .positive("amountMin field can't be negative")
           .required("amountMin field is required")
           .lessThan(

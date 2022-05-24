@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { MAX_INT } from "../../utils";
 
 const createOrderSchema = {
   schema: {
@@ -14,7 +15,11 @@ const createOrderSchema = {
           .array()
           .of(
             yup.object().shape({
-              quantity: yup.number().integer("quantity field is an integer"),
+              quantity: yup
+                .number()
+                .max(MAX_INT, "quantity field can't be so huge")
+                .integer("quantity field is an integer")
+                .positive("quantity field can't be negative"),
               productId: yup
                 .string()
                 .uuid("invalid id")
