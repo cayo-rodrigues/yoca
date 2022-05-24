@@ -1,3 +1,4 @@
+import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 import { IProductFeedback } from "../interfaces/ProductFeedback";
 import CreateProductFeedback from "../services/ProductFeedback/createFeedback.service";
@@ -9,33 +10,41 @@ import UpdateProductFeedback from "../services/ProductFeedback/updateGeneralFeed
 export class ProductFeedbackController {
   static async store(req: Request, res: Response) {
     const feedback: IProductFeedback = req.body;
+
     const newFeedback = await CreateProductFeedback.execute(feedback);
+
     return res.status(201).json({
       message: "Product Feedback created",
-      feedback: newFeedback,
+      feedback: instanceToPlain(newFeedback),
     });
   }
   static async index(req: Request, res: Response) {
     const feedbacks = await ListProductFeedback.execute();
-    return res.status(200).json(feedbacks);
+    return res.status(200).json(instanceToPlain(feedbacks));
   }
   static async indexOne(req: Request, res: Response) {
     const { id } = req.params;
+
     const feedback = await ListOneProductFeedback.execute(id);
-    return res.status(200).json(feedback);
+
+    return res.status(200).json(instanceToPlain(feedback));
   }
   static async remove(req: Request, res: Response) {
     const { id } = req.params;
-    const feedback = await DeleteProductFeedback.execute(id);
+
+    await DeleteProductFeedback.execute(id);
+
     return res.status(204).json();
   }
   static async update(req: Request, res: Response) {
     const { id } = req.params;
     const feeedback: IProductFeedback = req.body;
+
     const updatedFeedback = await UpdateProductFeedback.execute(id, feeedback);
+
     return res.status(200).json({
       message: "Product Feedback updated",
-      feedback: updatedFeedback,
+      feedback: instanceToPlain(updatedFeedback),
     });
   }
 }

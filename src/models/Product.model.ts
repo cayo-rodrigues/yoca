@@ -15,6 +15,7 @@ import ProductIngredient from "./ProductsIngredients.model";
 import OrderProduct from "./OrdersProducts.model";
 import { Exclude, Expose } from "class-transformer";
 import Ingredient from "./Ingredient.model";
+import ProductCategory from "./ProductCategory.model";
 
 @Entity("products")
 export default class Product {
@@ -36,6 +37,13 @@ export default class Product {
     { eager: true }
   )
   ingredients: ProductIngredient[];
+
+  @OneToMany(
+    () => ProductCategory,
+    (ProductCategory) => ProductCategory.product,
+    { eager: true }
+  )
+  categories: ProductCategory[];
 
   @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
     eager: true,

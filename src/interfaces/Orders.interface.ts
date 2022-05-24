@@ -1,4 +1,4 @@
-import { number } from "yup";
+import Product from "../models/Product.model";
 
 export interface IOrderProduct {
   quantity: number;
@@ -20,4 +20,9 @@ export interface IUpdateStatusReq {
 export interface IIngredientsArray {
   ingredientId: string;
   amount: number;
+}
+export interface IOrderProducts {
+  quantity: number;
+  totalPrice: number;
+  product: Product;
 }

@@ -1,3 +1,4 @@
+import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 
 import { IBaseIngredient } from "../interfaces/Ingredient.interface";
@@ -13,13 +14,16 @@ class IngredientController {
 
     const ingredient = await CreateIngredientService.execute(ingredientInfo);
 
-    return res.status(201).send({ message: "Ingredient created", ingredient });
+    return res.status(201).send({
+      message: "Ingredient created",
+      ingredient: instanceToPlain(ingredient),
+    });
   }
 
   static async index(req: Request, res: Response) {
     const ingredients = await ListIngredientsService.execute();
 
-    return res.send(ingredients);
+    return res.send(instanceToPlain(ingredients));
   }
 
   static async show(req: Request, res: Response) {
@@ -27,7 +31,7 @@ class IngredientController {
 
     const ingredient = await ShowIngredientService.execute({ id });
 
-    return res.send(ingredient);
+    return res.send(instanceToPlain(ingredient));
   }
 
   static async update(req: Request, res: Response) {
@@ -39,7 +43,10 @@ class IngredientController {
       ...ingredientInfo,
     });
 
-    return res.send({ message: "Ingredient updated", updatedIngredient });
+    return res.send({
+      message: "Ingredient updated",
+      updatedIngredient: instanceToPlain(updatedIngredient),
+    });
   }
 
   static async delete(req: Request, res: Response) {

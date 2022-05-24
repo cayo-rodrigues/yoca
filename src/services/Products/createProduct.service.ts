@@ -30,6 +30,8 @@ class CreateProductService {
         amount: ingredient.amount,
       });
 
+      console.log(productIngredient);
+
       await productsIngredientsRepo.save(productIngredient);
     });
 

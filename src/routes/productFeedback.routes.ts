@@ -2,6 +2,7 @@ import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
 import { ProductFeedbackController } from "../controllers/ProductFeedbacks.controller";
 import createProductFeedbackSchema from "../schemas/productFeedback/createFeedback.schema";
+import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 const productFeedbackRoutes = Router();
 
@@ -11,6 +12,11 @@ productFeedbackRoutes.post(
   ProductFeedbackController.store
 );
 productFeedbackRoutes.get("/", ProductFeedbackController.index);
+
+productFeedbackRoutes.use(
+  "/:id",
+  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
+);
 
 productFeedbackRoutes.get("/:id", ProductFeedbackController.indexOne);
 
