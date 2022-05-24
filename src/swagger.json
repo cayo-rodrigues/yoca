@@ -1,0 +1,468 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "YOCA API Documentation",
+    "description": "API para gerenciamento de restaurante.",
+    "termsOfService": "",
+    "contact": {
+      "email": "yoca@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/",
+      "description": "YOCA API"
+    },
+    {
+      "url": "http://localhost:3000/server"
+    }
+  ],
+  "paths": {
+    "/super": {
+      "post": {
+        "summary": "Criação do Super Usuário",
+        "description": "Rota para a criação do super usuário que terá privilégio de administrador.",
+        "tags": ["Sessions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Super"
+              },
+              "examples": {
+                "super": {
+                  "value": {
+                    "name": "admin",
+                    "email": "admin@email.com",
+                    "phone": "0194002-8922",
+                    "password": "admin123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/SuperResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/SuperBadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees": {
+      "post": {
+        "summary": "Criação de Usuários para Employees",
+        "description": "Rota para a criação de usuários.",
+        "tags": ["Employees"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Employees"
+              },
+              "examples": {
+                "super": {
+                  "value": {
+                    "name": "employee",
+                    "email": "employee@email.com",
+                    "phone": "0194002-8922",
+                    "password": "admin123456",
+                    "accessLevel": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Employee created",
+                    "employee": {
+                      "name": "testaurant",
+                      "phone": "4124002-8922",
+                      "email": "admin@email.com",
+                      "accessLevel": 2,
+                      "id": "904b8c97-91d4-4d44-8687-f94be0945d8e",
+                      "createdAt": "2022-05-24T12:29:09.457Z",
+                      "updatedAt": "2022-05-24T12:29:09.457Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/SuperBadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de Employees",
+        "description": "Rota para a listagem de usuários.",
+        "tags": ["Employees"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do employee",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "name": "employee",
+                      "phone": "4124002-8922",
+                      "email": "employee@email.com",
+                      "accessLevel": 2,
+                      "id": "904b8c97-91d4-4d44-8687-f94be0945d8e",
+                      "createdAt": "2022-05-24T12:29:09.457Z",
+                      "updatedAt": "2022-05-24T12:29:09.457Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/{id}": {
+      "get": {
+        "summary": "Listagem de Employees",
+        "description": "Rota para a listagem de usuários.",
+        "tags": ["Employees"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do employee",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "name": "employee",
+                      "phone": "4124002-8922",
+                      "email": "employee@email.com",
+                      "accessLevel": 2,
+                      "id": "904b8c97-91d4-4d44-8687-f94be0945d8e",
+                      "createdAt": "2022-05-24T12:29:09.457Z",
+                      "updatedAt": "2022-05-24T12:29:09.457Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Employee with this id not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Atualização de Employee",
+        "description": "Rota para a atualização de Employee",
+        "tags": ["Employees"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do employee",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Super"
+              },
+              "examples": {
+                "employee": {
+                  "value": {
+                    "name": "xxxxtest",
+                    "email": "xxxxtest@test.com",
+                    "phone": "987654321999",
+                    "password": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "name": "xxxxtest",
+                    "email": "xxxxtest@test.com",
+                    "phone": "987654321999",
+                    "password": "password"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Employee with this id not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleção de Employees",
+        "description": "Rota para deletar usuários.",
+        "tags": ["Employees"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do employee",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Employee with this id not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Super": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "SuperResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Super user created"
+          },
+          "superUser": {
+            "type": "object",
+            "example": {
+              "name": "admin",
+              "email": "admin@email.com",
+              "phone": "0194002-8922",
+              "password": "admin123456"
+            }
+          }
+        }
+      },
+      "SuperBadRequest": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "example": {
+              "body": [
+                {
+                  "message": "Field password is required",
+                  "propertyPath": "password"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Employees": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "accessLevel": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
