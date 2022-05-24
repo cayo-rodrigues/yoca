@@ -3,11 +3,14 @@ import { expressYupMiddleware } from "express-yup-middleware";
 
 import IngredientController from "../controllers/Ingredient.controller";
 import normalizeIngredientMiddleware from "../middlewares/ingredients/normalizeIngredient.middleware";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 import createIngredientSchema from "../schemas/ingredients/createIngredient.schema";
 import updateIngredientSchema from "../schemas/ingredients/updateIngredient.schema";
 import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 const ingredientsRoutes = Router();
+
+ingredientsRoutes.use(verifyAccessLevelMiddleware(2));
 
 ingredientsRoutes.post(
   "/",
