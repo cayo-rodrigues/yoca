@@ -76,6 +76,9 @@ class CreateOrderService {
       }
     }
 
+    let isWarning = false;
+    const warningIngredientsName: string[] = [];
+
     for (let i = 0; i < ingredientsAcc.length; i++) {
       const ingredientInfo = ingredientsAcc[i];
 
@@ -85,6 +88,11 @@ class CreateOrderService {
 
       ingredient.amount =
         +ingredient.amount - ingredientInfo.amount * orderProduct.quantity;
+
+      if (ingredient.amount <= +ingredient.amountMin) {
+        isWarning = true;
+        warningIngredientsName.push(ingredient.name);
+      }
     }
 
     ingredientsRepo.save(productsingredients);
@@ -131,10 +139,18 @@ class CreateOrderService {
       await orderProductRepo.save(orderProduct);
     });
 
-    return {
-      message: "Order created!",
-      order,
-    };
+    return isWarning
+      ? {
+          warning:
+            warningIngredientsName.join(" is below amount min, ") +
+            " is below amount min",
+          message: "Order created!",
+          order,
+        }
+      : {
+          message: "Order created!",
+          order,
+        };
   }
 }
 
