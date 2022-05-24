@@ -56,17 +56,7 @@ export default class Order {
     return this.orderProducts?.map(({ quantity, totalPrice, product }) => ({
       quantity,
       totalPrice,
-      product: {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        calories: product.calories,
-        createdAt: product.createdAt,
-        updatedAt: product.updatedAt,
-        ingredients: product.ingredients,
-        feedbacks: product.feedbacks,
-        categories: product.categories,
-      },
+      product,
     }));
   }
 
