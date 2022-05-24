@@ -4,9 +4,11 @@ import AppError from "../../errors/AppError";
 import { ICreateOrder } from "../../interfaces/Orders.interface";
 import Bill from "../../models/Bill.model";
 import Employee from "../../models/Employee.model";
+import Ingredient from "../../models/Ingredient.model";
 import Order from "../../models/Order.model";
 import OrderProduct from "../../models/OrdersProducts.model";
 import Product from "../../models/Product.model";
+import { IIngredientsArray } from "../../interfaces/Orders.interface";
 
 class CreateOrderService {
   static async execute({
@@ -20,10 +22,12 @@ class CreateOrderService {
     const employeeRepo = AppDataSource.getRepository(Employee);
     const orderProductRepo = AppDataSource.getRepository(OrderProduct);
     const billsRepo = AppDataSource.getRepository(Bill);
+    const ingredientsRepo = AppDataSource.getRepository(Ingredient);
 
     const productsIds = [
       ...new Set(ordersProducts.map(({ productId }) => productId)),
     ];
+
     const products = await productsRepo.findBy({
       id: In(productsIds),
     });
@@ -31,6 +35,59 @@ class CreateOrderService {
     if (products.length !== productsIds.length) {
       throw new AppError("Invalid list of ids", 400);
     }
+
+    const productsIngredientsInfo = products.map((product) => {
+      return product.ingredients.map((productIngredient) => {
+        return {
+          ingredientId: productIngredient.ingredientId,
+          amount: productIngredient.amount,
+        };
+      });
+    });
+
+    const ingredientsAcc: IIngredientsArray[] = [];
+
+    productsIngredientsInfo.flat().forEach((current) => {
+      const idx = ingredientsAcc.findIndex(
+        (ingredient) => ingredient.ingredientId === current.ingredientId
+      );
+
+      if (idx === -1) {
+        ingredientsAcc.push(current);
+      } else {
+        ingredientsAcc[idx].amount =
+          +current.amount + +ingredientsAcc[idx].amount;
+      }
+    });
+
+    const productsingredients = await ingredientsRepo.findBy({
+      id: In(ingredientsAcc.map(({ ingredientId }) => ingredientId)),
+    });
+
+    for (let i = 0; i < ingredientsAcc.length; i++) {
+      const ingredientInfo = ingredientsAcc[i];
+
+      const ingredient = productsingredients[i];
+
+      const orderProduct = ordersProducts[i];
+
+      if (ingredient.amount < ingredientInfo.amount * orderProduct.quantity) {
+        throw new AppError("Insufficient stock for this order!", 400);
+      }
+    }
+
+    for (let i = 0; i < ingredientsAcc.length; i++) {
+      const ingredientInfo = ingredientsAcc[i];
+
+      const ingredient = productsingredients[i];
+
+      const orderProduct = ordersProducts[i];
+
+      ingredient.amount =
+        +ingredient.amount - ingredientInfo.amount * orderProduct.quantity;
+    }
+
+    ingredientsRepo.save(productsingredients);
 
     const employee = await employeeRepo.findOneBy({
       id: employeeId,
@@ -74,7 +131,10 @@ class CreateOrderService {
       await orderProductRepo.save(orderProduct);
     });
 
-    return order;
+    return {
+      message: "Order created!",
+      order,
+    };
   }
 }
 
