@@ -11,5 +11,7 @@ ordersRoutes.post(
   OrdersController.store
 );
 ordersRoutes.get("", OrdersController.index);
+ordersRoutes.patch("/:id", OrdersController.update);
+ordersRoutes.delete("/:id", OrdersController.delete);
 
 export default ordersRoutes;
