@@ -21,7 +21,7 @@ const normalizeProductMiddleware = (
 
   req.productInfo = normalizedProduct;
 
-  next();
+  return next();
 };
 
 export default normalizeProductMiddleware;

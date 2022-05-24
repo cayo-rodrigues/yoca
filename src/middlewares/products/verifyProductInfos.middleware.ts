@@ -41,7 +41,7 @@ const verifyProductInfosMiddleware = async (
     throw new AppError("invalid list of categories ids", 400);
   }
 
-  next();
+  return next();
 };
 
 export default verifyProductInfosMiddleware;
