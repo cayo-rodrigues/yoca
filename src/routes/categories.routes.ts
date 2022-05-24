@@ -2,6 +2,7 @@ import { Router } from "express";
 import { expressYupMiddleware } from "express-yup-middleware";
 import CategoriesController from "../controllers/Categories.controller";
 import ensureAdminPermissionMiddleware from "../middlewares/ensureAdminPermission.middleware";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 import createCategorySchema from "../schemas/categories/createCategory.schema";
 import updateCategorySchema from "../schemas/categories/updateCategory.schema";
 import validateUUIDSchema from "../schemas/validateUUID.schema";
@@ -16,7 +17,7 @@ categoriesRoutes.get(
   CategoriesController.show
 );
 
-categoriesRoutes.use(ensureAdminPermissionMiddleware);
+categoriesRoutes.use(verifyAccessLevelMiddleware(2));
 
 categoriesRoutes.post(
   "/",

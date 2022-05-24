@@ -4,13 +4,14 @@ import { expressYupMiddleware } from "express-yup-middleware";
 import EmployeesController from "../controllers/Employee.controller";
 
 import ensureAdminPermissionMiddleware from "../middlewares/ensureAdminPermission.middleware";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 
 import createEmployeeSchema from "../schemas/employees/updateEmployee.schema";
 import updateEmployeeSchema from "../schemas/employees/updateEmployee.schema";
 
 const employeesRoutes = Router();
 
-employeesRoutes.use(ensureAdminPermissionMiddleware);
+employeesRoutes.use(verifyAccessLevelMiddleware(2));
 
 employeesRoutes.post(
   "/",
