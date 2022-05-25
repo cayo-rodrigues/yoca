@@ -24,6 +24,22 @@ class CreateOrderService {
     const billsRepo = AppDataSource.getRepository(Bill);
     const ingredientsRepo = AppDataSource.getRepository(Ingredient);
 
+    const employee = await employeeRepo.findOneBy({
+      id: employeeId,
+    });
+
+    if (!employee) {
+      throw new AppError("Employee not found", 404);
+    }
+
+    const bill = await billsRepo.findOneBy({
+      id: billId,
+    });
+
+    if (!bill) {
+      throw new AppError("Bill not found", 404);
+    }
+
     const productsIds = [
       ...new Set(ordersProducts.map(({ productId }) => productId)),
     ];
@@ -96,22 +112,6 @@ class CreateOrderService {
     }
 
     ingredientsRepo.save(productsingredients);
-
-    const employee = await employeeRepo.findOneBy({
-      id: employeeId,
-    });
-
-    if (!employee) {
-      throw new AppError("Employee not found", 404);
-    }
-
-    const bill = await billsRepo.findOneBy({
-      id: billId,
-    });
-
-    if (!bill) {
-      throw new AppError("Bill not found", 404);
-    }
 
     const orderTotalPrice = products.reduce(
       (acc, curr, idx) => acc + curr.price * ordersProducts[idx].quantity,
