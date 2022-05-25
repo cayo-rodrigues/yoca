@@ -5,6 +5,7 @@ import { ICreateOrder } from "../interfaces/Orders.interface";
 import CreateOrderService from "../services/Orders/CreateOrder.service";
 import DeleteOrderService from "../services/Orders/DeleteOrder.service";
 import ListOrdersService from "../services/Orders/ListOrders.service";
+import ShowOrderService from "../services/Orders/ShowOrder.service";
 import UpdateOrderStatusService from "../services/Orders/UpdateOrderStatus.service";
 
 class OrdersController {
@@ -49,7 +50,11 @@ class OrdersController {
   }
 
   static async show(req: Request, res: Response) {
-    // TODO
+    const { id } = req.params;
+
+    const order = await ShowOrderService.execute({ id });
+
+    return res.json(instanceToPlain(order));
   }
 
   static async update(req: Request, res: Response) {
