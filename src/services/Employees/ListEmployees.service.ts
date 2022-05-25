@@ -1,18 +1,23 @@
 import AppDataSource from "../../data-source";
 import Employee from "../../models/Employee.model";
-import { instanceToInstance } from "class-transformer";
+import { IList } from "../../interfaces/List.interface";
 
 class ListEmployeesService {
-  static async execute(): Promise<Employee[]> {
+  static async execute({ per_page, page }: IList): Promise<Employee[]> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
-    const employees = await employeeRepository.find();
+    if (!per_page) {
+      per_page = 20;
+    }
 
-    const employeesWithoutPassword = employees.map((employee) =>
-      instanceToInstance(employee)
-    );
+    if (!page) {
+      page = 1;
+    }
 
-    return employeesWithoutPassword;
+    return await employeeRepository.find({
+      skip: per_page * (page - 1),
+      take: per_page,
+    });
   }
 }
 
