@@ -74,8 +74,17 @@ describe(" GET - /categories/:id ", () => {
       password: "S3nh@F0rt3",
     });
 
+    const createCategoryResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "cat eagle laugh" });
+
+    await request(app)
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const listOneCategoryResponse = await request(app)
-      .get("/categories/aleatory-uuid")
+      .get(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listOneCategoryResponse.status).toBe(404);

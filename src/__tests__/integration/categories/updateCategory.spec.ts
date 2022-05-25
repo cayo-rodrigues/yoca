@@ -106,12 +106,20 @@ describe(" PATCH - /categories/:id ", () => {
       password: "S3nh@F0rt3",
     });
 
-    const updateOneCategoryResponse = await request(app)
-      .patch("/categories/uuid")
+    const createCategoryResponse = await request(app)
+      .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(categoryUpdates);
+      .send({ name: "cat eagle laugh" });
 
-    console.log(updateOneCategoryResponse);
+    const createAnotherCategoryResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "gato águia laugh" });
+
+    const updateOneCategoryResponse = await request(app)
+      .patch(`/categories/${createAnotherCategoryResponse.body.category.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "cat eagle laugh" });
 
     expect(updateOneCategoryResponse.status).toBe(409);
     expect(updateOneCategoryResponse.body).toEqual(
@@ -126,9 +134,18 @@ describe(" PATCH - /categories/:id ", () => {
       password: "S3nh@F0rt3",
     });
 
-    const updateOneCategoryResponse = await request(app)
-      .patch("/categories/aleatory-uuid")
+    const createCategoryResponse = await request(app)
+      .get("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    await request(app)
+      .delete(`/categories/${createCategoryResponse.body[0].id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const updateOneCategoryResponse = await request(app)
+      .patch(`/categories/${createCategoryResponse.body[0].id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "cat eagle laugh" });
 
     expect(updateOneCategoryResponse.status).toBe(404);
     expect(updateOneCategoryResponse.body).toEqual(

@@ -95,8 +95,17 @@ describe(" DELETE - /categories/:id ", () => {
       password: "S3nh@F0rt3",
     });
 
+    const createCategoryResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "cat eagle laugh" });
+
+    await request(app)
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const delOneCategoryResponse = await request(app)
-      .delete("/categories/aleatory-uuid")
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delOneCategoryResponse.status).toBe(404);
