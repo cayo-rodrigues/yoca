@@ -1,21 +1,12 @@
 import * as yup from "yup";
+import { normalizeTextInput } from "../../utils";
 
-const createEmployeeSchema = {
-  schema: {
-    user: {
-      yupSchema: yup.object().shape({
-        id: yup.string().uuid("Invalid uuid").required("Field id is required"),
-      }),
-    },
-    body: {
-      yupSchema: yup.object().shape({
-        name: yup
-        .string()
-        .max(64, "Field name has a max length of 64 characters")
-        .optional(),
-      }),
-    },
-  },
-};
+const updateCategorySchema = yup.object().shape({
+  name: yup
+    .string()
+    .max(64, "Field name cannot be longer than 64 characters")
+    .required("Field name is required")
+    .transform((value) => normalizeTextInput(value)),
+});
 
-export default createEmployeeSchema;
+export default updateCategorySchema;
