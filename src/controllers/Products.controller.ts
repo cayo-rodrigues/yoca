@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { instanceToPlain } from "class-transformer";
 
-import CreateProductService from "../services/Products/createProduct.service";
-import ListProductsService from "../services/Products/listProducts.service";
-import ListOneProductService from "../services/Products/listOneProduct.service";
-import DeleteProductService from "../services/Products/deleteProduct.service";
-import UpdateProductService from "../services/Products/updateProduct.service";
+import CreateProductService from "../services/Products/CreateProduct.service";
+import ListProductsService from "../services/Products/ListProducts.service";
+import ListOneProductService from "../services/Products/ShowProduct.service";
+import DeleteProductService from "../services/Products/DeleteProduct.service";
+import UpdateProductService from "../services/Products/UpdateProduct.service";
 
 class ProductsController {
   static async store(req: Request, res: Response) {
