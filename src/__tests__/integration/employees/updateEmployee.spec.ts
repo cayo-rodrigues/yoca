@@ -31,7 +31,7 @@ describe(" PATCH - /employees/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -39,14 +39,14 @@ describe(" PATCH - /employees/:id ", () => {
     name: "John doe",
     email: "johndoe@email.com",
     phone: "999999999999",
-    password: "12345678",
+    password: "S3nh@F0rt3",
     accessLevel: 2,
   };
   const employeeUpdates = {
     name: "New John Doe",
     email: "newjohndoe@email.com",
     phone: "8922-4002123",
-    password: "12345678",
+    password: "S3nh@F0rt3",
     accessLevel: 4,
   };
 
@@ -57,7 +57,7 @@ describe(" PATCH - /employees/:id ", () => {
   it("Should be able to update an existing employee", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createEmployeeResponse = await request(app)
@@ -74,8 +74,8 @@ describe(" PATCH - /employees/:id ", () => {
     expect(updateEmployeeResponse.body).toMatchObject<EmployeeUpdatesResponse>({
       message: "Employee updated",
       employee: {
-        ...updateEmployeeResponse.body,
-        name: "New John Doe",
+        ...updateEmployeeResponse.body.employee,
+        name: "new john doe",
         email: "newjohndoe@email.com",
         phone: "8922-4002123",
         accessLevel: 4,
@@ -85,7 +85,7 @@ describe(" PATCH - /employees/:id ", () => {
   it("Should not be able to update an existing employee with repeated email", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createEmployeeResponse = await request(app)
@@ -108,7 +108,7 @@ describe(" PATCH - /employees/:id ", () => {
   it("Should not be able to update an existing employee without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const withoutAccessUser = await request(app)
@@ -118,20 +118,20 @@ describe(" PATCH - /employees/:id ", () => {
         name: "John doe",
         email: "johndoedoe@email.com",
         phone: "999999999998",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoedoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const employeeUpdates = {
       name: "New John Doe",
       email: "newjohndoedoe@email.com",
       phone: "8922-4002456",
-      password: "12345678",
+      password: "S3nh@F0rt3",
       accessLevel: 4,
     };
     const updateEmployeeResponse = await request(app)
@@ -142,7 +142,7 @@ describe(" PATCH - /employees/:id ", () => {
     expect(updateEmployeeResponse.status).toBe(401);
     expect(updateEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Unauthorized",
+        message: "You don't have permission to access this route",
       })
     );
   });
