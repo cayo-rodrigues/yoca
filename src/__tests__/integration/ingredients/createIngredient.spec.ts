@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe("POST - /ingredients", () => {
@@ -19,25 +18,18 @@ describe("POST - /ingredients", () => {
   });
 
   const mockIngredient = {
-    name: "Cenoura",
+    name: "cenoura",
     measure: "kg",
     amount: 50,
     amountMax: 100,
     amountMin: 15,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to create an ingredient", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
     await request(app).post("/super").send({
       name: "testaurant",
       email: "admin@email.com",
@@ -50,7 +42,6 @@ describe("POST - /ingredients", () => {
       password: "admin123",
     });
 
-    uuidSpy.mockReturnValueOnce("uuid");
     const createIngredientResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -60,7 +51,7 @@ describe("POST - /ingredients", () => {
     expect(createIngredientResponse.body).toMatchObject({
       message: "Ingredient created",
       ingredient: {
-        id: "uuid",
+        ...createIngredientResponse.body.ingredient,
         ...mockIngredient,
       },
     });
@@ -78,7 +69,7 @@ describe("POST - /ingredients", () => {
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
-        name: "John doe",
+        name: "john doe",
         email: "johndoe@email.com",
         phone: "999999999999",
         password: "12345678",
@@ -96,7 +87,7 @@ describe("POST - /ingredients", () => {
       .post("/ingredients")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send({
-        name: "Batata",
+        name: "batata",
         measure: "kg",
         amount: 50,
         amountMax: 100,

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/30</span>
+                <span class='fraction'>46/46</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/30</span>
+                <span class='fraction'>46/46</span>
             </div>
         
             
@@ -93,7 +93,39 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -124,33 +156,49 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as yup from "yup";
+import { MAX_DECIMAL, normalizeTextInput, roundToTwo } from "../../utils";
 &nbsp;
-const updateIngredientSchema = {
-  schema: {
-    body: {
-      yupSchema: yup.object().shape({
-        name: yup.string().max(164, "name field has a max of 164 characters"),
-        measure: yup.string().max(3, "measure field has a max of 3 characters"),
-        amount: yup.number().positive("amount field can't be negative"),
-        amountMax: yup
-          .number()
-          .positive("amountMax field can't be negative")
-          .required("Field amountMax is required when updating ingredient"),
-        amountMin: yup
-          .number()
-          .positive("amountMin field can't be negative")
-          .lessThan(
-            yup.ref("amountMax"),
-            "amountMin should be less than amountMax"
-          )
-          .required("Field amountMin is required when updating ingredient"),
-      }),
-      validateOptions: {
-        abortEarly: false,
-      },
-    },
-  },
-};
+const updateIngredientSchema = yup.object().shape({
+  name: yup
+    .string()
+    .max(164, "Field name cannot be longer than 164 characters")
+    .transform((value) =&gt; normalizeTextInput(value)),
+  measure: yup
+    .string()
+    .max(3, "Field measure cannot be longer than 3 characters")
+    .transform((value) =&gt; normalizeTextInput(value)),
+  amount: yup
+    .number()
+    .max(
+      MAX_DECIMAL,
+      "Field amount cannot be longer than 10 characters (including decimal places)"
+    )
+    .positive("Field amount must be a positive number")
+    .transform((value) =&gt; roundToTwo(value)),
+  amountMax: yup
+    .number()
+    .max(
+      MAX_DECIMAL,
+      "Field amountMax cannot be longer than 10 characters (including decimal places)"
+    )
+    .positive("Field amountMax must be a positive number")
+    .required("Field amountMax is required")
+    .transform((value) =&gt; roundToTwo(value)),
+&nbsp;
+  amountMin: yup
+    .number()
+    .max(
+      MAX_DECIMAL,
+      "Field amountMin cannot be longer than 10 characters (including decimal places)"
+    )
+    .positive("Field amountMin must be a positive number")
+    .lessThan(
+      yup.ref("amountMax"),
+      "Field amountMin should be smaller than field amountMax"
+    )
+    .required("Field amountMin is required")
+    .transform((value) =&gt; roundToTwo(value)),
+});
 &nbsp;
 export default updateIngredientSchema;
 &nbsp;</pre></td></tr></table></pre>
@@ -160,7 +208,7 @@ export default updateIngredientSchema;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue May 24 2022 17:15:53 GMT-0300 (Brasilia Standard Time)
+                at Wed May 25 2022 12:11:06 GMT-0300 (Horário Padrão de Brasília)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
