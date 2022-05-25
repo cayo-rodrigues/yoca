@@ -2,7 +2,6 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
 
 describe(" GET - /ingredients ", () => {
   let connection: DataSource;
@@ -16,16 +15,12 @@ describe(" GET - /ingredients ", () => {
   });
 
   const mockIngredient = {
-    name: "Cenoura",
+    name: "cenoura",
     measure: "kg",
     amount: 50,
     amountMax: 100,
     amountMin: 15,
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
@@ -55,7 +50,16 @@ describe(" GET - /ingredients ", () => {
     expect(listIngredientsResponse.status).toBe(200);
     expect(listIngredientsResponse.body).toHaveProperty("reduce");
     expect(listIngredientsResponse.body).toEqual(
-      expect.arrayContaining([createIngredientResponse.body.ingredient])
+      expect.arrayContaining([
+        {
+          ...createIngredientResponse.body.ingredient,
+          amount: createIngredientResponse.body.ingredient.amount.toFixed(2),
+          amountMin:
+            createIngredientResponse.body.ingredient.amountMin.toFixed(2),
+          amountMax:
+            createIngredientResponse.body.ingredient.amountMax.toFixed(2),
+        },
+      ])
     );
   });
 
