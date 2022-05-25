@@ -37,7 +37,13 @@ class OrdersController {
   }
 
   static async index(req: Request, res: Response) {
-    const orders = await ListOrdersService.execute();
+    const per_page = req.query.per_page as unknown as string;
+    const page = req.query.page as unknown as string;
+
+    const orders = await ListOrdersService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     return res.json(instanceToPlain(orders));
   }
