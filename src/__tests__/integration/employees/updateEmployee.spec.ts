@@ -142,7 +142,7 @@ describe(" PATCH - /employees/:id ", () => {
     expect(updateEmployeeResponse.status).toBe(401);
     expect(updateEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "You don't have permission to access this route",
+        message: "Unauthorized",
       })
     );
   });
