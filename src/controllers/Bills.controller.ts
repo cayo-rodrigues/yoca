@@ -19,8 +19,8 @@ class BillsController {
 
   static async index(req: Request, res: Response) {
     const listUnpaid = !!req.query.unpaid;
-    const per_page = req.query.per_page as unknown as string;
-    const page = req.query.page as unknown as string;
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
 
     const bills = await ListBillsService.execute({
       listUnpaid,

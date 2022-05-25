@@ -31,8 +31,8 @@ class EmployeesController {
   }
 
   static async index(req: Request, res: Response) {
-    const per_page = req.query.per_page as unknown as string;
-    const page = req.query.page as unknown as string;
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
 
     const employees = await ListEmployeesService.execute({
       per_page: +per_page,
