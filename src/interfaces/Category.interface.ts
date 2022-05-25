@@ -10,3 +10,8 @@ export interface IUpdateCategory {
 export interface IUpdateCategoryData {
   name?: string;
 }
+
+export interface IListCategories {
+  per_page?: number;
+  page?: number;
+}

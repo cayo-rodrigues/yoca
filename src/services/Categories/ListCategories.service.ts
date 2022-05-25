@@ -1,13 +1,26 @@
 import AppDataSource from "../../data-source";
+import { IListCategories } from "../../interfaces/Category.interface";
 import Category from "../../models/Category.model";
 
 class ListCategoriesService {
-  static async execute(): Promise<Category[]> {
+  static async execute({
+    per_page,
+    page,
+  }: IListCategories): Promise<Category[]> {
     const categoryRepository = AppDataSource.getRepository(Category);
 
-    const categories = await categoryRepository.find();
+    if (!per_page) {
+      per_page = 20;
+    }
 
-    return categories;
+    if (!page) {
+      page = 1;
+    }
+
+    return await categoryRepository.find({
+      skip: page - 1,
+      take: per_page,
+    });
   }
 }
 

@@ -20,7 +20,7 @@ class ListBillsService {
 
     if (listUnpaid) {
       return await billsRepository.find({
-        skip: page - 1,
+        skip: per_page * (page - 1),
         take: per_page,
         where: {
           paid: false,
@@ -29,7 +29,7 @@ class ListBillsService {
     }
 
     return await billsRepository.find({
-      skip: page - 1,
+      skip: per_page * (page - 1),
       take: per_page,
     });
   }
