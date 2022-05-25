@@ -154,7 +154,7 @@ describe("POST - /employees", () => {
     expect(newEmployeeResponse.status).toBe(401);
     expect(newEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "You don't have permission to access this route",
+        message: "Unauthorized",
       })
     );
   });

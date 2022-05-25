@@ -16,7 +16,7 @@ describe(" GET - /employees ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -24,7 +24,7 @@ describe(" GET - /employees ", () => {
     name: "John doe",
     email: "johndoe@email.com",
     phone: "999999999999",
-    password: "12345678",
+    password: "S3nh@F0rt3",
     accessLevel: 2,
   };
 
@@ -35,17 +35,23 @@ describe(" GET - /employees ", () => {
   it("Should be able to list all employees", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
+
+    console.log({ adminLoginResponse });
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
+    console.log({ createEmployeeResponse });
+
     const listEmployeesResponse = await request(app)
       .get("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    console.log({ listEmployeesResponse });
 
     expect(listEmployeesResponse.status).toBe(200);
     expect(listEmployeesResponse.body).toHaveProperty("reduce");
@@ -55,8 +61,7 @@ describe(" GET - /employees ", () => {
   });
 
   it("Should not be able to list employees being unregistered user", async () => {
-    const listEmployeesResponse = await request(app)
-      .get("/employees")
+    const listEmployeesResponse = await request(app).get("/employees");
 
     expect(listEmployeesResponse.status).toBe(401);
     expect(listEmployeesResponse.body).toEqual(
