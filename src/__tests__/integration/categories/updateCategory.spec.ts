@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe(" PATCH - /categories/:id ", () => {
@@ -23,12 +22,8 @@ describe(" PATCH - /categories/:id ", () => {
   };
 
   const categoryUpdates = {
-    name: "Vegans",
+    name: "vegans",
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
@@ -42,12 +37,12 @@ describe(" PATCH - /categories/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("uuid");
@@ -58,14 +53,17 @@ describe(" PATCH - /categories/:id ", () => {
       .send(mockCategory);
 
     const updateOneCategoryResponse = await request(app)
-      .patch("/categories/uuid")
+      .patch(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(categoryUpdates);
 
     expect(updateOneCategoryResponse.status).toBe(200);
     expect(updateOneCategoryResponse.body).toMatchObject({
       message: "Category updated",
-      category: { id: "uuid", ...createCategoryResponse.body.category },
+      category: {
+        ...createCategoryResponse.body.category,
+        name: categoryUpdates.name,
+      },
     });
   });
 
@@ -73,7 +71,7 @@ describe(" PATCH - /categories/:id ", () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("without-access-uuid");
@@ -84,13 +82,13 @@ describe(" PATCH - /categories/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const updateCategoriesResponse = await request(app)
@@ -105,13 +103,15 @@ describe(" PATCH - /categories/:id ", () => {
   it("Should not be able to update one category with repeated name", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const updateOneCategoryResponse = await request(app)
       .patch("/categories/uuid")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(categoryUpdates);
+
+    console.log(updateOneCategoryResponse);
 
     expect(updateOneCategoryResponse.status).toBe(409);
     expect(updateOneCategoryResponse.body).toEqual(
@@ -123,7 +123,7 @@ describe(" PATCH - /categories/:id ", () => {
   it("Should not be able to update one category with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const updateOneCategoryResponse = await request(app)
