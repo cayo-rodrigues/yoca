@@ -1,15 +1,17 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import { IGeneralFeedback } from "../../interfaces/GeneralFeedback.interface";
+import {
+  IGeneralFeedback,
+  IUpdateGeneralFeedback,
+} from "../../interfaces/GeneralFeedback.interface";
 import GeneralFeedback from "../../models/GeneralFeedback.model";
 
-export default class UpdateGeneralFeedback {
-  static async execute(id: string, feedback: IGeneralFeedback) {
+class UpdateGeneralFeedback {
+  static async execute(feedback: IUpdateGeneralFeedback) {
     const generalFeedbackRepository =
       AppDataSource.getRepository(GeneralFeedback);
 
     const updatedFeedback = await generalFeedbackRepository.preload({
-      id,
       ...feedback,
     });
     if (!feedback) {
@@ -21,3 +23,5 @@ export default class UpdateGeneralFeedback {
     return updatedFeedback;
   }
 }
+
+export default UpdateGeneralFeedback;

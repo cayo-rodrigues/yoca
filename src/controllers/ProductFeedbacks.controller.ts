@@ -33,7 +33,7 @@ class ProductFeedbackController {
   static async show(req: Request, res: Response) {
     const { id } = req.params;
 
-    const feedback = await ShowProductFeedbackService.execute(id);
+    const feedback = await ShowProductFeedbackService.execute({ id });
 
     return res.json(instanceToPlain(feedback));
   }
@@ -42,7 +42,8 @@ class ProductFeedbackController {
     const { id } = req.params;
     const { description, productId, rating }: IProductFeedback = req.body;
 
-    const updatedFeedback = await UpdateProductFeedbackService.execute(id, {
+    const updatedFeedback = await UpdateProductFeedbackService.execute({
+      id,
       description,
       productId,
       rating,
@@ -57,7 +58,7 @@ class ProductFeedbackController {
   static async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    await DeleteProductFeedbackService.execute(id);
+    await DeleteProductFeedbackService.execute({ id });
 
     return res.status(204).json();
   }

@@ -1,11 +1,11 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
 
-import CreateBillService from "../services/Bills/createBill.service";
-import DeleteBillService from "../services/Bills/deleteBill.service";
-import ListBillsService from "../services/Bills/listBills.service";
-import ShowBillService from "../services/Bills/showBill.service";
-import UpdateBillService from "../services/Bills/updateBill.service";
+import CreateBillService from "../services/Bills/CreateBill.service";
+import DeleteBillService from "../services/Bills/DeleteBill.service";
+import ListBillsService from "../services/Bills/ListBills.service";
+import ShowBillService from "../services/Bills/ShowBill.service";
+import UpdateBillService from "../services/Bills/UpdateBill.service";
 
 class BillsController {
   static async store(req: Request, res: Response) {

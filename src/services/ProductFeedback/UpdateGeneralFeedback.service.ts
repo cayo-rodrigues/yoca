@@ -1,15 +1,17 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import { IProductFeedback } from "../../interfaces/ProductFeedback";
+import {
+  IProductFeedback,
+  IUpdateProductFeedback,
+} from "../../interfaces/ProductFeedback";
 import ProductFeedback from "../../models/ProductFeedback.model";
 
 class UpdateProductFeedbackService {
-  static async execute(id: string, feedback: IProductFeedback) {
+  static async execute(feedback: IUpdateProductFeedback) {
     const productFeedbackRepository =
       AppDataSource.getRepository(ProductFeedback);
 
     const updatedFeedback = await productFeedbackRepository.preload({
-      id,
       ...feedback,
     });
     if (!feedback) {

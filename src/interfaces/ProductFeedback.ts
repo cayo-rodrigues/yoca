@@ -3,3 +3,7 @@ export interface IProductFeedback {
   rating: number;
   productId: string;
 }
+
+export interface IUpdateProductFeedback extends IProductFeedback {
+  id: string;
+}

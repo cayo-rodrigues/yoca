@@ -38,18 +38,16 @@ class OrdersController {
 
     const orderUpdated = await UpdateOrderStatusService.execute({ status, id });
 
-    return res
-      .status(201)
-      .json({
-        message: "Order status updated",
-        order: instanceToPlain(orderUpdated),
-      });
+    return res.status(201).json({
+      message: "Order status updated",
+      order: instanceToPlain(orderUpdated),
+    });
   }
 
   static async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    await DeleteOrderService.execute(id);
+    await DeleteOrderService.execute({ id });
 
     res.status(204).json();
   }

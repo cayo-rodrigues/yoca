@@ -1,14 +1,12 @@
-import Category from "../models/Category.model";
-
-export interface CreateCategoryServiceParams {
+export interface ICreateCategory {
   name: string;
 }
 
-export interface UpdateCategoryServiceParams {
+export interface IUpdateCategory {
   id: string;
-  updateData: UpdateCategoryData;
+  updateData: IUpdateCategoryData;
 }
 
-export interface UpdateCategoryData {
+export interface IUpdateCategoryData {
   name?: string;
 }

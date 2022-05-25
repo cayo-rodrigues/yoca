@@ -21,6 +21,7 @@ export interface IIngredientsArray {
   ingredientId: string;
   amount: number;
 }
+
 export interface IOrderProducts {
   quantity: number;
   totalPrice: number;

@@ -1,9 +1,10 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { IUUID } from "../../interfaces/IdParam.interface";
 import ProductFeedback from "../../models/ProductFeedback.model";
 
 class DeleteProductFeedbackService {
-  static async execute(id: string) {
+  static async execute({ id }: IUUID) {
     const productFeedbackRepository =
       AppDataSource.getRepository(ProductFeedback);
 

@@ -1,9 +1,10 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { IUUID } from "../../interfaces/IdParam.interface";
 import Order from "../../models/Order.model";
 
 class DeleteOrderService {
-  static async execute(id: string): Promise<void> {
+  static async execute({ id }: IUUID): Promise<void> {
     const orderRepo = AppDataSource.getRepository(Order);
 
     const order = await orderRepo.findOne({ where: { id } });

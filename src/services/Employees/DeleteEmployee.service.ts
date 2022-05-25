@@ -1,9 +1,10 @@
 import AppDataSource from "../../data-source";
 import Employee from "../../models/Employee.model";
 import AppError from "../../errors/AppError";
+import { IUUID } from "../../interfaces/IdParam.interface";
 
-class deleteEmployeeService {
-  static async execute(id: string): Promise<void> {
+class DeleteEmployeeService {
+  static async execute({ id }: IUUID): Promise<void> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
     const employee = await employeeRepository.findOne({ where: { id } });
@@ -20,4 +21,4 @@ class deleteEmployeeService {
   }
 }
 
-export default deleteEmployeeService;
+export default DeleteEmployeeService;

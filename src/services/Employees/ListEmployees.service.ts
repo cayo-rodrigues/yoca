@@ -2,7 +2,7 @@ import AppDataSource from "../../data-source";
 import Employee from "../../models/Employee.model";
 import { instanceToInstance } from "class-transformer";
 
-class ListAllEmployeesService {
+class ListEmployeesService {
   static async execute(): Promise<Employee[]> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
@@ -16,4 +16,4 @@ class ListAllEmployeesService {
   }
 }
 
-export default ListAllEmployeesService;
+export default ListEmployeesService;

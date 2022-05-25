@@ -1,9 +1,10 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { IUUID } from "../../interfaces/IdParam.interface";
 import GeneralFeedback from "../../models/GeneralFeedback.model";
 
 class ShowGeneralFeedbackService {
-  static async execute(id: string) {
+  static async execute({ id }: IUUID) {
     const generalFeedbackRepository =
       AppDataSource.getRepository(GeneralFeedback);
 

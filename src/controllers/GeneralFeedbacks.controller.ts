@@ -32,7 +32,7 @@ class GeneralFeedbackController {
   static async show(req: Request, res: Response) {
     const { id } = req.params;
 
-    const feedback = await ShowGeneralFeedbackService.execute(id);
+    const feedback = await ShowGeneralFeedbackService.execute({ id });
 
     return res.json(instanceToPlain(feedback));
   }
@@ -41,7 +41,8 @@ class GeneralFeedbackController {
     const { id } = req.params;
     const { description, rating }: IGeneralFeedback = req.body;
 
-    const updatedFeedback = await UpdateGeneralFeedbackService.execute(id, {
+    const updatedFeedback = await UpdateGeneralFeedbackService.execute({
+      id,
       description,
       rating,
     });
@@ -55,7 +56,7 @@ class GeneralFeedbackController {
   static async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    await DeleteGeneralFeedbackService.execute(id);
+    await DeleteGeneralFeedbackService.execute({ id });
 
     return res.status(204).json();
   }

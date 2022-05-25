@@ -1,7 +1,7 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
 import Employee from "../../models/Employee.model";
-import { UpdateEmployeeServiceParams } from "../../interfaces/Employee.interface";
+import { IUpdateEmployee } from "../../interfaces/Employee.interface";
 import { hash } from "bcryptjs";
 import { plainToInstance } from "class-transformer";
 import { Not } from "typeorm";
@@ -11,7 +11,7 @@ class UpdateEmployeeService {
     id,
     updateData,
     loggedUser,
-  }: UpdateEmployeeServiceParams): Promise<Employee> {
+  }: IUpdateEmployee): Promise<Employee> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
     const employee = await employeeRepository.findOne({ where: { id } });
