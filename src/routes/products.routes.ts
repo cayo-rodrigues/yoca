@@ -1,11 +1,6 @@
 import { Router } from "express";
-import { expressYupMiddleware } from "express-yup-middleware";
 
 import ProductsController from "../controllers/Products.controller";
-
-import createProductSchema from "../schemas/products/createProduct.schema";
-import updateProductSchema from "../schemas/products/updateProduct.schema";
-import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 import verifyIdProductParamsMiddleware from "../middlewares/products/verifyIdProductParams.middleware";
 import verifyProductInfosMiddleware from "../middlewares/products/verifyProductInfos.middleware";
@@ -14,30 +9,34 @@ import normalizeProductMiddleware from "../middlewares/products/normalizeProduct
 import normalizeProductToUpdateMiddleware from "../middlewares/products/normalizeProductToUpdate.middleware";
 import verifyProductToUpdateInfosMiddleware from "../middlewares/products/verifyProductToUpdateInfos.middleware";
 
+import createProductSchema from "../schemas/products/createProduct.schema";
+import updateProductSchema from "../schemas/products/updateProduct.schema";
+import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
+import validateBodyMiddleware from "../middlewares/validateBody.middleware";
+
 const productsRoutes = Router();
+
+productsRoutes.get("/", ProductsController.index);
+
+productsRoutes.get("/:id", validateUUIDMiddleware, ProductsController.show);
+
+productsRoutes.use(verifyAccessLevelMiddleware(2));
 
 productsRoutes.post(
   "/",
-  verifyAccessLevelMiddleware(2),
-  expressYupMiddleware({ schemaValidator: createProductSchema }),
+  validateBodyMiddleware(createProductSchema),
   normalizeProductMiddleware,
   verifyProductInfosMiddleware,
   ProductsController.store
 );
-productsRoutes.get("/", ProductsController.index);
 
 productsRoutes.use(verifyIdProductParamsMiddleware);
 
-productsRoutes.use(
-  "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
-);
+productsRoutes.use("/:id", validateUUIDMiddleware);
 
-productsRoutes.get("/:id", ProductsController.show);
 productsRoutes.patch(
   "/:id",
-  verifyAccessLevelMiddleware(2),
-  expressYupMiddleware({ schemaValidator: updateProductSchema }),
+  validateBodyMiddleware(updateProductSchema),
   normalizeProductToUpdateMiddleware,
   verifyProductToUpdateInfosMiddleware,
   ProductsController.update
