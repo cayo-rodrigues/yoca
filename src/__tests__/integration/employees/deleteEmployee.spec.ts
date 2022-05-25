@@ -3,10 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
-
 describe(" DELETE - /employees/:id ", () => {
   let connection: DataSource;
 
@@ -33,38 +29,32 @@ describe(" DELETE - /employees/:id ", () => {
     accessLevel: 2,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete an employee", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
-    uuidSpy.mockReturnValueOnce("some-uuid");
-
     const createEmployeeResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
     const delEmployeeResponse = await request(app)
-      .delete("/employees/some-uuid")
+      .delete(`/employees/${createEmployeeResponse.body.employee.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    // retornando com {}
 
     expect(delEmployeeResponse.status).toBe(204);
     expect(delEmployeeResponse.body).toHaveLength(0);
     expect(
       (
         await request(app)
-          .delete("/employees/some-uuid")
+          .delete(`/employees/${createEmployeeResponse.body.employee.id}`)
           .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
@@ -74,9 +64,6 @@ describe(" DELETE - /employees/:id ", () => {
       email: "admin@email.com",
       password: "admin123",
     });
-
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("some-uuid");
 
     const withoutAccessUser = await request(app)
       .post("/employees")
@@ -94,15 +81,15 @@ describe(" DELETE - /employees/:id ", () => {
       password: "12345678",
     });
 
-    uuidSpy.mockReturnValueOnce("delete-employee-uuid");
-
     const createEmployeeResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
+   //soft delete impedindo query
+
     const delEmployeeResponse = await request(app)
-      .delete("/employees/some-uuid")
+      .delete(`/employees/${createEmployeeResponse.body.employee.id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delEmployeeResponse.status).toBe(401);
@@ -132,7 +119,7 @@ describe(" DELETE - /employees/:id ", () => {
     });
 
     const delEmployeeResponse = await request(app)
-      .delete("/employees/some-aleatory-uuid")
+      .delete("/employees/0f640a5f-e13c-4418-aa41-b773207935492")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delEmployeeResponse.status).toBe(404);
