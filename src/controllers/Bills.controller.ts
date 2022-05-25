@@ -1,5 +1,6 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
+import AppError from "../errors/AppError";
 
 import CreateBillService from "../services/Bills/CreateBill.service";
 import DeleteBillService from "../services/Bills/DeleteBill.service";
@@ -18,8 +19,14 @@ class BillsController {
 
   static async index(req: Request, res: Response) {
     const listUnpaid = !!req.query.unpaid;
+    const per_page = req.query.per_page as unknown as string;
+    const page = req.query.page as unknown as string;
 
-    const bills = await ListBillsService.execute({ listUnpaid });
+    const bills = await ListBillsService.execute({
+      listUnpaid,
+      per_page: +per_page,
+      page: +page,
+    });
 
     return res.json(instanceToPlain(bills));
   }
