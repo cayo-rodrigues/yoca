@@ -1,40 +1,38 @@
 import * as yup from "yup";
-import { MAX_DECIMAL } from "../../utils";
+import { MAX_DECIMAL, roundToTwo } from "../../utils";
 
-const updateProductSchema = {
-  schema: {
-    body: {
-      yupSchema: yup.object().shape({
-        name: yup.string().max(164, "name field has a max of 164 characters"),
-        price: yup
-          .number()
-          .max(
-            MAX_DECIMAL,
-            "price field can't have more than 10 digits in total (including decimal places)"
-          )
-          .positive("price field must be a positive number"),
-        calories: yup
-          .number()
-          .positive("calories field must be a positive number"),
-        ingredients: yup.array().of(
-          yup.object().shape({
-            id: yup
-              .string()
-              .uuid("invalid ingredient id")
-              .required("ingredient id field is required"),
-            amount: yup
-              .number()
-              .positive("ingredient amount field must be a positive number")
-              .required("ingredient id field is required"),
-          })
-        ),
-        categories: yup.array().of(yup.string().uuid("invalid category id")),
-      }),
-      validateOptions: {
-        abortEarly: false,
-      },
-    },
-  },
-};
+const updateProductSchema = yup.object().shape({
+  name: yup
+    .string()
+    .max(164, "Field name cannot be longer than 164 characters"),
+  price: yup
+    .number()
+    .positive("Field price must be a positive number")
+    .max(
+      MAX_DECIMAL,
+      "Field amount cannot be longer than 10 characters (including decimal places)"
+    )
+    .transform((value) => roundToTwo(value)),
+  calories: yup
+    .number()
+    .positive("Field calories must be a positive number")
+    .transform((value) => roundToTwo(value)),
+  ingredients: yup.array().of(
+    yup.object().shape({
+      id: yup
+        .string()
+        .uuid("Field ingredientId must have a valid UUID")
+        .required("Field ingredientId is required"),
+      amount: yup
+        .number()
+        .positive("Field amount must be a positive number")
+        .required("Field amount is required"),
+    })
+  ),
+  categories: yup
+    .array()
+    .of(yup.string().uuid("Field categories must be a valid array of UUID"))
+    .required("Field categories is required"),
+});
 
 export default updateProductSchema;

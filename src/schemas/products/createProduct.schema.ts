@@ -1,46 +1,45 @@
 import * as yup from "yup";
+import { MAX_DECIMAL, normalizeTextInput, roundToTwo } from "../../utils";
 
-const createProductSchema = {
-  schema: {
-    body: {
-      yupSchema: yup.object().shape({
-        name: yup
+const createProductSchema = yup.object().shape({
+  name: yup
+    .string()
+    .max(164, "Field name cannot be longer than 164 characters")
+    .required("Field name is required")
+    .transform((value) => normalizeTextInput(value)),
+  price: yup
+    .number()
+    .positive("Field price must be a positive number")
+    .max(
+      MAX_DECIMAL,
+      "Field amount cannot be longer than 10 characters (including decimal places)"
+    )
+    .required("Field price is required")
+    .transform((value) => roundToTwo(value)),
+  calories: yup
+    .number()
+    .positive("Field calories must be a positive number")
+    .required("Field calories is required")
+    .transform((value) => roundToTwo(value)),
+  ingredients: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup
           .string()
-          .max(164, "name field has a max of 164 characters")
-          .required("name field is required"),
-        price: yup
+          .uuid("Field ingredientId must have a valid UUID")
+          .required("Field ingredientId is required"),
+        amount: yup
           .number()
-          .positive("price field must be a positive number")
-          .required("price field is required"),
-        calories: yup
-          .number()
-          .positive("calories field must be a positive number")
-          .required("calories field is required"),
-        ingredients: yup
-          .array()
-          .of(
-            yup.object().shape({
-              id: yup
-                .string()
-                .uuid("invalid ingredient id")
-                .required("ingredient id field is required"),
-              amount: yup
-                .number()
-                .positive("ingredient amount field must be a positive number")
-                .required("ingredient amount field is required"),
-            })
-          )
-          .required("array of ingredients is required"),
-        categories: yup
-          .array()
-          .of(yup.string().uuid("invalid category id"))
-          .required("array of categories is required"),
-      }),
-      validateOptions: {
-        abortEarly: false,
-      },
-    },
-  },
-};
+          .positive("Field amount must be a positive number")
+          .required("Field amount is required"),
+      })
+    )
+    .required("Field ingredients is required"),
+  categories: yup
+    .array()
+    .of(yup.string().uuid("Field categories must be a valid array of UUID"))
+    .required("Field categories is required"),
+});
 
 export default createProductSchema;

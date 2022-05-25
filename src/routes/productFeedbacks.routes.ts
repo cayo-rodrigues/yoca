@@ -1,32 +1,27 @@
 import { Router } from "express";
-import { expressYupMiddleware } from "express-yup-middleware";
 
 import ProductFeedbackController from "../controllers/ProductFeedbacks.controller";
+import validateBodyMiddleware from "../middlewares/validateBody.middleware";
+import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
 
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 
-import createProductFeedbackSchema from "../schemas/productFeedback/createFeedback.schema";
-import validateUUIDSchema from "../schemas/validateUUID.schema";
+import createProductFeedbackSchema from "../schemas/productFeedback/createProductFeedback.schema";
 
 const productFeedbackRoutes = Router();
 
 productFeedbackRoutes.post(
   "/",
-  expressYupMiddleware({ schemaValidator: createProductFeedbackSchema }),
+  validateBodyMiddleware(createProductFeedbackSchema),
   ProductFeedbackController.store
 );
 productFeedbackRoutes.get("/", ProductFeedbackController.index);
 
-productFeedbackRoutes.use(
-  "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
-);
+productFeedbackRoutes.use("/:id", validateUUIDMiddleware);
 
 productFeedbackRoutes.get("/:id", ProductFeedbackController.show);
 
 productFeedbackRoutes.use("/:id", verifyAccessLevelMiddleware(2));
-
-productFeedbackRoutes.patch("/:id", ProductFeedbackController.update);
 
 productFeedbackRoutes.delete("/:id", ProductFeedbackController.delete);
 

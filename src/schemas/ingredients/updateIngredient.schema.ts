@@ -1,45 +1,46 @@
 import * as yup from "yup";
-import { MAX_DECIMAL } from "../../utils";
+import { MAX_DECIMAL, normalizeTextInput, roundToTwo } from "../../utils";
 
-const updateIngredientSchema = {
-  schema: {
-    body: {
-      yupSchema: yup.object().shape({
-        name: yup.string().max(164, "name field has a max of 164 characters"),
-        measure: yup.string().max(3, "measure field has a max of 3 characters"),
-        amount: yup
-          .number()
-          .max(
-            MAX_DECIMAL,
-            "amount field can't have more than 10 digits in total (including decimal places)"
-          )
-          .positive("amount field can't be negative"),
-        amountMax: yup
-          .number()
-          .max(
-            MAX_DECIMAL,
-            "amountMax field can't have more than 10 digits in total (including decimal places)"
-          )
-          .positive("amountMax field can't be negative")
-          .required("Field amountMax is required when updating ingredient"),
-        amountMin: yup
-          .number()
-          .max(
-            MAX_DECIMAL,
-            "amountMin field can't have more than 10 digits in total (including decimal places)"
-          )
-          .positive("amountMin field can't be negative")
-          .lessThan(
-            yup.ref("amountMax"),
-            "amountMin should be less than amountMax"
-          )
-          .required("Field amountMin is required when updating ingredient"),
-      }),
-      validateOptions: {
-        abortEarly: false,
-      },
-    },
-  },
-};
+const updateIngredientSchema = yup.object().shape({
+  name: yup
+    .string()
+    .max(164, "Field name cannot be longer than 164 characters")
+    .transform((value) => normalizeTextInput(value)),
+  measure: yup
+    .string()
+    .max(3, "Field measure cannot be longer than 3 characters")
+    .transform((value) => normalizeTextInput(value)),
+  amount: yup
+    .number()
+    .max(
+      MAX_DECIMAL,
+      "Field amount cannot be longer than 10 characters (including decimal places)"
+    )
+    .positive("Field amount must be a positive number")
+    .transform((value) => roundToTwo(value)),
+  amountMax: yup
+    .number()
+    .max(
+      MAX_DECIMAL,
+      "Field amountMax cannot be longer than 10 characters (including decimal places)"
+    )
+    .positive("Field amountMax must be a positive number")
+    .required("Field amountMax is required")
+    .transform((value) => roundToTwo(value)),
+
+  amountMin: yup
+    .number()
+    .max(
+      MAX_DECIMAL,
+      "Field amountMin cannot be longer than 10 characters (including decimal places)"
+    )
+    .positive("Field amountMin must be a positive number")
+    .lessThan(
+      yup.ref("amountMax"),
+      "Field amountMin should be smaller than field amountMax"
+    )
+    .required("Field amountMin is required")
+    .transform((value) => roundToTwo(value)),
+});
 
 export default updateIngredientSchema;
