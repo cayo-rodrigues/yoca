@@ -8,7 +8,6 @@ class ListCategoriesService {
     page,
   }: IListCategories): Promise<Category[]> {
     const categoryRepository = AppDataSource.getRepository(Category);
-
     if (!per_page) {
       per_page = 20;
     }
@@ -18,7 +17,7 @@ class ListCategoriesService {
     }
 
     return await categoryRepository.find({
-      skip: page - 1,
+      skip: per_page * (page - 1),
       take: per_page,
     });
   }
