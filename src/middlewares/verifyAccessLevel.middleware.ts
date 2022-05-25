@@ -13,7 +13,7 @@ const verifyAccessLevelMiddleware =
     ) {
       next();
     } else {
-      throw new AppError("You don't have permission to access this route", 401);
+      throw new AppError("Unauthorized", 401);
     }
   };
 
