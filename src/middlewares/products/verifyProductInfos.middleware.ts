@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { In } from "typeorm";
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { ICreateProduct } from "../../interfaces/Products.interface";
 import Category from "../../models/Category.model";
 import Ingredient from "../../models/Ingredient.model";
 import Product from "../../models/Product.model";
@@ -15,7 +16,7 @@ const verifyProductInfosMiddleware = async (
   const ingredientsRepo = AppDataSource.getRepository(Ingredient);
   const categoriesRepo = AppDataSource.getRepository(Category);
 
-  const { name, ingredients, categories } = req.productInfo;
+  const { name, ingredients, categories }: ICreateProduct = req.body;
 
   const productAlreadyExists = await productsRepo.findOne({
     where: { name },

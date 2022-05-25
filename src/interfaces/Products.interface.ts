@@ -16,7 +16,7 @@ export interface ICreateProduct {
 }
 
 export interface IUpdateProduct {
-  id: string;
+  id?: string;
   name?: string;
   price?: number;
   calories?: number;
