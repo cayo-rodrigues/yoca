@@ -9,7 +9,7 @@ import UpdateProductService from "../services/Products/UpdateProduct.service";
 
 class ProductsController {
   static async store(req: Request, res: Response) {
-    const { name, price, calories, ingredients, categories } = req.productInfo;
+    const { name, price, calories, ingredients, categories } = req.body;
 
     const product = await CreateProductService.execute({
       name,
@@ -39,8 +39,8 @@ class ProductsController {
   }
 
   static async update(req: Request, res: Response) {
-    const { id, name, price, calories, ingredients, categories } =
-      req.updateProductInfos;
+    const { id } = req.params;
+    const { name, price, calories, ingredients, categories } = req.body;
 
     const productUpdated = await UpdateProductService.execute({
       id,
