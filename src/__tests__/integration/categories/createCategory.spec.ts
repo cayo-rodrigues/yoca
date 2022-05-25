@@ -18,7 +18,7 @@ describe("POST - /categories", () => {
   });
 
   const mockCategory = {
-    name: "massas",
+    name: "bebidas",
   };
 
   afterAll(async () => {
@@ -51,10 +51,10 @@ describe("POST - /categories", () => {
 
     expect(categoryResponse.status).toBe(201);
     expect(categoryResponse.body).toMatchObject({
-      message: "Category Created",
+      message: "Category created",
       category: {
-        id: "uuid",
-        name: "Bebidas",
+        ...categoryResponse.body.category,
+        name: "bebidas",
       },
     });
   });
@@ -75,7 +75,7 @@ describe("POST - /categories", () => {
     expect(categoryResponse.status).toBe(409);
     expect(categoryResponse.body).toEqual(
       expect.objectContaining({
-        message: "Category with this name already exists",
+        message: "Category already exists",
       })
     );
   });
@@ -107,7 +107,7 @@ describe("POST - /categories", () => {
     uuidSpy.mockReturnValueOnce("uuid");
     const categoryResponse = await request(app)
       .post("/categories")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send({ name: "veganos" });
 
     expect(categoryResponse.status).toBe(401);
