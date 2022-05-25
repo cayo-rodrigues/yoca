@@ -12,14 +12,28 @@ class OrdersController {
     const { billId, employeeId, ordersProducts, table }: ICreateOrder =
       req.body;
 
-    const order = await CreateOrderService.execute({
-      billId,
-      employeeId,
-      ordersProducts,
-      table,
-    });
+    const { isWarning, lowStockIngredients, order } =
+      await CreateOrderService.execute({
+        billId,
+        employeeId,
+        ordersProducts,
+        table,
+      });
 
-    return res.status(201).json(order);
+    return res.status(201).json(
+      isWarning
+        ? {
+            warning:
+              lowStockIngredients.join(" is below amount min, ") +
+              " is below amount min",
+            message: "Order created!",
+            order,
+          }
+        : {
+            message: "Order created!",
+            order,
+          }
+    );
   }
 
   static async index(req: Request, res: Response) {

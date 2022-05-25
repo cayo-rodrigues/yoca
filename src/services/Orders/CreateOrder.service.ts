@@ -143,18 +143,7 @@ class CreateOrderService {
       await orderProductRepo.save(orderProduct);
     });
 
-    return isWarning
-      ? {
-          warning:
-            lowStockIngredients.join(" is below amount min, ") +
-            " is below amount min",
-          message: "Order created!",
-          order,
-        }
-      : {
-          message: "Order created!",
-          order,
-        };
+    return { isWarning, order, lowStockIngredients };
   }
 }
 
