@@ -1,11 +1,9 @@
 import { Exclude } from "class-transformer";
 import {
-  AfterLoad,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,

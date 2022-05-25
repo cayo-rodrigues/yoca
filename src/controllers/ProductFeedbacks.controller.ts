@@ -1,50 +1,67 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
+
 import { IProductFeedback } from "../interfaces/ProductFeedback";
-import CreateProductFeedback from "../services/ProductFeedback/createFeedback.service";
-import DeleteProductFeedback from "../services/ProductFeedback/deleteProductFeedback.service";
-import ListOneProductFeedback from "../services/ProductFeedback/listOneProductFeedback.service";
-import ListProductFeedback from "../services/ProductFeedback/listProductFeedbacks.service";
-import UpdateProductFeedback from "../services/ProductFeedback/updateGeneralFeedback.service";
+import CreateProductFeedbackService from "../services/ProductFeedback/CreateFeedback.service";
+import DeleteProductFeedbackService from "../services/ProductFeedback/DeleteProductFeedback.service";
+import ListProductFeedbacksService from "../services/ProductFeedback/ListProductFeedbacks.service";
+import ShowProductFeedbackService from "../services/ProductFeedback/ShowProductFeedback.service";
+import UpdateProductFeedbackService from "../services/ProductFeedback/UpdateGeneralFeedback.service";
 
-export class ProductFeedbackController {
+class ProductFeedbackController {
   static async store(req: Request, res: Response) {
-    const feedback: IProductFeedback = req.body;
+    const { description, productId, rating }: IProductFeedback = req.body;
 
-    const newFeedback = await CreateProductFeedback.execute(feedback);
+    const newFeedback = await CreateProductFeedbackService.execute({
+      description,
+      productId,
+      rating,
+    });
 
     return res.status(201).json({
-      message: "Product Feedback created",
+      message: "Product feedback created",
       feedback: instanceToPlain(newFeedback),
     });
   }
+
   static async index(req: Request, res: Response) {
-    const feedbacks = await ListProductFeedback.execute();
-    return res.status(200).json(instanceToPlain(feedbacks));
+    const feedbacks = await ListProductFeedbacksService.execute();
+
+    return res.json(instanceToPlain(feedbacks));
   }
-  static async indexOne(req: Request, res: Response) {
+
+  static async show(req: Request, res: Response) {
     const { id } = req.params;
 
-    const feedback = await ListOneProductFeedback.execute(id);
+    const feedback = await ShowProductFeedbackService.execute({ id });
 
-    return res.status(200).json(instanceToPlain(feedback));
+    return res.json(instanceToPlain(feedback));
   }
-  static async remove(req: Request, res: Response) {
-    const { id } = req.params;
 
-    await DeleteProductFeedback.execute(id);
-
-    return res.status(204).json();
-  }
   static async update(req: Request, res: Response) {
     const { id } = req.params;
-    const feeedback: IProductFeedback = req.body;
+    const { description, productId, rating }: IProductFeedback = req.body;
 
-    const updatedFeedback = await UpdateProductFeedback.execute(id, feeedback);
+    const updatedFeedback = await UpdateProductFeedbackService.execute({
+      id,
+      description,
+      productId,
+      rating,
+    });
 
-    return res.status(200).json({
-      message: "Product Feedback updated",
+    return res.json({
+      message: "Product feedback updated",
       feedback: instanceToPlain(updatedFeedback),
     });
   }
+
+  static async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await DeleteProductFeedbackService.execute({ id });
+
+    return res.status(204).json();
+  }
 }
+
+export default ProductFeedbackController;

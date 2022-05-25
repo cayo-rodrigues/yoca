@@ -7,10 +7,10 @@ import superRoutes from "./super.routes";
 import sessionsRoutes from "./sessions.routes";
 import employeesRoutes from "./employees.routes";
 import ingredientsRoutes from "./ingredients.routes";
-import generalFeedbackRoutes from "./generalFeedback.routes";
+import generalFeedbackRoutes from "./generalFeedbacks.routes";
 import ordersRoutes from "./orders.routes";
 import billsRoutes from "./bills.routes";
-import productFeedbackRoutes from "./productFeedback.routes";
+import productFeedbackRoutes from "./productFeedbacks.routes";
 import categoriesRoutes from "./categories.routes";
 
 const routes = Router();

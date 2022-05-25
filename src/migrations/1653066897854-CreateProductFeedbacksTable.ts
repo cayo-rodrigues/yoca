@@ -28,6 +28,7 @@ export class CreateProductFeedbacksTable1653066897854
           {
             name: "productId",
             type: "uuid",
+            isNullable: true,
           },
           {
             name: "createdAt",

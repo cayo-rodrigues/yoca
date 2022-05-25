@@ -1,4 +1,4 @@
-export interface CreateSuperServiceParams {
+export interface ICreateSuper {
   phone: string;
   name: string;
   email: string;

@@ -1,6 +1,5 @@
 import { Exclude } from "class-transformer";
 import {
-  AfterLoad,
   Column,
   CreateDateColumn,
   DeleteDateColumn,

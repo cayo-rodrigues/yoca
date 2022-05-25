@@ -1,16 +1,28 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
+
+import {
+  ICreateEmployee,
+  IUpdateEmployeeData,
+} from "../interfaces/Employee.interface";
 import CreateEmployeeService from "../services/Employees/CreateEmployee.service";
-import deleteEmployeeService from "../services/Employees/DeleteEmployee.service";
-import ListAllEmployeesService from "../services/Employees/ListAllEmployees.service";
-import showEmployeeService from "../services/Employees/ShowEmployee.service";
-import updateEmployeeService from "../services/Employees/UpdateEmployee.service";
+import DeleteEmployeeService from "../services/Employees/DeleteEmployee.service";
+import ListEmployeesService from "../services/Employees/ListEmployees.service";
+import ShowEmployeeService from "../services/Employees/ShowEmployee.service";
+import UpdateEmployeeService from "../services/Employees/UpdateEmployee.service";
 
-export default class EmployeesController {
+class EmployeesController {
   static async store(req: Request, res: Response) {
-    const data = req.body;
+    const { accessLevel, email, name, password, phone }: ICreateEmployee =
+      req.body;
 
-    const employee = await CreateEmployeeService.execute(data);
+    const employee = await CreateEmployeeService.execute({
+      accessLevel,
+      email,
+      name,
+      password,
+      phone,
+    });
 
     res.status(201).json({
       message: "Employee created",
@@ -19,38 +31,50 @@ export default class EmployeesController {
   }
 
   static async index(req: Request, res: Response) {
-    const employees = await ListAllEmployeesService.execute();
+    const employees = await ListEmployeesService.execute();
 
-    res.status(200).json(instanceToPlain(employees));
+    res.json(instanceToPlain(employees));
   }
 
   static async show(req: Request, res: Response) {
     const { id } = req.params;
 
-    const employee = await showEmployeeService.execute(id);
+    const employee = await ShowEmployeeService.execute({ id });
 
-    res.status(200).json(instanceToPlain(employee));
+    res.json(instanceToPlain(employee));
   }
 
   static async update(req: Request, res: Response) {
-    const updateData = req.body;
-    const loggedUser = req.user;
     const { id } = req.params;
+    const loggedUser = req.user;
+    const { accessLevel, email, name, password, phone }: IUpdateEmployeeData =
+      req.body;
 
-    const employee = await updateEmployeeService.execute({
+    const employee = await UpdateEmployeeService.execute({
       id,
-      updateData,
       loggedUser,
+      updateData: {
+        accessLevel,
+        email,
+        name,
+        password,
+        phone,
+      },
     });
 
-    res.status(200).json(instanceToPlain(employee));
+    res.json({
+      message: "Employee updated",
+      employee: instanceToPlain(employee),
+    });
   }
 
   static async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    await deleteEmployeeService.execute(id);
+    await DeleteEmployeeService.execute({ id });
 
     res.status(204).json();
   }
 }
+
+export default EmployeesController;

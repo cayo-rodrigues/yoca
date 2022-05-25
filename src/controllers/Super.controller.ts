@@ -1,12 +1,19 @@
 import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
+
+import { ICreateSuper } from "../interfaces/Super.interface";
 import CreateSuperService from "../services/Super/CreateSuper.service";
 
-export default class Controller {
+class SuperController {
   static async store(req: Request, res: Response) {
-    const data = req.body;
+    const { email, name, password, phone }: ICreateSuper = req.body;
 
-    const superUser = await CreateSuperService.execute(data);
+    const superUser = await CreateSuperService.execute({
+      email,
+      name,
+      password,
+      phone,
+    });
 
     res.status(201).json({
       message: "Super user created",
@@ -14,3 +21,5 @@ export default class Controller {
     });
   }
 }
+
+export default SuperController;

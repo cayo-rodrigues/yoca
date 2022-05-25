@@ -3,10 +3,10 @@ import AppError from "../../errors/AppError";
 import Employee from "../../models/Employee.model";
 import { hash } from "bcryptjs";
 import { instanceToInstance } from "class-transformer";
-import { CreateEmployeeServiceParams } from "../../interfaces/Employee.interface";
+import { ICreateEmployee } from "../../interfaces/Employee.interface";
 
 class CreateEmployeeService {
-  static async execute(data: CreateEmployeeServiceParams): Promise<Employee> {
+  static async execute(data: ICreateEmployee): Promise<Employee> {
     const { phone, name, email, password, accessLevel } = data;
 
     const employeeRepository = AppDataSource.getRepository(Employee);

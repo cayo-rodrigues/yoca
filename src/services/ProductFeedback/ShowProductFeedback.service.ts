@@ -1,16 +1,20 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import GeneralFeedback from "../../models/GeneralFeedback.model";
+import { IUUID } from "../../interfaces/IdParam.interface";
 import ProductFeedback from "../../models/ProductFeedback.model";
 
-export default class ListOneProductFeedback {
-  static async execute(id: string) {
+class ShowProductFeedbackService {
+  static async execute({ id }: IUUID) {
     const productFeedbackRepository =
       AppDataSource.getRepository(ProductFeedback);
+
     const feedback = await productFeedbackRepository.findOne({ where: { id } });
     if (!feedback) {
       throw new AppError("Product Feedback not found", 404);
     }
+
     return feedback;
   }
 }
+
+export default ShowProductFeedbackService;
