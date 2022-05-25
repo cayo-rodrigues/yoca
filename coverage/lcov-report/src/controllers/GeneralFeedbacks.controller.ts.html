@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.88% </span>
+                <span class="strong">35.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/54</span>
+                <span class='fraction'>23/65</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.88% </span>
+                <span class="strong">35.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/54</span>
+                <span class='fraction'>23/65</span>
             </div>
         
             
@@ -117,7 +117,18 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -137,23 +148,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -166,65 +166,98 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { instanceToPlain } from "class-transformer";
 import { Request, Response } from "express";
-import { IGeneralFeedback } from "../interfaces/GeneralFeedback.interface";
-import GeneralFeedback from "../models/GeneralFeedback.model";
-import CreateGeneralFeedback from "../services/GeneralFeedbacks/createFeedback.service";
-import DeleteGeneralFeedback from "../services/GeneralFeedbacks/deleteGeneralFeedback.service";
-import ListGeneralFeedback from "../services/GeneralFeedbacks/listGeneralFeedbacks.service";
-import ListOneGeneralFeedback from "../services/GeneralFeedbacks/listOneGeneralFeedback.service";
-import UpdateGeneralFeedback from "../services/GeneralFeedbacks/updateGeneralFeedback.service";
 &nbsp;
-export class GeneralFeedbackController {
+import { IGeneralFeedback } from "../interfaces/GeneralFeedback.interface";
+import CreateGeneralFeedbackService from "../services/GeneralFeedbacks/CreateFeedback.service";
+import DeleteGeneralFeedbackService from "../services/GeneralFeedbacks/DeleteGeneralFeedback.service";
+import ListGeneralFeedbackService from "../services/GeneralFeedbacks/ListGeneralFeedbacks.service";
+import ShowGeneralFeedbackService from "../services/GeneralFeedbacks/ShowGeneralFeedback.service";
+import UpdateGeneralFeedbackService from "../services/GeneralFeedbacks/UpdateGeneralFeedback.service";
+&nbsp;
+class GeneralFeedbackController {
   static async <span class="fstat-no" title="function not covered" >store(req: Request, res: Response) {</span>
-<span class="cstat-no" title="statement not covered" >    const feedback = req.body;</span>
-<span class="cstat-no" title="statement not covered" >    const newFeedback = await CreateGeneralFeedback.execute(feedback);</span>
+<span class="cstat-no" title="statement not covered" >    const { description, rating }: IGeneralFeedback = req.body;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const newFeedback = await CreateGeneralFeedbackService.execute({</span>
+<span class="cstat-no" title="statement not covered" >      description,</span>
+<span class="cstat-no" title="statement not covered" >      rating,</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    return res.status(201).json({</span>
-<span class="cstat-no" title="statement not covered" >      message: "General Feedback created",</span>
+<span class="cstat-no" title="statement not covered" >      message: "General feedback created",</span>
 <span class="cstat-no" title="statement not covered" >      feedback: instanceToPlain(newFeedback),</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   static async <span class="fstat-no" title="function not covered" >index(req: Request, res: Response) {</span>
-<span class="cstat-no" title="statement not covered" >    const feedbacks = await ListGeneralFeedback.execute();</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(200).json(instanceToPlain(feedbacks));</span>
+<span class="cstat-no" title="statement not covered" >    const feedbacks = await ListGeneralFeedbackService.execute();</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return res.json(instanceToPlain(feedbacks));</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-  static async <span class="fstat-no" title="function not covered" >indexOne(req: Request, res: Response) {</span>
+  static async <span class="fstat-no" title="function not covered" >show(req: Request, res: Response) {</span>
 <span class="cstat-no" title="statement not covered" >    const { id } = req.params;</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const feedback = await ListOneGeneralFeedback.execute(id);</span>
+<span class="cstat-no" title="statement not covered" >    const feedback = await ShowGeneralFeedbackService.execute({ id });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return res.status(200).json(instanceToPlain(feedback));</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-  static async <span class="fstat-no" title="function not covered" >remove(req: Request, res: Response) {</span>
-<span class="cstat-no" title="statement not covered" >    const { id } = req.params;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const feedback = await DeleteGeneralFeedback.execute(id);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return res.status(204).json();</span>
+<span class="cstat-no" title="statement not covered" >    return res.json(instanceToPlain(feedback));</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   static async <span class="fstat-no" title="function not covered" >update(req: Request, res: Response) {</span>
 <span class="cstat-no" title="statement not covered" >    const { id } = req.params;</span>
-<span class="cstat-no" title="statement not covered" >    const feeedback = req.body as IGeneralFeedback;</span>
+<span class="cstat-no" title="statement not covered" >    const { description, rating }: IGeneralFeedback = req.body;</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const updatedFeedback = await UpdateGeneralFeedback.execute(id, feeedback);</span>
+<span class="cstat-no" title="statement not covered" >    const updatedFeedback = await UpdateGeneralFeedbackService.execute({</span>
+<span class="cstat-no" title="statement not covered" >      id,</span>
+<span class="cstat-no" title="statement not covered" >      description,</span>
+<span class="cstat-no" title="statement not covered" >      rating,</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return res.status(200).json({</span>
-<span class="cstat-no" title="statement not covered" >      message: "General Feedback updated",</span>
+<span class="cstat-no" title="statement not covered" >    return res.json({</span>
+<span class="cstat-no" title="statement not covered" >      message: "General feedback updated",</span>
 <span class="cstat-no" title="statement not covered" >      feedback: instanceToPlain(updatedFeedback),</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+  static async <span class="fstat-no" title="function not covered" >delete(req: Request, res: Response) {</span>
+<span class="cstat-no" title="statement not covered" >    const { id } = req.params;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await DeleteGeneralFeedbackService.execute({ id });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return res.status(204).json();</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 }
+&nbsp;
+export default GeneralFeedbackController;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -232,7 +265,7 @@ export class GeneralFeedbackController {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue May 24 2022 17:15:53 GMT-0300 (Brasilia Standard Time)
+                at Wed May 25 2022 13:37:10 GMT-0300 (Brasilia Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

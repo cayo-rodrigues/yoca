@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/42</span>
+                <span class='fraction'>42/42</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/42</span>
+                <span class='fraction'>42/42</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -114,36 +114,36 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -152,40 +152,40 @@ import AppError from "../../errors/AppError";
 import Employee from "../../models/Employee.model";
 import { hash } from "bcryptjs";
 import { instanceToInstance } from "class-transformer";
-import { CreateEmployeeServiceParams } from "../../interfaces/Employee.interface";
+import { ICreateEmployee } from "../../interfaces/Employee.interface";
 &nbsp;
 class CreateEmployeeService {
-  static async <span class="fstat-no" title="function not covered" >execute(data: CreateEmployeeServiceParams): Promise&lt;Employee&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const { phone, name, email, password, accessLevel } = data;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const employeeRepository = AppDataSource.getRepository(Employee);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const emailOrPhoneAlreadyExists = await employeeRepository.findOne({</span>
-<span class="cstat-no" title="statement not covered" >      where: [{ phone }, { email }],</span>
-<span class="cstat-no" title="statement not covered" >      withDeleted: true,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (emailOrPhoneAlreadyExists?.email === email) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new AppError("Employee with this email already exists", 409);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    if (emailOrPhoneAlreadyExists?.phone === phone) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new AppError("Employee with this phone already exists", 409);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const employee = employeeRepository.create({</span>
-<span class="cstat-no" title="statement not covered" >      phone,</span>
-<span class="cstat-no" title="statement not covered" >      name,</span>
-<span class="cstat-no" title="statement not covered" >      email,</span>
-<span class="cstat-no" title="statement not covered" >      password: await hash(password, 8),</span>
-<span class="cstat-no" title="statement not covered" >      accessLevel,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    await employeeRepository.save(employee);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const employeeWithoutPassword = instanceToInstance(employee);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return employeeWithoutPassword;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  static async execute(data: ICreateEmployee): Promise&lt;Employee&gt; {
+    const { phone, name, email, password, accessLevel } = data;
+&nbsp;
+    const employeeRepository = AppDataSource.getRepository(Employee);
+&nbsp;
+    const emailOrPhoneAlreadyExists = await employeeRepository.findOne({
+      where: [{ phone }, { email }],
+      withDeleted: true,
+    });
+&nbsp;
+    if (emailOrPhoneAlreadyExists?.email === email) {
+      throw new AppError("Employee with this email already exists", 409);
+    }
+    if (emailOrPhoneAlreadyExists?.phone === phone) {
+      throw new AppError("Employee with this phone already exists", 409);
+    }
+&nbsp;
+    const employee = employeeRepository.create({
+      phone,
+      name,
+      email,
+      password: await hash(password, 8),
+      accessLevel,
+    });
+&nbsp;
+    await employeeRepository.save(employee);
+&nbsp;
+    const employeeWithoutPassword = instanceToInstance(employee);
+&nbsp;
+    return employeeWithoutPassword;
+  }
 }
 &nbsp;
 export default CreateEmployeeService;
@@ -196,7 +196,7 @@ export default CreateEmployeeService;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue May 24 2022 17:15:53 GMT-0300 (Brasilia Standard Time)
+                at Wed May 25 2022 13:37:10 GMT-0300 (Brasilia Standard Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

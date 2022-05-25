@@ -74,8 +74,8 @@ describe(" PATCH - /employees/:id ", () => {
     expect(updateEmployeeResponse.body).toMatchObject<EmployeeUpdatesResponse>({
       message: "Employee updated",
       employee: {
-        ...updateEmployeeResponse.body,
-        name: "New John Doe",
+        ...updateEmployeeResponse.body.employee,
+        name: "new john doe",
         email: "newjohndoe@email.com",
         phone: "8922-4002123",
         accessLevel: 4,
@@ -142,7 +142,7 @@ describe(" PATCH - /employees/:id ", () => {
     expect(updateEmployeeResponse.status).toBe(401);
     expect(updateEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Unauthorized",
+        message: "You don't have permission to access this route",
       })
     );
   });

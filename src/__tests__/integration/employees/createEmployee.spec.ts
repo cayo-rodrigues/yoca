@@ -63,7 +63,7 @@ describe("POST - /employees", () => {
       message: "Employee created",
       employee: {
         ...createEmployeeResponse.body.employee,
-        name: "John doe",
+        name: "john doe",
         email: "johndoe@email.com",
         phone: "999999999999",
         accessLevel: 2,
@@ -154,7 +154,7 @@ describe("POST - /employees", () => {
     expect(newEmployeeResponse.status).toBe(401);
     expect(newEmployeeResponse.body).toEqual(
       expect.objectContaining({
-        message: "Unauthorized",
+        message: "You don't have permission to access this route",
       })
     );
   });
