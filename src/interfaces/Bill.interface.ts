@@ -1,4 +1,4 @@
-export interface BillUpdateReq {
+export interface IBillUpdateReq {
   paid: boolean;
   id: number;
 }

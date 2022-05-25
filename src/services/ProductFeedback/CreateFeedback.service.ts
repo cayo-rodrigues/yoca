@@ -2,7 +2,7 @@ import AppDataSource from "../../data-source";
 import { IProductFeedback } from "../../interfaces/ProductFeedback";
 import ProductFeedback from "../../models/ProductFeedback.model";
 
-export default class CreateProductFeedback {
+class CreateProductFeedbackService {
   static async execute(feedbackInfo: IProductFeedback) {
     const productFeedbackRepo = AppDataSource.getRepository(ProductFeedback);
 
@@ -12,3 +12,5 @@ export default class CreateProductFeedback {
     return newFeedback;
   }
 }
+
+export default CreateProductFeedbackService;

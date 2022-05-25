@@ -1,5 +1,4 @@
 import AppDataSource from "../../data-source";
-import AppError from "../../errors/AppError";
 import { IParamsIdProduct } from "../../interfaces/Products.interface";
 import Product from "../../models/Product.model";
 

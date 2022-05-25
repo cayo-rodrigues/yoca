@@ -1,6 +1,6 @@
 import Employee from "../models/Employee.model";
 
-export interface CreateEmployeeServiceParams {
+export interface ICreateEmployee {
   phone: string;
   name: string;
   email: string;
@@ -8,14 +8,16 @@ export interface CreateEmployeeServiceParams {
   accessLevel: number;
 }
 
-export interface UpdateEmployeeServiceParams {
+export interface IUpdateEmployee {
   id: string;
   loggedUser: Employee;
-  updateData: {
-    phone?: string;
-    name?: string;
-    email?: string;
-    password?: string;
-    accessLevel?: number;
-  };
+  updateData: IUpdateEmployeeData;
+}
+
+export interface IUpdateEmployeeData {
+  phone?: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  accessLevel?: number;
 }

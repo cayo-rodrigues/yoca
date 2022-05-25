@@ -2,7 +2,7 @@ import { hash } from "bcryptjs";
 import { instanceToInstance } from "class-transformer";
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import { CreateSuperServiceParams } from "../../interfaces/Super.interface";
+import { ICreateSuper } from "../../interfaces/Super.interface";
 import Employee from "../../models/Employee.model";
 
 class CreateSuperService {
@@ -11,7 +11,7 @@ class CreateSuperService {
     name,
     email,
     password,
-  }: CreateSuperServiceParams): Promise<Employee> {
+  }: ICreateSuper): Promise<Employee> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
     const users = await employeeRepository.find();

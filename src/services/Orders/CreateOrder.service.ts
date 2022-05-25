@@ -77,7 +77,7 @@ class CreateOrderService {
     }
 
     let isWarning = false;
-    const warningIngredientsName: string[] = [];
+    const lowStockIngredients: string[] = [];
 
     for (let i = 0; i < ingredientsAcc.length; i++) {
       const ingredientInfo = ingredientsAcc[i];
@@ -91,7 +91,7 @@ class CreateOrderService {
 
       if (ingredient.amount <= +ingredient.amountMin) {
         isWarning = true;
-        warningIngredientsName.push(ingredient.name);
+        lowStockIngredients.push(ingredient.name);
       }
     }
 
@@ -120,7 +120,7 @@ class CreateOrderService {
 
     bill.total = +bill.total + orderTotalPrice;
 
-    await billsRepo.save(bill)
+    await billsRepo.save(bill);
 
     const order = orderRepo.create({
       table,
@@ -143,18 +143,7 @@ class CreateOrderService {
       await orderProductRepo.save(orderProduct);
     });
 
-    return isWarning
-      ? {
-          warning:
-            warningIngredientsName.join(" is below amount min, ") +
-            " is below amount min",
-          message: "Order created!",
-          order,
-        }
-      : {
-          message: "Order created!",
-          order,
-        };
+    return { isWarning, order, lowStockIngredients };
   }
 }
 

@@ -1,10 +1,10 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import { BillUpdateReq } from "../../interfaces/Bills.interface";
+import { IBillUpdateReq } from "../../interfaces/Bill.interface";
 import Bill from "../../models/Bill.model";
 
 class UpdateBillService {
-  static async execute({ paid, id }: BillUpdateReq): Promise<any> {
+  static async execute({ paid, id }: IBillUpdateReq): Promise<Bill> {
     const billsRepository = AppDataSource.getRepository(Bill);
 
     const bill = await billsRepository.findOne({ where: { id } });
@@ -17,10 +17,7 @@ class UpdateBillService {
 
     await billsRepository.update(bill.id, { paid });
 
-    return {
-      message: "Bill updated",
-      bill,
-    };
+    return bill;
   }
 }
 

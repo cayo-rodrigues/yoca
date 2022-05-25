@@ -1,13 +1,10 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { INumberId } from "../../interfaces/IdParam.interface";
 import Bill from "../../models/Bill.model";
 
-interface DeleteBillServiceParams {
-  id: number;
-}
-
 class DeleteBillService {
-  static async execute({ id }: DeleteBillServiceParams): Promise<void> {
+  static async execute({ id }: INumberId): Promise<void> {
     const billsRepo = AppDataSource.getRepository(Bill);
 
     const bill = await billsRepo.findOneBy({ id });

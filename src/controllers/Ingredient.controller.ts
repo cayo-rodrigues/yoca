@@ -10,9 +10,16 @@ import UpdateIngredientService from "../services/Ingredients/UpdateIngredient.se
 
 class IngredientController {
   static async store(req: Request, res: Response) {
-    const ingredientInfo: IBaseIngredient = req.ingredientInfo;
+    const { amount, amountMax, amountMin, measure, name }: IBaseIngredient =
+      req.ingredientInfo;
 
-    const ingredient = await CreateIngredientService.execute(ingredientInfo);
+    const ingredient = await CreateIngredientService.execute({
+      amount,
+      amountMax,
+      amountMin,
+      measure,
+      name,
+    });
 
     return res.status(201).send({
       message: "Ingredient created",
@@ -23,7 +30,7 @@ class IngredientController {
   static async index(req: Request, res: Response) {
     const ingredients = await ListIngredientsService.execute();
 
-    return res.send(instanceToPlain(ingredients));
+    return res.json(instanceToPlain(ingredients));
   }
 
   static async show(req: Request, res: Response) {
@@ -31,19 +38,24 @@ class IngredientController {
 
     const ingredient = await ShowIngredientService.execute({ id });
 
-    return res.send(instanceToPlain(ingredient));
+    return res.json(instanceToPlain(ingredient));
   }
 
   static async update(req: Request, res: Response) {
     const { id } = req.params;
-    const ingredientInfo: IBaseIngredient = req.body;
+    const { amount, amountMax, amountMin, measure, name }: IBaseIngredient =
+      req.body;
 
     const updatedIngredient = await UpdateIngredientService.execute({
       id,
-      ...ingredientInfo,
+      amount,
+      amountMax,
+      amountMin,
+      measure,
+      name,
     });
 
-    return res.send({
+    return res.json({
       message: "Ingredient updated",
       updatedIngredient: instanceToPlain(updatedIngredient),
     });
@@ -54,7 +66,7 @@ class IngredientController {
 
     await DeleteIngredientService.execute({ id });
 
-    return res.status(204).send();
+    return res.status(204).json();
   }
 }
 
