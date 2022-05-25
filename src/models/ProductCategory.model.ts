@@ -6,9 +6,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  OneToMany,
   ManyToOne,
 } from "typeorm";
+
 import Category from "./Category.model";
 import Product from "./Product.model";
 

@@ -1,16 +1,12 @@
 import { Exclude } from "class-transformer";
 import {
-  Check,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-
-import Order from "./Order.model";
 
 @Entity("employees")
 class Employee {

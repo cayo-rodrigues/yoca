@@ -1,13 +1,11 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  AfterLoad,
   DeleteDateColumn,
 } from "typeorm";
 
