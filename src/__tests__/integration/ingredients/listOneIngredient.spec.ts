@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe(" GET - /ingredients/:id ", () => {
@@ -25,10 +24,6 @@ describe(" GET - /ingredients/:id ", () => {
     amountMax: 100,
     amountMin: 15,
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
@@ -60,7 +55,6 @@ describe(" GET - /ingredients/:id ", () => {
     const listOneIngredientResponse = await request(app)
       .get("/ingredients/uuid")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
 
     expect(listOneIngredientResponse.status).toBe(200);
     expect(listOneIngredientResponse.body).toEqual(

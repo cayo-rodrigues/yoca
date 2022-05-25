@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe(" PATCH - /ingredients/:id ", () => {
@@ -33,10 +32,6 @@ describe(" PATCH - /ingredients/:id ", () => {
     amountMax: 100,
     amountMin: 15,
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
@@ -70,6 +65,8 @@ describe(" PATCH - /ingredients/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(ingredientUpdates);
 
+    console.log(updateIngredientResponse);
+
     expect(updateIngredientResponse.status).toBe(200);
     expect(updateIngredientResponse.body).toMatchObject({
       message: "Ingredient updated",
@@ -85,7 +82,7 @@ describe(" PATCH - /ingredients/:id ", () => {
       email: "admin@email.com",
       password: "admin123",
     });
-    
+
     uuidSpy.mockReturnValueOnce("some-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
