@@ -28,7 +28,13 @@ class IngredientController {
   }
 
   static async index(req: Request, res: Response) {
-    const ingredients = await ListIngredientsService.execute();
+    const per_page = req.query.per_page as unknown as string;
+    const page = req.query.page as unknown as string;
+
+    const ingredients = await ListIngredientsService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     return res.json(instanceToPlain(ingredients));
   }

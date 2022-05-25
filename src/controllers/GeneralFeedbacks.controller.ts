@@ -29,7 +29,7 @@ class GeneralFeedbackController {
 
     const feedbacks = await ListGeneralFeedbackService.execute({
       per_page: +per_page,
-      page: +per_page,
+      page: +page,
     });
 
     return res.json(instanceToPlain(feedbacks));
