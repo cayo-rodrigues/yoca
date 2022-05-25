@@ -4,7 +4,7 @@ import { IUpdateStatusReq } from "../../interfaces/Orders.interface";
 import Order from "../../models/Order.model";
 
 class UpdateOrderStatusService {
-  static async execute({ status, id }: IUpdateStatusReq): Promise<any> {
+  static async execute({ status, id }: IUpdateStatusReq): Promise<Order> {
     const ordersRepo = AppDataSource.getRepository(Order);
 
     const order = await ordersRepo.findOne({
@@ -21,10 +21,7 @@ class UpdateOrderStatusService {
 
     await ordersRepo.save(order);
 
-    return {
-      message: "Order status updated",
-      order,
-    };
+    return order;
   }
 }
 

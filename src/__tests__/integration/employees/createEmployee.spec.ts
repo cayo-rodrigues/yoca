@@ -4,6 +4,7 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
+import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe("POST - /employees", () => {
@@ -24,6 +25,9 @@ describe("POST - /employees", () => {
     password: "12345678",
     accessLevel: 2,
   };
+  afterEach(async () => {
+    await clearDB(connection);
+  });
 
   afterAll(async () => {
     await connection.destroy();

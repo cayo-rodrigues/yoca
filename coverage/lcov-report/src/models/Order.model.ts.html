@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.75% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>64/69</span>
+                <span class='fraction'>66/72</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.75% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>64/69</span>
+                <span class='fraction'>66/72</span>
             </div>
         
             
@@ -132,7 +132,10 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -146,14 +149,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -200,6 +195,17 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
   Column,
@@ -211,64 +217,67 @@
   UpdateDateColumn,
   OneToMany,
   AfterLoad,
+  DeleteDateColumn,
 } from "typeorm";
 &nbsp;
 import Employee from "./Employee.model";
 &nbsp;
 import Bill from "./Bill.model";
 import OrderProduct from "./OrdersProducts.model";
-&nbsp;
-export enum OrderStatus {
-  PENDING = "pending",
-  READY = "ready",
-  SERVED = "served",
-}
+import { Exclude, Expose } from "class-transformer";
+import { IOrderProducts } from "../interfaces/Orders.interface";
 &nbsp;
 @Entity("orders")
 export default class Order {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 &nbsp;
-  @Column({ name: "table", type: "varchar", length: "3" })
+  @Column()
   table: string;
 &nbsp;
-  @Column({
-    name: "status",
-    type: "enum",
-    enum: OrderStatus,
-    default: OrderStatus.PENDING,
-  })
-  status: OrderStatus;
+  @Column()
+  status: string;
 &nbsp;
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
+  @Column()
   total: number;
 &nbsp;
-  @ManyToOne(() =&gt; Employee, (employee) =&gt; employee, {
-    eager: true,
-  })
-  @JoinColumn({ name: "employee_id" })
+  @Exclude()
+  @Column()
+  employeeId: string;
+&nbsp;
+  @ManyToOne(<span class="fstat-no" title="function not covered" >() =&gt; Employee,</span> { eager: true })
   employee: Employee;
 &nbsp;
-  @ManyToOne(() =&gt; Bill, (bill) =&gt; bill.orders)
-  @JoinColumn({ name: "bill_id" })
+  @Column()
+  billId: number;
+&nbsp;
+  @ManyToOne(() =&gt; Bill)
   bill: Bill;
 &nbsp;
-  @OneToMany(() =&gt; OrderProduct, (orderProduct) =&gt; orderProduct.product)
+  @Exclude()
+  @OneToMany(<span class="fstat-no" title="function not covered" >() =&gt; OrderProduct,</span> <span class="fstat-no" title="function not covered" >(orderProduct) =&gt; orderProduct.order,</span> {
+    eager: true,
+  })
   orderProducts: OrderProduct[];
 &nbsp;
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @Expose({ name: "products" })
+<span class="fstat-no" title="function not covered" >  getProducts(): IOrderProducts[] {</span>
+<span class="cstat-no" title="statement not covered" >    return this.orderProducts?.map(({ quantity, totalPrice, product }) =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >      quantity,</span>
+<span class="cstat-no" title="statement not covered" >      totalPrice,</span>
+<span class="cstat-no" title="statement not covered" >      product,</span>
+<span class="cstat-no" title="statement not covered" >    }));</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+  @CreateDateColumn()
   createdAt: Date;
 &nbsp;
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 &nbsp;
-  @AfterLoad()
-<span class="fstat-no" title="function not covered" >  getTotalPrice() {</span>
-<span class="cstat-no" title="statement not covered" >    this.total = this.orderProducts.reduce(</span>
-<span class="cstat-no" title="statement not covered" >      (acc, curr) =&gt; acc + curr.totalPrice,</span>
-<span class="cstat-no" title="statement not covered" >      0</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -277,7 +286,7 @@ export default class Order {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri May 20 2022 17:23:09 GMT-0300 (Horário Padrão de Brasília)
+                at Tue May 24 2022 17:15:53 GMT-0300 (Brasilia Standard Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

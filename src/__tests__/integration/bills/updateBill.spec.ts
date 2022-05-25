@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { clearDB } from "../../connection";
 
 describe(" UPDATE - /bills/:id ", () => {
   let connection: DataSource;
@@ -17,6 +18,10 @@ describe(" UPDATE - /bills/:id ", () => {
   const mockBillUpdate = {
     paid: true,
   };
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();

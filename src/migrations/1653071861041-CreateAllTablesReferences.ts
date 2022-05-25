@@ -41,6 +41,7 @@ export class CreateAllTablesReferences1653071861041
         columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
+        onDelete: "SET NULL",
       })
     );
 
@@ -51,6 +52,7 @@ export class CreateAllTablesReferences1653071861041
         columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
+        onDelete: "SET NULL",
       })
     );
 
@@ -61,6 +63,7 @@ export class CreateAllTablesReferences1653071861041
         columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
+        onDelete: "SET NULL",
       })
     );
 
@@ -71,6 +74,7 @@ export class CreateAllTablesReferences1653071861041
         columnNames: ["ingredientId"],
         referencedColumnNames: ["id"],
         referencedTableName: "ingredients",
+        onDelete: "SET NULL",
       })
     );
 
@@ -81,6 +85,7 @@ export class CreateAllTablesReferences1653071861041
         columnNames: ["productId"],
         referencedColumnNames: ["id"],
         referencedTableName: "products",
+        onDelete: "SET NULL",
       })
     );
 
@@ -91,6 +96,7 @@ export class CreateAllTablesReferences1653071861041
         columnNames: ["categoryId"],
         referencedColumnNames: ["id"],
         referencedTableName: "categories",
+        onDelete: "SET NULL",
       })
     );
   }

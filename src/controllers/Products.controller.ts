@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import CreateProductService from "../services/Products/createProduct.service";
-import ListProductsService from "../services/Products/listProducts.service";
-import ListOneProductService from "../services/Products/listOneProduct.service";
-import DeleteProductService from "../services/Products/deleteProduct.service";
-import UpdateProductService from "../services/Products/updateProduct.service";
 import { instanceToPlain } from "class-transformer";
 
-export default class ProductsController {
+import CreateProductService from "../services/Products/CreateProduct.service";
+import ListProductsService from "../services/Products/ListProducts.service";
+import ListOneProductService from "../services/Products/ShowProduct.service";
+import DeleteProductService from "../services/Products/DeleteProduct.service";
+import UpdateProductService from "../services/Products/UpdateProduct.service";
+
+class ProductsController {
   static async store(req: Request, res: Response) {
     const { name, price, calories, ingredients, categories } = req.productInfo;
 
@@ -64,3 +65,5 @@ export default class ProductsController {
     return res.status(204).json();
   }
 }
+
+export default ProductsController;

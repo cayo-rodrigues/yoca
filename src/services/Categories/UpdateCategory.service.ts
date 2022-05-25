@@ -1,14 +1,11 @@
 import { Not } from "typeorm";
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import { UpdateCategoryServiceParams } from "../../interfaces/Category.interface";
+import { IUpdateCategory } from "../../interfaces/Category.interface";
 import Category from "../../models/Category.model";
 
 class UpdateCategoryService {
-  static async execute({
-    id,
-    updateData,
-  }: UpdateCategoryServiceParams): Promise<Category> {
+  static async execute({ id, updateData }: IUpdateCategory): Promise<Category> {
     const categoryRepository = AppDataSource.getRepository(Category);
 
     const category = await categoryRepository.findOne({ where: { id } });

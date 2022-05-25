@@ -4,6 +4,7 @@ import app from "../../../../app";
 import request from "supertest";
 
 import * as uuid from "uuid";
+import { clearDB } from "../../../connection";
 jest.mock("uuid");
 
 describe("UPDATE - /feedbacks/general/:id", () => {
@@ -27,6 +28,10 @@ describe("UPDATE - /feedbacks/general/:id", () => {
       "Finalmente um restaurante que serve talher de peixe, porém, poderia ser de porcelana",
     rating: 4.5,
   };
+
+  afterEach(async ()=>{
+    await clearDB(connection);
+  })
 
   afterAll(async () => {
     await connection.destroy();

@@ -13,6 +13,7 @@ billsRoutes.get("/", verifyAccessLevelMiddleware(3), BillsController.index);
 billsRoutes.use("/:id", validateUUIDMiddleware);
 
 billsRoutes.get("/:id", verifyAccessLevelMiddleware(3), BillsController.show);
+
 billsRoutes.patch(
   "/:id",
   verifyAccessLevelMiddleware(3),

@@ -26,10 +26,12 @@ export class CreateProductsIngredients1653066951924
           {
             name: "productId",
             type: "uuid",
+            isNullable: true,
           },
           {
             name: "ingredientId",
             type: "uuid",
+            isNullable: true,
           },
           {
             name: "createdAt",

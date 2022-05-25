@@ -1,5 +1,5 @@
 import AppDataSource from "../../data-source";
-import { IListBills } from "../../interfaces/Bills.interface";
+import { IListBills } from "../../interfaces/Bill.interface";
 import Bill from "../../models/Bill.model";
 
 class ListBillsService {

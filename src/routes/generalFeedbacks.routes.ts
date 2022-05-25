@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { GeneralFeedbackController } from "../controllers/GeneralFeedbacks.controller";
+import GeneralFeedbackController from "../controllers/GeneralFeedbacks.controller";
 
 import validateBodyMiddleware from "../middlewares/validateBody.middleware";
 import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
@@ -19,10 +19,10 @@ generalFeedbackRoutes.get("/", GeneralFeedbackController.index);
 
 generalFeedbackRoutes.use("/:id", validateUUIDMiddleware);
 
-generalFeedbackRoutes.get("/:id", GeneralFeedbackController.indexOne);
+generalFeedbackRoutes.get("/:id", GeneralFeedbackController.show);
 
 generalFeedbackRoutes.use("/:id", verifyAccessLevelMiddleware(2));
 
-generalFeedbackRoutes.delete("/:id", GeneralFeedbackController.remove);
+generalFeedbackRoutes.delete("/:id", GeneralFeedbackController.delete);
 
 export default generalFeedbackRoutes;
