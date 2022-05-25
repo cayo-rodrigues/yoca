@@ -7,7 +7,7 @@ class ListBillsService {
     listUnpaid,
     per_page,
     page,
-  }: IListBills): Promise<Bill[]> {
+  }: IListBills): Promise<any> {
     const billsRepository = AppDataSource.getRepository(Bill);
 
     if (!per_page) {
@@ -18,20 +18,54 @@ class ListBillsService {
       page = 1;
     }
 
+    const count = await billsRepository.count();
+
+    const pages = Math.ceil(count / per_page);
+
+    const prev =
+      page <= 1
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+
+    const next =
+      page >= pages
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+
     if (listUnpaid) {
-      return await billsRepository.find({
+      const bills = await billsRepository.find({
         skip: per_page * (page - 1),
         take: per_page,
         where: {
           paid: false,
         },
       });
+
+      return {
+        bills,
+        info: {
+          count,
+          pages,
+          next,
+          prev,
+        },
+      };
     }
 
-    return await billsRepository.find({
+    const bills = await billsRepository.find({
       skip: per_page * (page - 1),
       take: per_page,
     });
+
+    return {
+      bills,
+      info: {
+        count,
+        pages,
+        next,
+        prev,
+      },
+    };
   }
 }
 

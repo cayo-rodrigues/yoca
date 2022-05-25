@@ -3,7 +3,7 @@ import { IList } from "../../interfaces/List.interface";
 import Product from "../../models/Product.model";
 
 class ListProductsService {
-  static async execute({ per_page, page }: IList): Promise<Product[]> {
+  static async execute({ per_page, page }: IList): Promise<any> {
     const productsRepo = AppDataSource.getRepository(Product);
 
     if (!per_page) {
@@ -14,10 +14,34 @@ class ListProductsService {
       page = 1;
     }
 
-    return await productsRepo.find({
+    const count = await productsRepo.count();
+
+    const pages = Math.ceil(count / per_page);
+
+    const prev =
+      page <= 1
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+
+    const next =
+      page >= pages
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+
+    const products = await productsRepo.find({
       skip: per_page * (page - 1),
       take: per_page,
     });
+
+    return {
+      products,
+      info: {
+        count,
+        pages,
+        next,
+        prev,
+      },
+    };
   }
 }
 

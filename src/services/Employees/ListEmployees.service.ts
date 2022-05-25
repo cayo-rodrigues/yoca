@@ -3,7 +3,7 @@ import Employee from "../../models/Employee.model";
 import { IList } from "../../interfaces/List.interface";
 
 class ListEmployeesService {
-  static async execute({ per_page, page }: IList): Promise<Employee[]> {
+  static async execute({ per_page, page }: IList): Promise<any> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
     if (!per_page) {
@@ -14,10 +14,34 @@ class ListEmployeesService {
       page = 1;
     }
 
-    return await employeeRepository.find({
+    const count = await employeeRepository.count();
+
+    const pages = Math.ceil(count / per_page);
+
+    const prev =
+      page <= 1
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+
+    const next =
+      page >= pages
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+
+    const employees = await employeeRepository.find({
       skip: per_page * (page - 1),
       take: per_page,
     });
+
+    return {
+      employees,
+      info: {
+        count,
+        pages,
+        next,
+        prev,
+      },
+    };
   }
 }
 
