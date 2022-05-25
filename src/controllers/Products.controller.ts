@@ -25,7 +25,13 @@ class ProductsController {
   }
 
   static async index(req: Request, res: Response) {
-    const products = await ListProductsService.execute();
+    const per_page = req.query.per_page as unknown as string;
+    const page = req.query.page as unknown as string;
+
+    const products = await ListProductsService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     return res.json(instanceToPlain(products));
   }
