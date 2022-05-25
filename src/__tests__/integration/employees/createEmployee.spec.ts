@@ -3,19 +3,36 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
+type EmployeeResponse = {
+  message: string;
+  employee: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    accessLevel: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe("POST - /employees", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
+    console.log("BEFORE ALL");
     await AppDataSource.initialize()
       .then((res) => (connection = res))
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
   const mockEmployee = {
@@ -25,29 +42,16 @@ describe("POST - /employees", () => {
     password: "12345678",
     accessLevel: 2,
   };
-  afterEach(async () => {
-    await clearDB(connection);
-  });
 
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to create an employee", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
-    uuidSpy.mockReturnValueOnce("employee-uuid");
 
     const createEmployeeResponse = await request(app)
       .post("/employees")
@@ -55,10 +59,10 @@ describe("POST - /employees", () => {
       .send(mockEmployee);
 
     expect(createEmployeeResponse.status).toBe(201);
-    expect(createEmployeeResponse.body).toMatchObject({
+    expect(createEmployeeResponse.body).toMatchObject<EmployeeResponse>({
       message: "Employee created",
       employee: {
-        id: "employee-uuid",
+        ...createEmployeeResponse.body.employee,
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
@@ -118,9 +122,6 @@ describe("POST - /employees", () => {
       password: "12345678",
       accessLevel: 3,
     };
-
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("employee-without-access-uuid");
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",

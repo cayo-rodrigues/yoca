@@ -14,8 +14,8 @@ const AppDataSource =
         port: 16543,
         entities: ["src/models/*.ts"],
         migrations: ["src/migrations/*.ts"],
-        logging: true,
         migrationsRun: true,
+        dropSchema: true
       })
     : new DataSource({
         type: "postgres",
