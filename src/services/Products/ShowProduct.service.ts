@@ -1,7 +1,7 @@
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
-import { IParamsIdProduct } from "../../interfaces/Products.interface";
 import Product from "../../models/Product.model";
+import { IParamsIdProduct } from "../../interfaces/Products.interface";
 
 class ListOneProductService {
   static async execute({ id }: IParamsIdProduct): Promise<Product> {
