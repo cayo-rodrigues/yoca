@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { expressYupMiddleware } from "express-yup-middleware";
 
 import EmployeesController from "../controllers/Employee.controller";
 
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
+import validateBodyMiddleware from "../middlewares/validateBody.middleware";
+import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
 
-import createEmployeeSchema from "../schemas/employees/updateEmployee.schema";
+import createEmployeeSchema from "../schemas/employees/createEmployee.schema";
 import updateEmployeeSchema from "../schemas/employees/updateEmployee.schema";
-import validateUUIDSchema from "../schemas/validateUUID.schema";
 
 const employeesRoutes = Router();
 
@@ -15,22 +15,19 @@ employeesRoutes.use(verifyAccessLevelMiddleware(2));
 
 employeesRoutes.post(
   "/",
-  expressYupMiddleware({ schemaValidator: createEmployeeSchema }),
+  validateBodyMiddleware(createEmployeeSchema),
   EmployeesController.store
 );
 
 employeesRoutes.get("/", EmployeesController.index);
 
-employeesRoutes.use(
-  "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema })
-);
+employeesRoutes.use("/:id", validateUUIDMiddleware);
 
 employeesRoutes.get("/:id", EmployeesController.show);
 
 employeesRoutes.patch(
   "/:id",
-  expressYupMiddleware({ schemaValidator: updateEmployeeSchema }),
+  validateBodyMiddleware(updateEmployeeSchema),
   EmployeesController.update
 );
 
