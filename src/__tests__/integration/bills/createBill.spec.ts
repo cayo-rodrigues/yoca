@@ -2,7 +2,6 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
 
 describe("POST - /bills", () => {
   let connection: DataSource;
@@ -15,10 +14,6 @@ describe("POST - /bills", () => {
       });
   });
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
@@ -28,12 +23,12 @@ describe("POST - /bills", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -43,13 +38,13 @@ describe("POST - /bills", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const billResponse = await request(app)
@@ -70,7 +65,7 @@ describe("POST - /bills", () => {
   it("Should not be able to create an bill with accessLevel greater than 3", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -80,13 +75,13 @@ describe("POST - /bills", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 4,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const billResponse = await request(app)

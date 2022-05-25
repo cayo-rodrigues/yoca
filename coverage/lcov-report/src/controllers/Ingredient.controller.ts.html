@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.42% </span>
+                <span class="strong">31.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/73</span>
+                <span class='fraction'>23/73</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.42% </span>
+                <span class="strong">31.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/73</span>
+                <span class='fraction'>23/73</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -148,22 +148,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -220,23 +220,23 @@ import ShowIngredientService from "../services/Ingredients/ShowIngredient.servic
 import UpdateIngredientService from "../services/Ingredients/UpdateIngredient.service";
 &nbsp;
 class IngredientController {
-  static async store(req: Request, res: Response) {
-    const { amount, amountMax, amountMin, measure, name }: IBaseIngredient =
-      req.body;
-&nbsp;
-    const ingredient = await CreateIngredientService.execute({
-      amount,
-      amountMax,
-      amountMin,
-      measure,
-      name,
-    });
-&nbsp;
-    return res.status(201).send({
-      message: "Ingredient created",
-      ingredient: instanceToPlain(ingredient),
-    });
-  }
+  static async <span class="fstat-no" title="function not covered" >store(req: Request, res: Response) {</span>
+<span class="cstat-no" title="statement not covered" >    const { amount, amountMax, amountMin, measure, name }: IBaseIngredient =</span>
+<span class="cstat-no" title="statement not covered" >      req.body;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const ingredient = await CreateIngredientService.execute({</span>
+<span class="cstat-no" title="statement not covered" >      amount,</span>
+<span class="cstat-no" title="statement not covered" >      amountMax,</span>
+<span class="cstat-no" title="statement not covered" >      amountMin,</span>
+<span class="cstat-no" title="statement not covered" >      measure,</span>
+<span class="cstat-no" title="statement not covered" >      name,</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return res.status(201).send({</span>
+<span class="cstat-no" title="statement not covered" >      message: "Ingredient created",</span>
+<span class="cstat-no" title="statement not covered" >      ingredient: instanceToPlain(ingredient),</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   static async <span class="fstat-no" title="function not covered" >index(req: Request, res: Response) {</span>
 <span class="cstat-no" title="statement not covered" >    const ingredients = await ListIngredientsService.execute();</span>
@@ -268,7 +268,7 @@ class IngredientController {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    return res.json({</span>
 <span class="cstat-no" title="statement not covered" >      message: "Ingredient updated",</span>
-<span class="cstat-no" title="statement not covered" >      updatedIngredient: instanceToPlain(updatedIngredient),</span>
+<span class="cstat-no" title="statement not covered" >      ingredient: instanceToPlain(updatedIngredient),</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
@@ -289,7 +289,7 @@ export default IngredientController;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed May 25 2022 12:11:06 GMT-0300 (Horário Padrão de Brasília)
+                at Wed May 25 2022 14:23:41 GMT-0300 (Horário Padrão de Brasília)
             </div>
         <script src="../../prettify.js"></script>
         <script>

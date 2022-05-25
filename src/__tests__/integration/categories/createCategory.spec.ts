@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe("POST - /categories", () => {
@@ -22,10 +21,6 @@ describe("POST - /categories", () => {
     name: "massas",
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
@@ -38,13 +33,15 @@ describe("POST - /categories", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
+
+    console.log(adminLoginResponse);
 
     uuidSpy.mockReturnValueOnce("uuid");
     const categoryResponse = await request(app)
@@ -66,7 +63,7 @@ describe("POST - /categories", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("uuid");
@@ -87,7 +84,7 @@ describe("POST - /categories", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("without-access-uuid");
@@ -98,13 +95,13 @@ describe("POST - /categories", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("uuid");
