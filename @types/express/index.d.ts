@@ -12,8 +12,6 @@ declare global {
     interface Request {
       user: Employee;
       ingredientInfo: ICreateIngredient;
-      productInfo: ICreateProduct;
-      updateProductInfos: IUpdateProduct;
     }
   }
 }

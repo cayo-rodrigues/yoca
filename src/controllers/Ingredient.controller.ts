@@ -11,7 +11,7 @@ import UpdateIngredientService from "../services/Ingredients/UpdateIngredient.se
 class IngredientController {
   static async store(req: Request, res: Response) {
     const { amount, amountMax, amountMin, measure, name }: IBaseIngredient =
-      req.ingredientInfo;
+      req.body;
 
     const ingredient = await CreateIngredientService.execute({
       amount,
@@ -57,7 +57,7 @@ class IngredientController {
 
     return res.json({
       message: "Ingredient updated",
-      updatedIngredient: instanceToPlain(updatedIngredient),
+      ingredient: instanceToPlain(updatedIngredient),
     });
   }
 
