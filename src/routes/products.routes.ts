@@ -15,6 +15,8 @@ const productsRoutes = Router();
 
 productsRoutes.get("/", ProductsController.index);
 
+productsRoutes.get("/available", ProductsController.available);
+
 productsRoutes.get("/:id", validateUUIDMiddleware, ProductsController.show);
 
 productsRoutes.use(verifyAccessLevelMiddleware(2));
