@@ -31,7 +31,7 @@ describe("POST - /ingredients", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -50,7 +50,7 @@ describe("POST - /ingredients", () => {
   it("Should be able to create an ingredient", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createIngredientResponse = await request(app)
@@ -72,7 +72,7 @@ describe("POST - /ingredients", () => {
   it("Should not be able to create an ingredient without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const withoutAccessUser = await request(app)
@@ -82,13 +82,13 @@ describe("POST - /ingredients", () => {
         name: "john doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const createIngredientResponse = await request(app)
@@ -112,7 +112,7 @@ describe("POST - /ingredients", () => {
   it("Should not be able to create an ingredient with repeated name", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createIngredientResponse = await request(app)

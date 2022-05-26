@@ -16,7 +16,7 @@ describe(" GET - /bills/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -27,7 +27,7 @@ describe(" GET - /bills/:id ", () => {
   it("Should be able to list one bill", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -37,13 +37,13 @@ describe(" GET - /bills/:id ", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const billResponse = await request(app)
@@ -64,7 +64,7 @@ describe(" GET - /bills/:id ", () => {
   it("Should not be able to list one bill with accessLevel greater than 4", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -74,13 +74,13 @@ describe(" GET - /bills/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 5,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const listBillResponse = await request(app)
@@ -95,7 +95,7 @@ describe(" GET - /bills/:id ", () => {
   it("Should not be able to list one bill with unexistent id", async () => {
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const listOneBillResponse = await request(app)

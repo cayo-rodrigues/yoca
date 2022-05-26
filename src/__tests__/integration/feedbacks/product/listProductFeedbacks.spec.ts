@@ -16,7 +16,7 @@ describe("GET - /feedbacks/products", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -35,7 +35,7 @@ describe("GET - /feedbacks/products", () => {
   it("Should be able to list product feedbacks", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const categoriesResponse = await request(app)
@@ -77,11 +77,15 @@ describe("GET - /feedbacks/products", () => {
     const listProductFeedbacks = await request(app).get("/feedbacks/products");
 
     expect(listProductFeedbacks.status).toBe(200);
-    expect(listProductFeedbacks.body).toEqual(expect.arrayContaining([{
-      ...productFeedbackResponse.body.feedback,
-      description: "A pizza estava perfeita!",
-      rating: 5,
-      productId: productResponse.body.product.id,
-    }]));
+    expect(listProductFeedbacks.body).toEqual(
+      expect.arrayContaining([
+        {
+          ...productFeedbackResponse.body.feedback,
+          description: "A pizza estava perfeita!",
+          rating: 5,
+          productId: productResponse.body.product.id,
+        },
+      ])
+    );
   });
 });

@@ -17,7 +17,7 @@ describe("GET - /feedbacks/products/:id", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -36,7 +36,7 @@ describe("GET - /feedbacks/products/:id", () => {
   it("Should be able to list one product feedback", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const categoriesResponse = await request(app)

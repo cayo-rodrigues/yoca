@@ -16,7 +16,7 @@ describe(" GET - /ingredients/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -35,7 +35,7 @@ describe(" GET - /ingredients/:id ", () => {
   it("Should be able to list one ingredient", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createIngredientResponse = await request(app)
@@ -60,7 +60,7 @@ describe(" GET - /ingredients/:id ", () => {
   it("Should not be able to list one ingredient without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     await request(app)
@@ -70,13 +70,13 @@ describe(" GET - /ingredients/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
     const listOneIngredientResponse = await request(app)
       .get(`/ingredients/25d3ece6-c84f-4182-a23e-d4e7ca117cc5`)

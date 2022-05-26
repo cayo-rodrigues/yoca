@@ -29,7 +29,7 @@ describe("POST - /orders", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -48,7 +48,7 @@ describe("POST - /orders", () => {
   it("Should be able to create an order", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -58,13 +58,13 @@ describe("POST - /orders", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const billResponse = await request(app)
@@ -130,7 +130,7 @@ describe("POST - /orders", () => {
   it("Should not be able to create an order with products using extra amount of ingredients", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const listProducts = await request(app)
@@ -143,7 +143,7 @@ describe("POST - /orders", () => {
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const billResponse = await request(app)
@@ -177,7 +177,7 @@ describe("POST - /orders", () => {
   it("Should not be able to create an order sending unexistent billId", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const listProducts = await request(app)
@@ -190,7 +190,7 @@ describe("POST - /orders", () => {
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const createOrderResponse = await request(app)
@@ -218,7 +218,7 @@ describe("POST - /orders", () => {
   it("Should not be able to create an order sending unexistent employeeId", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const listProducts = await request(app)
@@ -227,7 +227,7 @@ describe("POST - /orders", () => {
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const createOrderResponse = await request(app)

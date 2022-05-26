@@ -29,7 +29,7 @@ describe("PATCH - /orders/:id", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -52,7 +52,7 @@ describe("PATCH - /orders/:id", () => {
   it("Should be able to update an order", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -62,13 +62,13 @@ describe("PATCH - /orders/:id", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const billResponse = await request(app)
@@ -135,7 +135,7 @@ describe("PATCH - /orders/:id", () => {
   it("Should not be able to update an order with accessLevel greater than 4", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const waiterResponse = await request(app)
@@ -145,13 +145,13 @@ describe("PATCH - /orders/:id", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 5,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const updateOrderResponse = await request(app)
