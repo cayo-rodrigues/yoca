@@ -2,7 +2,18 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
+
+type BillUpdatesResponse = {
+  message: string;
+  bill: {
+    id: number;
+    paid: boolean;
+    total: number;
+    orders: [];
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" UPDATE - /bills/:id ", () => {
   let connection: DataSource;
@@ -13,21 +24,6 @@ describe(" UPDATE - /bills/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-  });
-
-  const mockBillUpdate = {
-    paid: true,
-  };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
-  afterAll(async () => {
-    await connection.destroy();
-  });
-
-  it("Should be able to update one bill", async () => {
 
     await request(app).post("/super").send({
       name: "testaurant",
@@ -35,7 +31,17 @@ describe(" UPDATE - /bills/:id ", () => {
       phone: "+55061940028922",
       password: "admin123",
     });
+  });
 
+  const mockBillUpdate = {
+    paid: true,
+  };
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
+  it("Should be able to update one bill", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -67,14 +73,13 @@ describe(" UPDATE - /bills/:id ", () => {
       .send(mockBillUpdate);
 
     expect(updateBillResponse.status).toBe(200);
-    expect(updateBillResponse.body).toMatchObject({
+    expect(updateBillResponse.body).toMatchObject<BillUpdatesResponse>({
       message: "Bill updated",
       bill: { ...billResponse.body.bill, paid: true },
     });
   });
 
   it("Should not be able to update one bill with accessLevel greater than 3", async () => {
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -94,6 +99,7 @@ describe(" UPDATE - /bills/:id ", () => {
     const billResponse = await request(app)
       .post("/bills")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
       password: "12345678",
