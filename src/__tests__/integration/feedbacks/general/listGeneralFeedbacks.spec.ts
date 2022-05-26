@@ -3,10 +3,6 @@ import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
-
 describe("GET - /feedbacks/general", () => {
   let connection: DataSource;
 
@@ -23,18 +19,11 @@ describe("GET - /feedbacks/general", () => {
     rating: 5,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to list general feedbacks", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("gen-fb-uuid");
-
     const genFeedbackResponse = await request(app)
       .post("/feedbacks/general")
       .send(mockGeneralFeedback);

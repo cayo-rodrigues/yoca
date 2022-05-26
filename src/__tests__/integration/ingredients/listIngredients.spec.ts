@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe(" GET - /ingredients ", () => {
   let connection: DataSource;
@@ -12,6 +13,12 @@ describe(" GET - /ingredients ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: TESTS_PASSWORD,
+    });
   });
 
   const mockIngredient = {
@@ -27,16 +34,9 @@ describe(" GET - /ingredients ", () => {
   });
 
   it("Should be able to list all ingredients", async () => {
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const createIngredientResponse = await request(app)
@@ -48,16 +48,14 @@ describe(" GET - /ingredients ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listIngredientsResponse.status).toBe(200);
-    expect(listIngredientsResponse.body).toHaveProperty("reduce");
-    expect(listIngredientsResponse.body).toEqual(
+    expect(listIngredientsResponse.body.results).toHaveProperty("reduce");
+    expect(listIngredientsResponse.body.results).toEqual(
       expect.arrayContaining([
         {
           ...createIngredientResponse.body.ingredient,
-          amount: createIngredientResponse.body.ingredient.amount.toFixed(2),
-          amountMin:
-            createIngredientResponse.body.ingredient.amountMin.toFixed(2),
-          amountMax:
-            createIngredientResponse.body.ingredient.amountMax.toFixed(2),
+          amount: "50.00",
+          amountMax: "100.00",
+          amountMin: "15.00",
         },
       ])
     );
@@ -66,7 +64,7 @@ describe(" GET - /ingredients ", () => {
   it("Should not be able to list ingredients without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const withoutAccessUser = await request(app)
@@ -76,13 +74,13 @@ describe(" GET - /ingredients ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const listIngredientsResponse = await request(app)

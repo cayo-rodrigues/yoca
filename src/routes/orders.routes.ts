@@ -19,6 +19,8 @@ ordersRoutes.post(
 
 ordersRoutes.get("", verifyAccessLevelMiddleware(4), OrdersController.index);
 
+ordersRoutes.get("/:id", verifyAccessLevelMiddleware(4), OrdersController.index);
+
 ordersRoutes.patch(
   "/:id",
   validateBodyMiddleware(updateOrderSchema),

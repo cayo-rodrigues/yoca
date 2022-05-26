@@ -2,9 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-
-import * as uuid from "uuid";
-jest.mock("uuid");
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe(" DELETE - /ingredients/:id ", () => {
   let connection: DataSource;
@@ -15,6 +13,12 @@ describe(" DELETE - /ingredients/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: TESTS_PASSWORD,
+    });
   });
 
   const mockIngredient = {
@@ -30,22 +34,10 @@ describe(" DELETE - /ingredients/:id ", () => {
   });
 
   it("Should be able to delete an ingredient", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
-
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
@@ -53,25 +45,23 @@ describe(" DELETE - /ingredients/:id ", () => {
       .send(mockIngredient);
 
     const delIngredientResponse = await request(app)
-      .delete("/ingredients/uuid")
+      .delete(`/ingredients/${createIngredientResponse.body.ingredient.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delIngredientResponse.status).toBe(204);
-    expect(delIngredientResponse.body).toHaveLength(0);
+    expect(delIngredientResponse.body).toEqual({});
     expect(
       (
         await request(app)
-          .delete("/ingredients/uuid")
+          .delete(`/ingredients/${createIngredientResponse.body.ingredient.id}`)
           .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
   it("Should not be able to delete an ingredient without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValue("some-uuid");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     await request(app)
@@ -81,22 +71,17 @@ describe(" DELETE - /ingredients/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
-    const createIngredientResponse = await request(app)
-      .post("/ingredients")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockIngredient);
-
     const delIngredientResponse = await request(app)
-      .delete("/ingredients/some-uuid")
+      .delete("/ingredients/5cee5a5f-169d-423b-8c48-64d27d2c59ed")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delIngredientResponse.status).toBe(401);
@@ -106,29 +91,14 @@ describe(" DELETE - /ingredients/:id ", () => {
       })
     );
   });
-  it("Should not be able to delete an ingredient without id", async () => {
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
-    });
-
-    const delIngredientResponse = await request(app)
-      .delete("/ingredients")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
-    expect(delIngredientResponse.status).toBe(400);
-    expect(delIngredientResponse.body).toEqual(
-      expect.objectContaining({ message: "Missing params id" })
-    );
-  });
   it("Should not be able to delete an ingredient with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const delIngredientResponse = await request(app)
-      .delete("/ingredients/some-aleatory-uuid")
+      .delete("/ingredients/5cee5a5f-169d-423b-8c48-64d27d2c59ed")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delIngredientResponse.status).toBe(404);

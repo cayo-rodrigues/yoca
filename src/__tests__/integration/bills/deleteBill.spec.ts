@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe(" DELETE - /bills/:id ", () => {
   let connection: DataSource;
@@ -13,28 +13,22 @@ describe(" DELETE - /bills/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: TESTS_PASSWORD,
+    });
   });
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete one bill", async () => {
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -44,13 +38,13 @@ describe(" DELETE - /bills/:id ", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)
@@ -59,15 +53,15 @@ describe(" DELETE - /bills/:id ", () => {
 
     const delOneBillResponse = await request(app)
       .delete("/bills/1")
-      .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(delOneBillResponse.status).toBe(200);
-    expect(delOneBillResponse.body).toHaveLength(0);
+    expect(delOneBillResponse.status).toBe(204);
+    expect(delOneBillResponse.body).toEqual({});
     expect(
       (
         await request(app)
-          .delete("/bills/uuid")
-          .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`)
+          .delete("/bills/1")
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
@@ -75,7 +69,7 @@ describe(" DELETE - /bills/:id ", () => {
   it("Should not be able to delete bill with accessLevel greater than 3", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -85,7 +79,7 @@ describe(" DELETE - /bills/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 4,
       });
 
@@ -95,7 +89,7 @@ describe(" DELETE - /bills/:id ", () => {
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const delCategoriesResponse = await request(app)
@@ -110,7 +104,7 @@ describe(" DELETE - /bills/:id ", () => {
   it("Should not be able to delete one bill with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const delOneBillResponse = await request(app)

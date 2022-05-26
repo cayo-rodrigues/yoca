@@ -2,7 +2,19 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
+import { TESTS_PASSWORD } from "../../../utils";
+
+type BillUpdatesResponse = {
+  message: string;
+  bill: {
+    id: number;
+    paid: boolean;
+    total: number;
+    orders: [];
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" UPDATE - /bills/:id ", () => {
   let connection: DataSource;
@@ -13,32 +25,27 @@ describe(" UPDATE - /bills/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: TESTS_PASSWORD,
+    });
   });
 
   const mockBillUpdate = {
     paid: true,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to update one bill", async () => {
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -48,13 +55,13 @@ describe(" UPDATE - /bills/:id ", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)
@@ -67,17 +74,16 @@ describe(" UPDATE - /bills/:id ", () => {
       .send(mockBillUpdate);
 
     expect(updateBillResponse.status).toBe(200);
-    expect(updateBillResponse.body).toMatchObject({
+    expect(updateBillResponse.body).toMatchObject<BillUpdatesResponse>({
       message: "Bill updated",
       bill: { ...billResponse.body.bill, paid: true },
     });
   });
 
   it("Should not be able to update one bill with accessLevel greater than 3", async () => {
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -87,16 +93,17 @@ describe(" UPDATE - /bills/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 4,
       });
 
     const billResponse = await request(app)
       .post("/bills")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const updateBillResponse = await request(app)
@@ -112,7 +119,7 @@ describe(" UPDATE - /bills/:id ", () => {
   it("Should not be able to update one bill with unexistent id", async () => {
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const updateBillResponse = await request(app)
