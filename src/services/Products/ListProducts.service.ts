@@ -1,6 +1,7 @@
 import AppDataSource from "../../data-source";
 import { IList } from "../../interfaces/List.interface";
 import Product from "../../models/Product.model";
+import { getUrl } from "../../utils";
 
 class ListProductsService {
   static async execute({ per_page, page }: IList): Promise<any> {
@@ -21,12 +22,12 @@ class ListProductsService {
     const prev =
       page <= 1
         ? null
-        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
 
     const products = await productsRepo.find({
       skip: per_page * (page - 1),
@@ -34,7 +35,7 @@ class ListProductsService {
     });
 
     return {
-      products,
+      results: products,
       info: {
         count,
         pages,

@@ -1,6 +1,7 @@
 import AppDataSource from "../../data-source";
 import { IListBills } from "../../interfaces/Bill.interface";
 import Bill from "../../models/Bill.model";
+import { getUrl } from "../../utils";
 
 class ListBillsService {
   static async execute({
@@ -25,12 +26,12 @@ class ListBillsService {
     const prev =
       page <= 1
         ? null
-        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
 
     if (listUnpaid) {
       const bills = await billsRepository.find({
@@ -42,7 +43,7 @@ class ListBillsService {
       });
 
       return {
-        bills,
+        results: bills,
         info: {
           count,
           pages,

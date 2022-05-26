@@ -1,6 +1,7 @@
 import AppDataSource from "../../data-source";
 import Employee from "../../models/Employee.model";
 import { IList } from "../../interfaces/List.interface";
+import { getUrl } from "../../utils";
 
 class ListEmployeesService {
   static async execute({ per_page, page }: IList): Promise<any> {
@@ -21,12 +22,12 @@ class ListEmployeesService {
     const prev =
       page <= 1
         ? null
-        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
 
     const employees = await employeeRepository.find({
       skip: per_page * (page - 1),
@@ -34,7 +35,7 @@ class ListEmployeesService {
     });
 
     return {
-      employees,
+      results: employees,
       info: {
         count,
         pages,
