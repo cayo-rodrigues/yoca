@@ -31,8 +31,8 @@ describe("GET - /feedbacks/general", () => {
     const listGenFeedbacks = await request(app).get("/feedbacks/general");
 
     expect(listGenFeedbacks.status).toBe(200);
-    expect(listGenFeedbacks.body).toHaveProperty("reduce");
-    expect(listGenFeedbacks.body).toEqual(
+    expect(listGenFeedbacks.body.results).toHaveProperty("reduce");
+    expect(listGenFeedbacks.body.results).toEqual(
       expect.arrayContaining([genFeedbackResponse.body.feedback])
     );
   });

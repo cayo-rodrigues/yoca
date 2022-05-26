@@ -33,7 +33,11 @@ describe("GET - /feedbacks/general/:id", () => {
     );
 
     expect(listOneGenFeedback.status).toBe(200);
-    expect(listOneGenFeedback.body).toEqual(genFeedbackResponse.body.feedback);
+    expect(listOneGenFeedback.body).toEqual(
+      expect.objectContaining({
+        ...genFeedbackResponse.body.feedback,
+      })
+    );
   });
   it("Should not be able to list one general feedback sending unexistent id", async () => {
     const listOneGenFeedback = await request(app).get(

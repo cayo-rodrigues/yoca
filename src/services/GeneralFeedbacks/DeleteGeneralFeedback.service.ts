@@ -10,7 +10,7 @@ class DeleteGeneralFeedbackService {
 
     const feedback = await generalFeedbackRepository.findOne({ where: { id } });
     if (!feedback) {
-      throw new AppError("General Feedback not found", 404);
+      throw new AppError("General feedback not found", 404);
     }
 
     await generalFeedbackRepository.delete(id);

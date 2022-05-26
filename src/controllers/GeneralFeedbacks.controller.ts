@@ -6,7 +6,6 @@ import CreateGeneralFeedbackService from "../services/GeneralFeedbacks/CreateFee
 import DeleteGeneralFeedbackService from "../services/GeneralFeedbacks/DeleteGeneralFeedback.service";
 import ListGeneralFeedbackService from "../services/GeneralFeedbacks/ListGeneralFeedbacks.service";
 import ShowGeneralFeedbackService from "../services/GeneralFeedbacks/ShowGeneralFeedback.service";
-import UpdateGeneralFeedbackService from "../services/GeneralFeedbacks/UpdateGeneralFeedback.service";
 
 class GeneralFeedbackController {
   static async store(req: Request, res: Response) {
@@ -41,22 +40,6 @@ class GeneralFeedbackController {
     const feedback = await ShowGeneralFeedbackService.execute({ id });
 
     return res.json(instanceToPlain(feedback));
-  }
-
-  static async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const { description, rating }: IGeneralFeedback = req.body;
-
-    const updatedFeedback = await UpdateGeneralFeedbackService.execute({
-      id,
-      description,
-      rating,
-    });
-
-    return res.json({
-      message: "General feedback updated",
-      feedback: instanceToPlain(updatedFeedback),
-    });
   }
 
   static async delete(req: Request, res: Response) {
