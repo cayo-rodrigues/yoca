@@ -78,7 +78,7 @@ describe("GET - /feedbacks/products", () => {
     const listProductFeedbacks = await request(app).get("/feedbacks/products");
 
     expect(listProductFeedbacks.status).toBe(200);
-    expect(listProductFeedbacks.body).toEqual(
+    expect(listProductFeedbacks.body.results).toEqual(
       expect.arrayContaining([
         {
           ...productFeedbackResponse.body.feedback,
