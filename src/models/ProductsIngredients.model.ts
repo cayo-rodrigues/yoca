@@ -1,8 +1,9 @@
+import { Exclude } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,25 +14,36 @@ import Product from "./Product.model";
 
 @Entity("products_ingredients")
 export default class ProductIngredient {
+  @Exclude()
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
+  @Column()
   amount: number;
 
-  @ManyToOne(() => Product, (product) => product.productIngredients)
-  @JoinColumn({ name: "product_id" })
-  product: Product;
+  @Exclude()
+  @Column()
+  productId: string;
 
-  @ManyToOne(() => Ingredient, (ingredient) => ingredient.productIngredients, {
-    eager: true,
-  })
-  @JoinColumn({ name: "ingredient_id" })
+  @Exclude()
+  @Column()
+  ingredientId: string;
+
+  @ManyToOne(() => Ingredient, { eager: true })
   ingredient: Ingredient;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @ManyToOne(() => Product)
+  product: Product;
+
+  @Exclude()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @Exclude()
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

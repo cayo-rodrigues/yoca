@@ -1,41 +1,46 @@
+import { Exclude } from "class-transformer";
 import {
-  Check,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
-import { Exclude } from "class-transformer";
-
 @Entity("employees")
-@Check('"access_level" BETWEEN 1 AND 5')
 class Employee {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 164 })
+  @Column()
   name: string;
 
-  @Column({ length: 15, unique: true })
+  @Column()
   phone: string;
 
-  @Column({ length: 164, unique: true })
+  @Column()
   email: string;
 
   @Exclude()
   @Column()
   password: string;
 
-  @Column({ type: "int2", name: "access_level" })
+  @Column()
   accessLevel: number;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  // @OneToMany(() => Order, (Order) => Order.employeeId)
+  // orders: Order[];
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
 
 export default Employee;
