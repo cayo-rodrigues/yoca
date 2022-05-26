@@ -14,7 +14,7 @@ describe("DELETE - /feedbacks/general/:id", () => {
         console.error("Error during Data Source initialization", err);
       });
     await request(app).post("/super").send({
-      name: "testaurat",
+      name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
       password: TESTS_PASSWORD,
@@ -42,8 +42,6 @@ describe("DELETE - /feedbacks/general/:id", () => {
     const deleteGenFeedback = await request(app)
       .delete(`/feedbacks/general/${genFeedbackResponse.body.feedback.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
-    console.log(deleteGenFeedback);
 
     expect(deleteGenFeedback.status).toBe(204);
     expect(deleteGenFeedback.body).toHaveLength(0);
