@@ -27,8 +27,8 @@ const createProductSchema = yup.object().shape({
       yup.object().shape({
         id: yup
           .string()
-          .uuid("Field ingredientId must have a valid UUID")
-          .required("Field ingredientId is required"),
+          .uuid("Field ingredient id must have a valid UUID")
+          .required("Field ingredient id is required"),
         amount: yup
           .number()
           .positive("Field amount must be a positive number")
