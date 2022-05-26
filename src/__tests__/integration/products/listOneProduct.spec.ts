@@ -3,7 +3,7 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-describe(" DELETE - /products/:id ", () => {
+describe(" GET - /products/:id", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -52,6 +52,15 @@ describe(" DELETE - /products/:id ", () => {
     categories: ["uuid"],
   };
 
+  type ListProductResponse = {
+    id: string;
+    name: string;
+    price: number;
+    calories: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+
   interface IAttMocks {
     idProduct?: string;
     idIngredient?: string;
@@ -70,7 +79,7 @@ describe(" DELETE - /products/:id ", () => {
     await connection.destroy();
   });
 
-  it("Should be able to delete an existing product", async () => {
+  it("Should be able to list a product", async () => {
     await request(app).post("/super").send(mockSuperUser);
 
     const {
@@ -96,44 +105,15 @@ describe(" DELETE - /products/:id ", () => {
         attMocks({ idIngredient: ingredient.id });
       });
 
-    await request(app)
+    const {
+      body: { product: createdProduct },
+    } = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${token}`)
       .send(mockProduct)
       .then((res) => {
         attMocks({ idProduct: res.body.product.id });
         return res;
-      });
-
-    const delProductResponse = await request(app)
-      .delete(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${token}`);
-
-    expect(delProductResponse.status).toBe(204);
-    expect(delProductResponse.body).toEqual({});
-    expect(
-      (
-        await request(app)
-          .delete(`/products/${mockProduct.id}`)
-          .set("Authorization", `Bearer ${token}`)
-      ).status
-    ).toBe(404);
-  });
-
-  it("Should not be able to delete an existing product without sending accessLevel 1 or 2", async () => {
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send({
-      email: mockSuperUser.email,
-      password: mockSuperUser.password,
-    });
-
-    await request(app)
-      .post("/products")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockProduct)
-      .then(({ body: { product } }) => {
-        attMocks({ idProduct: product.id });
       });
 
     await request(app)
@@ -148,14 +128,37 @@ describe(" DELETE - /products/:id ", () => {
       password: mockEmployee.password,
     });
 
-    const delProductResponse = await request(app)
-      .delete(`/products/${mockProduct.id}`)
+    createdProduct.price = createdProduct.price.toFixed(2);
+    createdProduct.calories = createdProduct.calories.toFixed(2);
+
+    const listOneProductResponse = await request(app)
+      .get(`/products/${mockProduct.id}`)
       .set("Authorization", `Bearer ${employeeToken}`);
 
-    expect(delProductResponse.status).toBe(401);
-    expect(delProductResponse.body).toEqual(
+    expect(listOneProductResponse.status).toBe(200);
+    expect(listOneProductResponse.body).toMatchObject({
+      ...createdProduct,
+    });
+  });
+
+  it("Should not be able to list a product that doesnt exists", async () => {
+    await request(app).post("/super").send(mockSuperUser);
+
+    const {
+      body: { token },
+    } = await request(app).post("/sessions").send({
+      email: mockSuperUser.email,
+      password: mockSuperUser.password,
+    });
+
+    const listOneProductResponse = await request(app)
+      .get(`/products/${mockIngredient.id}`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(listOneProductResponse.status).toBe(404);
+    expect(listOneProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Unauthorized",
+        message: "Product not found",
       })
     );
   });

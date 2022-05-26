@@ -23,7 +23,7 @@ const verifyProductInfosMiddleware = async (
   });
 
   if (productAlreadyExists) {
-    throw new AppError("Product already exists", 409);
+    throw new AppError("Product with this name already exists", 409);
   }
 
   const allIngredients = await ingredientsRepo.findBy({
@@ -39,7 +39,7 @@ const verifyProductInfosMiddleware = async (
   });
 
   if (allCategories.length !== categories.length) {
-    throw new AppError("invalid list of categories ids", 400);
+    throw new AppError("Invalid list of categories ids", 400);
   }
 
   return next();

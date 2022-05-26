@@ -3,10 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
-
 describe("POST - /products", () => {
   let connection: DataSource;
 
@@ -18,7 +14,28 @@ describe("POST - /products", () => {
       });
   });
 
+  const mockSuperUser = {
+    name: "testaurat",
+    email: "admin@email.com",
+    phone: "+55061940028922",
+    password: "Admin123",
+  };
+
+  const mockEmployee = {
+    name: "John doe",
+    email: "johndoe@email.com",
+    phone: "999999999999",
+    password: "Aa12345678",
+    accessLevel: 3,
+  };
+
+  const mockCategory = {
+    id: "uuid",
+    name: "massas",
+  };
+
   const mockIngredient = {
+    id: "uuid",
     name: "Cenoura",
     measure: "kg",
     amount: 50,
@@ -27,102 +44,108 @@ describe("POST - /products", () => {
   };
 
   const mockProduct = {
+    id: "uuid",
     name: "Pizza",
     price: 4.99,
     calories: 300,
-    ingredients: [{ ingredientId: "uuid", amount: "100" }],
-    categories: ["massas"],
+    ingredients: [{ id: "uuid", amount: "100" }],
+    categories: ["uuid"],
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
+  interface IAttMocks {
+    idProduct?: string;
+    idIngredient?: string;
+    idCategory?: string;
+  }
+
+  const attMocks = ({ idProduct, idIngredient, idCategory }: IAttMocks) => {
+    mockProduct.id = idProduct ? idProduct : mockProduct.id;
+    mockIngredient.id = idIngredient ? idIngredient : mockIngredient.id;
+    mockCategory.id = idCategory ? idCategory : mockCategory.id;
+    mockProduct.ingredients[0].id = mockIngredient.id;
+    mockProduct.categories[0] = mockCategory.id;
+  };
 
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to create a product", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
+    await request(app).post("/super").send(mockSuperUser);
 
-    await request(app).post("/super").send({
-      name: "testaurat",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
+    const {
+      body: { token },
+    } = await request(app).post("/sessions").send({
+      email: mockSuperUser.email,
+      password: mockSuperUser.password,
     });
 
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
-    });
-
-    uuidSpy.mockReturnValueOnce("massas-uuid");
     await request(app)
       .post("/categories")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({
-        name: "massas",
+      .set("Authorization", `Bearer ${token}`)
+      .send(mockCategory)
+      .then(({ body: { category } }) => {
+        attMocks({ idCategory: category.id });
       });
 
-    uuidSpy.mockReturnValueOnce("uuid");
     await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockIngredient);
+      .set("Authorization", `Bearer ${token}`)
+      .send(mockIngredient)
+      .then(({ body: { ingredient } }) => {
+        attMocks({ idIngredient: ingredient.id });
+      });
 
-    uuidSpy.mockReturnValueOnce("uuid");
     const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockProduct);
+      .set("Authorization", `Bearer ${token}`)
+      .send(mockProduct)
+      .then((res) => {
+        attMocks({ idProduct: res.body.product.id });
+        return res;
+      });
 
     expect(createProductResponse.status).toBe(201);
     expect(createProductResponse.body).toMatchObject({
       message: "Product created",
       product: {
-        id: "uuid",
-        ...mockProduct,
+        id: mockProduct.id,
+        name: mockProduct.name.toLowerCase().trim(),
+        price: mockProduct.price,
+        calories: mockProduct.calories,
       },
     });
   });
+
   it("Should not be able to create a product without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
+    const {
+      body: { token },
+    } = await request(app).post("/sessions").send({
+      email: mockSuperUser.email,
+      password: mockSuperUser.password,
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
-    const withoutAccessUser = await request(app)
+    await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({
-        name: "John doe",
-        email: "johndoe@email.com",
-        phone: "999999999999",
-        password: "12345678",
-        accessLevel: 3,
-      });
+      .set("Authorization", `Bearer ${token}`)
+      .send(mockEmployee);
 
-    const withoutAccessLogin = await request(app).post("/sessions").send({
-      email: "johndoe@email.com",
-      password: "12345678",
+    const {
+      body: { token: tokenEmployee },
+    } = await request(app).post("/sessions").send({
+      email: mockEmployee.email,
+      password: mockEmployee.password,
     });
-
-    uuidSpy.mockReturnValueOnce("potato-uuid");
 
     const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
+      .set("Authorization", `Bearer ${tokenEmployee}`)
       .send({
         name: "Batatão recheado com cenoura",
         price: 4.99,
         calories: 300,
-        ingredients: [{ ingredientId: "uuid", amount: "100" }],
-        categories: ["massas"],
+        ingredients: [{ id: mockIngredient.id, amount: "100" }],
+        categories: [mockCategory.id],
       });
 
     expect(createProductResponse.status).toBe(401);
@@ -132,15 +155,18 @@ describe("POST - /products", () => {
       })
     );
   });
+
   it("Should not be able to create a product with repeated name", async () => {
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
+    const {
+      body: { token },
+    } = await request(app).post("/sessions").send({
+      email: mockSuperUser.email,
+      password: mockSuperUser.password,
     });
 
     const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .set("Authorization", `Bearer ${token}`)
       .send(mockProduct);
 
     expect(createProductResponse.status).toBe(409);
@@ -150,27 +176,62 @@ describe("POST - /products", () => {
       })
     );
   });
+
   it("Should not be able to create a product with unexistent ingredient", async () => {
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
+    const {
+      body: { token },
+    } = await request(app).post("/sessions").send({
+      email: mockSuperUser.email,
+      password: mockSuperUser.password,
     });
 
     const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .set("Authorization", `Bearer ${token}`)
       .send({
         name: "Batatão",
         price: 4.99,
         calories: 300,
-        ingredients: [{ ingredientId: "uuid-batata", amount: "100" }],
-        categories: ["massas"],
+        ingredients: [
+          {
+            id: mockProduct.id,
+            amount: "100",
+          },
+        ],
+        categories: mockProduct.categories,
       });
 
-    expect(createProductResponse.status).toBe(404);
+    expect(createProductResponse.status).toBe(400);
     expect(createProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Ingredients does not exist",
+        message: "Invalid list of ingredients ids",
+      })
+    );
+  });
+
+  it("Should not be able to create a product with unexistent category", async () => {
+    const {
+      body: { token },
+    } = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "Admin123",
+    });
+
+    const createProductResponse = await request(app)
+      .post("/products")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Batatão",
+        price: 4.99,
+        calories: 300,
+        ingredients: mockProduct.ingredients,
+        categories: [mockProduct.id],
+      });
+
+    expect(createProductResponse.status).toBe(400);
+    expect(createProductResponse.body).toEqual(
+      expect.objectContaining({
+        message: "Invalid list of categories ids",
       })
     );
   });
