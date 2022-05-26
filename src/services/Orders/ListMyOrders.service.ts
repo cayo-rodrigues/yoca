@@ -1,10 +1,10 @@
 import AppDataSource from "../../data-source";
-import { IList } from "../../interfaces/List.interface";
+import { IListMyOrders } from "../../interfaces/Orders.interface";
 import Order from "../../models/Order.model";
 import { getUrl } from "../../utils";
 
-class ListOrdersService {
-  static async execute({ page, per_page }: IList): Promise<any> {
+class ListMyOrdersService {
+  static async execute({ page, per_page, id }: IListMyOrders): Promise<any> {
     const ordersRepo = AppDataSource.getRepository(Order);
 
     if (!per_page) {
@@ -15,7 +15,11 @@ class ListOrdersService {
       page = 1;
     }
 
-    const count = await ordersRepo.count();
+    const count = await ordersRepo.count({
+      where: {
+        employeeId: id,
+      },
+    });
 
     const pages = Math.ceil(count / per_page);
 
@@ -32,6 +36,9 @@ class ListOrdersService {
     const orders = await ordersRepo.find({
       skip: per_page * (page - 1),
       take: per_page,
+      where: {
+        employeeId: id,
+      },
     });
 
     return {
@@ -46,4 +53,4 @@ class ListOrdersService {
   }
 }
 
-export default ListOrdersService;
+export default ListMyOrdersService;

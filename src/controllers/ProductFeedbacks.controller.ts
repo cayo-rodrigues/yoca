@@ -6,7 +6,6 @@ import CreateProductFeedbackService from "../services/ProductFeedback/CreateFeed
 import DeleteProductFeedbackService from "../services/ProductFeedback/DeleteProductFeedback.service";
 import ListProductFeedbacksService from "../services/ProductFeedback/ListProductFeedbacks.service";
 import ShowProductFeedbackService from "../services/ProductFeedback/ShowProductFeedback.service";
-import UpdateProductFeedbackService from "../services/ProductFeedback/UpdateGeneralFeedback.service";
 
 class ProductFeedbackController {
   static async store(req: Request, res: Response) {
@@ -42,23 +41,6 @@ class ProductFeedbackController {
     const feedback = await ShowProductFeedbackService.execute({ id });
 
     return res.json(instanceToPlain(feedback));
-  }
-
-  static async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const { description, productId, rating }: IProductFeedback = req.body;
-
-    const updatedFeedback = await UpdateProductFeedbackService.execute({
-      id,
-      description,
-      productId,
-      rating,
-    });
-
-    return res.json({
-      message: "Product feedback updated",
-      feedback: instanceToPlain(updatedFeedback),
-    });
   }
 
   static async delete(req: Request, res: Response) {

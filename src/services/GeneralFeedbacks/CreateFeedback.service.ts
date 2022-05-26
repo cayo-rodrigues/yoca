@@ -7,7 +7,9 @@ class CreateGeneralFeedbackService {
     const generalFeedbackRepository =
       AppDataSource.getRepository(GeneralFeedback);
 
-    const newFeedback = await generalFeedbackRepository.save(feedback);
+    const newFeedback = generalFeedbackRepository.create(feedback);
+
+    await generalFeedbackRepository.save(newFeedback);
 
     return newFeedback;
   }

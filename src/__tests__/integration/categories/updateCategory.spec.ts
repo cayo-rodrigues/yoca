@@ -3,8 +3,15 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
+type CategoryUpdatesResponse = {
+  message: string;
+  category: {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" PATCH - /categories/:id ", () => {
   let connection: DataSource;
@@ -15,6 +22,12 @@ describe(" PATCH - /categories/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
   const mockCategory = {
@@ -30,22 +43,10 @@ describe(" PATCH - /categories/:id ", () => {
   });
 
   it("Should be able to update one category", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "S3nh@F0rt3",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "S3nh@F0rt3",
     });
-
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const createCategoryResponse = await request(app)
       .post("/categories")
@@ -58,23 +59,23 @@ describe(" PATCH - /categories/:id ", () => {
       .send(categoryUpdates);
 
     expect(updateOneCategoryResponse.status).toBe(200);
-    expect(updateOneCategoryResponse.body).toMatchObject({
+    expect(
+      updateOneCategoryResponse.body
+    ).toMatchObject<CategoryUpdatesResponse>({
       message: "Category updated",
       category: {
-        ...createCategoryResponse.body.category,
-        name: categoryUpdates.name,
+        ...updateOneCategoryResponse.body.category,
+        ...categoryUpdates,
       },
     });
   });
 
   it("Should not be able to update category without accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -92,7 +93,7 @@ describe(" PATCH - /categories/:id ", () => {
     });
 
     const updateCategoriesResponse = await request(app)
-      .patch("/categories/uuid")
+      .patch(`/categories/${withoutAccessUser.body.employee.id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(updateCategoriesResponse.status).toBe(401);
@@ -109,17 +110,12 @@ describe(" PATCH - /categories/:id ", () => {
     const createCategoryResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({ name: "cat eagle laugh" });
-
-    const createAnotherCategoryResponse = await request(app)
-      .post("/categories")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({ name: "gato águia laugh" });
+      .send(mockCategory);
 
     const updateOneCategoryResponse = await request(app)
-      .patch(`/categories/${createAnotherCategoryResponse.body.category.id}`)
+      .patch(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({ name: "cat eagle laugh" });
+      .send(categoryUpdates);
 
     expect(updateOneCategoryResponse.status).toBe(409);
     expect(updateOneCategoryResponse.body).toEqual(
@@ -139,11 +135,11 @@ describe(" PATCH - /categories/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     await request(app)
-      .delete(`/categories/${createCategoryResponse.body[0].id}`)
+      .delete(`/categories/${createCategoryResponse.body.results[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const updateOneCategoryResponse = await request(app)
-      .patch(`/categories/${createCategoryResponse.body[0].id}`)
+      .patch(`/categories/${createCategoryResponse.body.results[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({ name: "cat eagle laugh" });
 

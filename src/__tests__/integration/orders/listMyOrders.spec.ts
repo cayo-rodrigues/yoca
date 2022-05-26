@@ -107,6 +107,6 @@ describe("GET - /orders/me", () => {
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listEmployeeOrders.status).toBe(200);
-    expect(listEmployeeOrders.body).toHaveProperty("reduce");
+    expect(listEmployeeOrders.body.results).toHaveProperty("reduce");
   });
 });

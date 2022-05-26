@@ -22,12 +22,12 @@ class ListIngredientsService {
     const prev =
       page <= 1
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/ingredients?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/ingredients?per_page=${per_page}&page=${page + 1}`;
 
     const ingredients = await ingredientRepo.find({
       skip: per_page * (page - 1),

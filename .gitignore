@@ -1,4 +1,7 @@
 node_modules
 dist
 .env
-coverage
+
+# Ignore test-related files
+/coverage.data
+/coverage/

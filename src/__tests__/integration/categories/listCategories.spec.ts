@@ -12,6 +12,13 @@ describe(" GET - /categories ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
   const mockCategory = {
@@ -23,13 +30,6 @@ describe(" GET - /categories ", () => {
   });
 
   it("Should be able to list all categories", async () => {
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "S3nh@F0rt3",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "S3nh@F0rt3",
@@ -45,8 +45,8 @@ describe(" GET - /categories ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listCategoriesResponse.status).toBe(200);
-    expect(listCategoriesResponse.body).toHaveProperty("reduce");
-    expect(listCategoriesResponse.body).toEqual(
+    expect(listCategoriesResponse.body.results).toHaveProperty("reduce");
+    expect(listCategoriesResponse.body.results).toEqual(
       expect.arrayContaining([categoryResponse.body.category])
     );
   });

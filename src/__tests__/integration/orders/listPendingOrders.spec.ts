@@ -107,6 +107,6 @@ describe("GET - /orders/pending", () => {
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listPendingOrders.status).toBe(200);
-    expect(listPendingOrders.body).toHaveProperty("reduce");
+    expect(listPendingOrders.body.results).toHaveProperty("reduce");
   });
 });

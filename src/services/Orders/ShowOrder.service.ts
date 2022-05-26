@@ -10,7 +10,7 @@ class ShowOrderService {
     const order = await orderRepo.findOne({ where: { id } });
 
     if (!order) {
-      throw new AppError("Ingredient not found", 404);
+      throw new AppError("Order not found", 404);
     }
 
     return order;

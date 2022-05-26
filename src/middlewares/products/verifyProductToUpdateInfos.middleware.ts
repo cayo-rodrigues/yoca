@@ -47,7 +47,7 @@ const verifyProductToUpdateInfosMiddleware = async (
     });
 
     if (allCategories.length !== categories.length) {
-      throw new AppError("invalid list of categories ids", 400);
+      throw new AppError("Invalid list of categories ids", 400);
     }
   }
 

@@ -67,15 +67,17 @@ describe(" GET - /products ", () => {
         categories: [categoriesResponse.body.category.id],
       });
     const listProductsResponse = await request(app)
-      .get("/products")
+      .get(`/products/${createProductResponse.body.product.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listProductsResponse.status).toBe(200);
-    expect(listProductsResponse.body.results).toHaveProperty("reduce");
+    expect(listProductsResponse.body).not.toBeUndefined();
   });
 
   it("Should not be able to list products being unregistered user", async () => {
-    const listProductsResponse = await request(app).get("/products");
+    const listProductsResponse = await request(app).get(
+      "/products/b646c6bb-b830-404e-94ee-3fb347b98d97"
+    );
 
     expect(listProductsResponse.status).toBe(401);
     expect(listProductsResponse.body).toEqual(

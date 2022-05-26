@@ -27,3 +27,9 @@ export interface IOrderProducts {
   totalPrice: number;
   product: Product;
 }
+
+export interface IListMyOrders {
+  id: string
+  per_page?: number;
+  page?: number;
+}
