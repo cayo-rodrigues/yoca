@@ -22,12 +22,12 @@ class ListProductsService {
     const prev =
       page <= 1
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/products?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/products?per_page=${per_page}&page=${page + 1}`;
 
     const products = await productsRepo.find({
       skip: per_page * (page - 1),

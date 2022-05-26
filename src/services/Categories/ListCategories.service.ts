@@ -22,12 +22,12 @@ class ListCategoriesService {
     const prev =
       page <= 1
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/categories?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/categories?per_page=${per_page}&page=${page + 1}`;
 
     const categories = await categoryRepository.find({
       skip: per_page * (page - 1),
