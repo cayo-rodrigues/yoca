@@ -33,7 +33,7 @@ describe("GET - /orders/ready", () => {
     await connection.destroy();
   });
 
-  it("Should be able to list all pending orders", async () => {
+  it("Should be able to list all ready orders", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: TESTS_PASSWORD,
@@ -103,12 +103,12 @@ describe("GET - /orders/ready", () => {
       .send(mockOrder);
 
     const listReadyOrders = await request(app)
-      .get("/orders/pending")
+      .get("/orders/ready")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listReadyOrders.status).toBe(200);
-    expect(listReadyOrders.body).toHaveProperty("reduce");
-    expect(listReadyOrders.body).toBe([]);
+    expect(listReadyOrders.body.results).toHaveProperty("reduce");
+    expect(listReadyOrders.body.results).toStrictEqual([]);
   });
   it("Should not be able to list ready orders with accessLevel greater than 4", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({

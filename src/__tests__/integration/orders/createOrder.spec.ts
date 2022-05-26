@@ -156,11 +156,11 @@ describe("POST - /orders", () => {
       ordersProducts: [
         {
           quantity: 1,
-          productId: listProducts.body[0].id,
+          productId: listProducts.body.results[0].id,
         },
       ],
       billId: billResponse.body.bill.id,
-      employeeId: listWaiters.body[0].id,
+      employeeId: listWaiters.body.results[0].id,
     };
 
     const createOrderResponse = await request(app)
@@ -201,12 +201,12 @@ describe("POST - /orders", () => {
         table: "47",
         ordersProducts: [
           {
-            productId: listProducts.body[0].id,
+            productId: listProducts.body.results[0].id,
             quantity: 2,
           },
         ],
         billId: 5,
-        employeeId: listWaiters.body[0].id,
+        employeeId: listWaiters.body.results[0].id,
       });
 
     expect(createOrderResponse.status).toBe(404);
@@ -238,12 +238,12 @@ describe("POST - /orders", () => {
         table: "47",
         ordersProducts: [
           {
-            productId: listProducts.body[0].id,
+            productId: listProducts.body.results[0].id,
             quantity: 2,
           },
         ],
         billId: 1,
-        employeeId: listProducts.body[0].id,
+        employeeId: listProducts.body.results[0].id,
       });
 
     expect(createOrderResponse.status).toBe(404);
