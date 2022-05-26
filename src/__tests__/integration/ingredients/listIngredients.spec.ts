@@ -12,6 +12,12 @@ describe(" GET - /ingredients ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
   const mockIngredient = {
@@ -27,13 +33,6 @@ describe(" GET - /ingredients ", () => {
   });
 
   it("Should be able to list all ingredients", async () => {
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -53,11 +52,9 @@ describe(" GET - /ingredients ", () => {
       expect.arrayContaining([
         {
           ...createIngredientResponse.body.ingredient,
-          amount: createIngredientResponse.body.ingredient.amount.toFixed(2),
-          amountMin:
-            createIngredientResponse.body.ingredient.amountMin.toFixed(2),
-          amountMax:
-            createIngredientResponse.body.ingredient.amountMax.toFixed(2),
+          amount: "50.00",
+          amountMax: "100.00",
+          amountMin: "15.00",
         },
       ])
     );

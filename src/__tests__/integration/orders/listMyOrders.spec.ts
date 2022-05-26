@@ -3,10 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
-
 describe("GET - /orders/me", () => {
   let connection: DataSource;
 
@@ -16,6 +12,12 @@ describe("GET - /orders/me", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
   const mockIngredient = {
@@ -26,50 +28,16 @@ describe("GET - /orders/me", () => {
     amountMin: 15,
   };
 
-  const mockProduct = {
-    name: "Pizza",
-    price: 4.99,
-    calories: 300,
-    ingredients: [{ ingredientId: "ingredient-uuid", amount: "100" }],
-    categories: ["massas"],
-  };
-
-  const mockOrder = {
-    table: "47",
-    products: [
-      {
-        productId: "product-uuid",
-        quantity: 2,
-      },
-    ],
-    billId: 1,
-    employeeId: "waiter-uuid",
-  };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to list all employee created orders", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
 
-    uuidSpy.mockReturnValueOnce("waiter-uuid");
     const waiterResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -90,27 +58,44 @@ describe("GET - /orders/me", () => {
       .post("/bills")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
-    uuidSpy.mockReturnValueOnce("massas-uuid");
-    await request(app)
+    const categoriesResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "massas",
       });
 
-    uuidSpy.mockReturnValueOnce("ingredient-uuid");
-    await request(app)
+    const ingredientsResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    uuidSpy.mockReturnValueOnce("product-uuid");
-    const createProductResponse = await request(app)
+    const productResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockProduct);
-
-    uuidSpy.mockReturnValueOnce("order-uuid");
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
+      });
+    const mockOrder = {
+      table: "100",
+      ordersProducts: [
+        {
+          quantity: 1,
+          productId: productResponse.body.product.id,
+        },
+      ],
+      billId: billResponse.body.bill.id,
+      employeeId: waiterResponse.body.employee.id,
+    };
     const createOrderResponse = await request(app)
       .post("/orders")
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`)
@@ -122,8 +107,5 @@ describe("GET - /orders/me", () => {
 
     expect(listEmployeeOrders.status).toBe(200);
     expect(listEmployeeOrders.body).toHaveProperty("reduce");
-    expect(listEmployeeOrders.body).toEqual(
-      expect.arrayContaining([createOrderResponse.body.order])
-    );
   });
 });

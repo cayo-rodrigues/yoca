@@ -3,8 +3,19 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
+type IngredientUpdatesResponse = {
+  message: string;
+  ingredient: {
+    id: string;
+    name: string;
+    measure: string;
+    amount: number;
+    amount_max: number;
+    amount_min: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" PATCH - /ingredients/:id ", () => {
   let connection: DataSource;
@@ -15,6 +26,12 @@ describe(" PATCH - /ingredients/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
   const mockIngredient = {
@@ -38,22 +55,10 @@ describe(" PATCH - /ingredients/:id ", () => {
   });
 
   it("Should be able to update an existing ingredient", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
-
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
@@ -61,29 +66,29 @@ describe(" PATCH - /ingredients/:id ", () => {
       .send(mockIngredient);
 
     const updateIngredientResponse = await request(app)
-      .patch("/ingredients/uuid")
+      .patch(`/ingredients/${createIngredientResponse.body.ingredient.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(ingredientUpdates);
 
     console.log(updateIngredientResponse);
 
     expect(updateIngredientResponse.status).toBe(200);
-    expect(updateIngredientResponse.body).toMatchObject({
+    expect(
+      updateIngredientResponse.body
+    ).toMatchObject<IngredientUpdatesResponse>({
       message: "Ingredient updated",
       ingredient: {
-        id: "uuid",
+        ...updateIngredientResponse.body.updatedIngredient,
         ...ingredientUpdates,
       },
     });
   });
   it("Should not be able to update an existing ingredient without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
 
-    uuidSpy.mockReturnValueOnce("some-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -101,7 +106,7 @@ describe(" PATCH - /ingredients/:id ", () => {
     });
 
     const updateIngredientResponse = await request(app)
-      .patch("/ingredients/uuid")
+      .patch("/ingredients/5cee5a5f-169d-423b-8c48-64d27d2c59ed")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send(mockIngredient);
 

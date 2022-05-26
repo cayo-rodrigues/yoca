@@ -3,11 +3,18 @@ import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
+type GenProductResponse = {
+  message: string;
+  feedback: {
+    description: string;
+    rating: number;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
-describe("POST - /feedbacks/product", () => {
+describe("POST - /feedbacks/products", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -16,37 +23,75 @@ describe("POST - /feedbacks/product", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
-  const mockProductFeedback = {
-    product: "Pizza",
-    description:
-      "Massa muito grossa, não consegui bater meu recorde de 45 fatias :(",
-    rating: 2,
+  const mockIngredient = {
+    name: "Cenoura",
+    measure: "kg",
+    amount: 50,
+    amountMax: 100,
+    amountMin: 15,
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to create an product feedback", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("prod-fb-uuid");
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: "admin123",
+    });
 
-    const genFeedbackResponse = await request(app)
-      .post("/feedbacks/product")
-      .send(mockProductFeedback);
+    const categoriesResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "massas",
+      });
 
-    expect(genFeedbackResponse.status).toBe(201);
-    expect(genFeedbackResponse.body).toMatchObject({
-      message: "Feedback created",
+    const ingredientsResponse = await request(app)
+      .post("/ingredients")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockIngredient);
+
+    const productResponse = await request(app)
+      .post("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
+      });
+
+    const productFeedbackResponse = await request(app)
+      .post("/feedbacks/products")
+      .send({
+        description: "A pizza estava perfeita!",
+        rating: 5,
+        productId: productResponse.body.product.id,
+      });
+
+    expect(productFeedbackResponse.status).toBe(201);
+    expect(productFeedbackResponse.body).toMatchObject<GenProductResponse>({
+      message: "Product feedback created",
       feedback: {
-        id: "prod-fb-uuid",
-        ...mockProductFeedback,
+        ...productFeedbackResponse.body.feedback,
+        description: "A pizza estava perfeita!",
+        rating: 5,
       },
     });
   });

@@ -2,7 +2,6 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
 
 describe(" GET - /bills/:id ", () => {
   let connection: DataSource;
@@ -13,25 +12,19 @@ describe(" GET - /bills/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-  });
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
-  afterAll(async () => {
-    await connection.destroy();
-  });
-
-  it("Should be able to list one bill", async () => {
-
     await request(app).post("/super").send({
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
       password: "admin123",
     });
+  });
 
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
+  it("Should be able to list one bill", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -69,7 +62,6 @@ describe(" GET - /bills/:id ", () => {
   });
 
   it("Should not be able to list one bill with accessLevel greater than 4", async () => {
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
