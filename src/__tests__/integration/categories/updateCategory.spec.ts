@@ -3,8 +3,15 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
+type CategoryUpdatesResponse = {
+  message: string;
+  category: {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" PATCH - /categories/:id ", () => {
   let connection: DataSource;
@@ -30,9 +37,6 @@ describe(" PATCH - /categories/:id ", () => {
   });
 
   it("Should be able to update one category", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
     await request(app).post("/super").send({
       name: "testaurant",
       email: "admin@email.com",
@@ -45,8 +49,6 @@ describe(" PATCH - /categories/:id ", () => {
       password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("uuid");
-
     const createCategoryResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -58,23 +60,23 @@ describe(" PATCH - /categories/:id ", () => {
       .send(categoryUpdates);
 
     expect(updateOneCategoryResponse.status).toBe(200);
-    expect(updateOneCategoryResponse.body).toMatchObject({
+    expect(
+      updateOneCategoryResponse.body
+    ).toMatchObject<CategoryUpdatesResponse>({
       message: "Category updated",
       category: {
-        ...createCategoryResponse.body.category,
-        name: categoryUpdates.name,
+        ...updateOneCategoryResponse.body.category,
+        ...categoryUpdates,
       },
     });
   });
 
   it("Should not be able to update category without accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -125,32 +127,6 @@ describe(" PATCH - /categories/:id ", () => {
     expect(updateOneCategoryResponse.body).toEqual(
       expect.objectContaining({
         message: "Category with this name already exists",
-      })
-    );
-  });
-  it("Should not be able to update one category with unexistent id", async () => {
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "S3nh@F0rt3",
-    });
-
-    const createCategoryResponse = await request(app)
-      .get("/categories")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
-    await request(app)
-      .delete(`/categories/${createCategoryResponse.body[0].id}`)
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
-    const updateOneCategoryResponse = await request(app)
-      .patch(`/categories/${createCategoryResponse.body[0].id}`)
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({ name: "cat eagle laugh" });
-
-    expect(updateOneCategoryResponse.status).toBe(404);
-    expect(updateOneCategoryResponse.body).toEqual(
-      expect.objectContaining({
-        message: "Category not found",
       })
     );
   });
