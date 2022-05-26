@@ -66,7 +66,7 @@ describe("POST - /bills", () => {
     expect(billResponse.status).toBe(201);
     expect(billResponse.body).toMatchObject<BillResponse>({
       message: "Bill created",
-      ...billResponse.body.bill,
+      bill: { ...billResponse.body.bill },
     });
   });
   it("Should not be able to create an bill with accessLevel greater than 3", async () => {

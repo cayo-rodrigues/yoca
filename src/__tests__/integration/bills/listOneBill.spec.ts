@@ -56,7 +56,6 @@ describe(" GET - /bills/:id ", () => {
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listOneBillResponse.status).toBe(200);
-    expect(listOneBillResponse.body).toHaveProperty("reduce");
     expect(listOneBillResponse.body).toEqual(
       expect.objectContaining({ ...billResponse.body.bill })
     );

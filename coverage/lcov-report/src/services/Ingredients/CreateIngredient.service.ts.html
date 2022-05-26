@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.75% </span>
+                <span class="strong">34.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/29</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>10/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.75% </span>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">34.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>24/29</span>
+                <span class='fraction'>10/29</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -99,25 +99,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -127,26 +127,26 @@ import { IBaseIngredient } from "../../interfaces/Ingredient.interface";
 import AppError from "../../errors/AppError";
 &nbsp;
 class CreateIngredientService {
-  static async execute(ingredientInfo: IBaseIngredient): Promise&lt;Ingredient&gt; {
-    const ingredientRepo = AppDataSource.getRepository(Ingredient);
-&nbsp;
-    const existingIngredient = await ingredientRepo.findOne({
-      where: { name: ingredientInfo.name },
-    });
-&nbsp;
-    if (existingIngredient) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+  static async <span class="fstat-no" title="function not covered" >execute(ingredientInfo: IBaseIngredient): Promise&lt;Ingredient&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const ingredientRepo = AppDataSource.getRepository(Ingredient);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const existingIngredient = await ingredientRepo.findOne({</span>
+<span class="cstat-no" title="statement not covered" >      where: { name: ingredientInfo.name },</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (existingIngredient) {</span>
 <span class="cstat-no" title="statement not covered" >      throw new AppError(</span>
 <span class="cstat-no" title="statement not covered" >        "Ingredient already exists, add to its amount instead",</span>
 <span class="cstat-no" title="statement not covered" >        409</span>
 <span class="cstat-no" title="statement not covered" >      );</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-&nbsp;
-    const ingredient = ingredientRepo.create(ingredientInfo);
-&nbsp;
-    await ingredientRepo.save(ingredient);
-&nbsp;
-    return ingredient;
-  }
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const ingredient = ingredientRepo.create(ingredientInfo);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await ingredientRepo.save(ingredient);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return ingredient;</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 }
 &nbsp;
 export default CreateIngredientService;
@@ -157,7 +157,7 @@ export default CreateIngredientService;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu May 26 2022 08:32:29 GMT-0300 (Horário Padrão de Brasília)
+                at Thu May 26 2022 09:50:39 GMT-0300 (Horário Padrão de Brasília)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
