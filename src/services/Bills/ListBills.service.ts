@@ -36,8 +36,8 @@ class ListBillsService {
     const bills = await billsRepository.find({
       skip: per_page * (page - 1),
       take: per_page,
-      where: {
-        paid: listUnpaid,
+      [listUnpaid ? "where" : ""]: {
+        paid: false,
       },
     });
 
