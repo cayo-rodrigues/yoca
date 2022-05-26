@@ -50,7 +50,24 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "$ref": "#/components/schemas/SuperResponse"
+                  "example": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Super user created"
+                      },
+                      "superUser": {
+                        "type": "object",
+                        "example": {
+                          "name": "admin",
+                          "email": "admin@email.com",
+                          "phone": "0194002-8922",
+                          "password": "admin123456"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -61,7 +78,14 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "$ref": "#/components/schemas/SuperBadRequest"
+                  "example": {
+                    "body": [
+                      {
+                        "message": "Field password is required",
+                        "propertyPath": "password"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -94,7 +118,7 @@
                 "$ref": "#/components/schemas/Sessions"
               },
               "examples": {
-                "super": {
+                "user": {
                   "value": {
                     "email": "super@super.com",
                     "password": "password"
@@ -158,7 +182,7 @@
                 "$ref": "#/components/schemas/Employees"
               },
               "examples": {
-                "super": {
+                "employee": {
                   "value": {
                     "name": "employee",
                     "email": "employee@email.com",
@@ -459,7 +483,7 @@
                 "$ref": "#/components/schemas/Categories"
               },
               "examples": {
-                "super": {
+                "category": {
                   "value": {
                     "name": "Bebidas"
                   }
@@ -749,13 +773,13 @@
                 "$ref": "#/components/schemas/Ingredients"
               },
               "examples": {
-                "super": {
+                "ingredient": {
                   "value": {
                     "name": "batata",
                     "measure": "kg",
                     "amount": 150,
-                    "amount_max": 200,
-                    "amount_min": 10
+                    "amountMax": 200,
+                    "amountMin": 10
                   }
                 }
               }
@@ -1063,7 +1087,7 @@
                 "$ref": "#/components/schemas/Products"
               },
               "examples": {
-                "super": {
+                "product": {
                   "value": {
                     "name": "Pizza de Queijo",
                     "price": 39.99,
@@ -1382,6 +1406,748 @@
           }
         }
       }
+    },
+    "/bills": {
+      "post": {
+        "summary": "Criação de Bills",
+        "description": "Rota para a criação de bills.",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "deletedAt": null,
+                    "id": "1",
+                    "createdAt": "2022-05-26T16:25:38.026Z",
+                    "updatedAt": "2022-05-26T16:25:38.026Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "You need to be an admin to access this route"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Bill already exists"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de Bills",
+        "description": "Rota para a listagem de bills.",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "id": "1",
+                      "paid": false,
+                      "total": "0.00",
+                      "createdAt": "2022-05-26T16:25:38.026Z",
+                      "updatedAt": "2022-05-26T16:25:38.026Z",
+                      "deletedAt": null,
+                      "orders": []
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bills/{id}": {
+      "get": {
+        "summary": "Listagem de Bills pelo id",
+        "description": "Rota para a listagem de bills pelo id.",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid da bill",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "id": "1",
+                    "paid": false,
+                    "total": "0.00",
+                    "createdAt": "2022-05-26T16:25:38.026Z",
+                    "updatedAt": "2022-05-26T16:25:38.026Z",
+                    "deletedAt": null,
+                    "orders": []
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Bill not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Atualização de Bills",
+        "description": "Rota para a atualização de bills",
+        "tags": ["Bills"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid da bill",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Bills"
+              },
+              "examples": {
+                "value": {
+                  "paid": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Bill updated",
+                    "bill": {
+                      "id": "1",
+                      "paid": true,
+                      "total": "0.00",
+                      "createdAt": "2022-05-26T16:25:38.026Z",
+                      "updatedAt": "2022-05-26T16:25:38.026Z",
+                      "deletedAt": null,
+                      "orders": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Bill not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleção de Bills",
+        "description": "Rota para deletar bills.",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid da bill",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Bill not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedbacks/products": {
+      "post": {
+        "summary": "Criação de Feedbacks de Produtos",
+        "description": "Rota para a criação de feedbacks de produtos.",
+        "tags": ["Products Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductsFeedbacks"
+              },
+              "examples": {
+                "product feedback": {
+                  "value": {
+                    "rating": 5,
+                    "description": "A pizza estava perfeita!",
+                    "productId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Product created",
+                    "product": {
+                      "name": "Pizza de Queijo",
+                      "price": 39.99,
+                      "calories": 500,
+                      "id": "a732ea20-5df4-49d6-9c84-cdf49702a445",
+                      "createdAt": "2022-05-26T19:33:31.535Z",
+                      "updatedAt": "2022-05-26T19:33:31.535Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "You need to be an admin to access this route"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de Feedbacks de Produtos",
+        "description": "Rota para a listagem de feedbacks de produtos.",
+        "tags": ["Products Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "id": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
+                      "name": "Pizza de Queijo",
+                      "price": "39.99",
+                      "calories": "500.00",
+                      "createdAt": "2022-05-24T15:57:46.065Z",
+                      "updatedAt": "2022-05-24T16:46:12.530Z",
+                      "ingredients": [
+                        {
+                          "id": "57e41e94-757f-40b1-b56a-b3eef2be59a2",
+                          "amount": "100.00",
+                          "productId": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
+                          "ingredientId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
+                          "createdAt": "2022-05-24T15:57:46.084Z",
+                          "updatedAt": "2022-05-24T15:57:46.084Z",
+                          "deletedAt": null
+                        }
+                      ],
+                      "feedbacks": [
+                        {
+                          "id": "1ffda9ad-1726-487f-bd40-9ba6d526fd2e",
+                          "description": "A pizza estava perfeita!",
+                          "rating": 5,
+                          "productId": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
+                          "createdAt": "2022-05-26T19:28:25.753Z",
+                          "updatedAt": "2022-05-26T19:28:25.753Z",
+                          "deletedAt": null
+                        }
+                      ]
+                    },
+                    {
+                      "id": "a732ea20-5df4-49d6-9c84-cdf49702a445",
+                      "name": "Pizza de Queijo2",
+                      "price": "39.99",
+                      "calories": "500.00",
+                      "createdAt": "2022-05-26T19:33:31.535Z",
+                      "updatedAt": "2022-05-26T19:33:31.535Z",
+                      "ingredients": [
+                        {
+                          "id": "04f1d92c-d40b-49c2-be78-bf0870fad11d",
+                          "amount": "100.00",
+                          "productId": "a732ea20-5df4-49d6-9c84-cdf49702a445",
+                          "ingredientId": "4b4853c6-fd45-47cd-aecc-8fa5db425cc9",
+                          "createdAt": "2022-05-26T19:33:31.551Z",
+                          "updatedAt": "2022-05-26T19:33:31.551Z",
+                          "deletedAt": null
+                        }
+                      ],
+                      "feedbacks": []
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedbacks/products/{id}": {
+      "get": {
+        "summary": "Listagem de feedbacks pelo id",
+        "description": "Rota para a listagem de feedbacks pelo id.",
+        "tags": ["Products Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do product feedback",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "id": "1ffda9ad-1726-487f-bd40-9ba6d526fd2e",
+                    "description": "A pizza estava perfeita!",
+                    "rating": 5,
+                    "productId": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
+                    "createdAt": "2022-05-26T19:28:25.753Z",
+                    "updatedAt": "2022-05-26T19:28:25.753Z",
+                    "deletedAt": null
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Product Feedback not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleção de Feedback de Produto",
+        "description": "Rota para deletar feedback de produto.",
+        "tags": ["Products Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do product feedback",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Product Feedback not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedbacks/general": {
+      "post": {
+        "summary": "Criação de Feedbacks Geral",
+        "description": "Rota para a criação de feedbacks geral.",
+        "tags": ["General Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeneralFeedbacks"
+              },
+              "examples": {
+                "feedback general": {
+                  "value": {
+                    "rating": 2,
+                    "description": "atendimento me lemboru muito minha infância, quando minha mãe gritava comigo e me ameaçava"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "General Feedback created",
+                    "feedback": {
+                      "rating": 2,
+                      "description": "atendimento me lemboru muito minha infância, quando minha mãe gritava comigo e me ameaçava",
+                      "deletedAt": null,
+                      "id": "c6aa6f9e-fbb3-4e3d-83ac-68076c335fd4",
+                      "createdAt": "2022-05-26T19:49:17.968Z",
+                      "updatedAt": "2022-05-26T19:49:17.968Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "You need to be an admin to access this route"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de Feedbacks Geral",
+        "description": "Rota para a listagem de feedbacks geral.",
+        "tags": ["General Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "id": "c6aa6f9e-fbb3-4e3d-83ac-68076c335fd4",
+                      "description": "atendimento me lemboru muito minha infância, quando minha mãe gritava comigo e me ameaçava",
+                      "rating": 2,
+                      "createdAt": "2022-05-26T19:49:17.968Z",
+                      "updatedAt": "2022-05-26T19:49:17.968Z",
+                      "deletedAt": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedbacks/general/{id}": {
+      "get": {
+        "summary": "Listagem de Feedbacks pelo id",
+        "description": "Rota para a listagem de feedbacks pelo id.",
+        "tags": ["General Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do general feedback",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "id": "565ac8ea-0bd6-48a8-87eb-442e6f924053",
+                    "description": "Restaurante excelente!",
+                    "rating": 5,
+                    "createdAt": "2022-05-26T19:58:04.569Z",
+                    "updatedAt": "2022-05-26T19:58:04.569Z",
+                    "deletedAt": null
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "General Feedback not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleção de Feedback Geral",
+        "description": "Rota para deletar feedback geral.",
+        "tags": ["General Feedbacks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid do general feedback",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "General Feedback not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1400,40 +2166,6 @@
           },
           "password": {
             "type": "string"
-          }
-        }
-      },
-      "SuperResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Super user created"
-          },
-          "superUser": {
-            "type": "object",
-            "example": {
-              "name": "admin",
-              "email": "admin@email.com",
-              "phone": "0194002-8922",
-              "password": "admin123456"
-            }
-          }
-        }
-      },
-      "SuperBadRequest": {
-        "type": "object",
-        "properties": {
-          "errors": {
-            "type": "object",
-            "example": {
-              "body": [
-                {
-                  "message": "Field password is required",
-                  "propertyPath": "password"
-                }
-              ]
-            }
           }
         }
       },
@@ -1527,6 +2259,39 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "Bills": {
+        "type": "object",
+        "properties": {
+          "paid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProductsFeedbacks": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          }
+        }
+      },
+      "GeneralFeedbacks": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
           }
         }
       }
