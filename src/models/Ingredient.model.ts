@@ -14,19 +14,19 @@ export default class Ingredient {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ unique: true, length: 164 })
+  @Column()
   name: string;
 
-  @Column({ length: 3 })
+  @Column()
   measure: string;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
+  @Column()
   amount: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "amount_min" })
+  @Column()
   amountMin: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "amount_max" })
+  @Column()
   amountMax: number;
 
   @OneToMany(
@@ -35,9 +35,9 @@ export default class Ingredient {
   )
   productIngredients: ProductIngredient[];
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

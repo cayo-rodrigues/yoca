@@ -1,7 +1,9 @@
+import { Exclude } from "class-transformer";
 import {
   Check,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,15 +15,19 @@ export default class GeneralFeedback {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 512 })
+  @Column()
   description: string;
 
-  @Column({ type: "int2" })
+  @Column()
   rating: number;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

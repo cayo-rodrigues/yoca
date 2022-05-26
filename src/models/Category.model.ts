@@ -2,27 +2,27 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
-import Product from "./Product.model";
+import ProductCategory from "./ProductCategory.model";
 
 @Entity("categories")
 export default class Category {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 64, unique: true, name: "name" })
+  @OneToMany(() => ProductCategory, (productCategory) => productCategory.category)
+  products: ProductCategory[];
+
+  @Column()
   name: string;
 
-  @ManyToMany(() => Product)
-  products: Product[];
-
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

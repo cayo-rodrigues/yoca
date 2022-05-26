@@ -5,55 +5,48 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  JoinTable,
-  ManyToMany,
 } from "typeorm";
 
 import ProductFeedback from "./ProductFeedback.model";
-import Category from "./Category.model";
 import ProductIngredient from "./ProductsIngredients.model";
-import OrderProduct from "./OrdersProducts.model";
+import ProductCategory from "./ProductCategory.model";
 
 @Entity("products")
 export default class Product {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ length: 164, unique: true })
+  @Column()
   name: string;
 
-  @Column({ type: "decimal", precision: 8, scale: 2 })
+  @Column()
   price: number;
 
-  @Column({ type: "decimal", precision: 11, scale: 2 })
+  @Column()
   calories: number;
-
-  @ManyToMany(() => Category, { eager: true })
-  @JoinTable({
-    name: "products_categories",
-    joinColumn: { name: "product_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "category_id", referencedColumnName: "id" },
-  })
-  categories: Category[];
 
   @OneToMany(
     () => ProductIngredient,
-    (productIngredient) => productIngredient.product,
+    (ProductIngredient) => ProductIngredient.product,
     { eager: true }
   )
-  productIngredients: ProductIngredient[];
+  ingredients: ProductIngredient[];
+
+  @OneToMany(
+    () => ProductCategory,
+    (ProductCategory) => ProductCategory.product,
+    { eager: true }
+  )
+  categories: ProductCategory[];
 
   @OneToMany(() => ProductFeedback, (feedback) => feedback.product, {
     eager: true,
   })
   feedbacks: ProductFeedback[];
 
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
-  orderProducts: OrderProduct[];
-
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

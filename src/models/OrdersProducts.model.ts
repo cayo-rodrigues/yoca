@@ -1,9 +1,9 @@
+import { Exclude } from "class-transformer";
 import {
-  AfterLoad,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,33 +14,41 @@ import Product from "./Product.model";
 
 @Entity("orders_products")
 class OrderProduct {
+  @Exclude()
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
-  @Column({ type: "int", default: 1 })
+  @Column()
   quantity: number;
 
-  @Column({ type: "decimal", precision: 8, scale: 2, name: "total_price" })
+  @Column()
   totalPrice: number;
 
-  @ManyToOne(() => Order, (order) => order.orderProducts)
-  @JoinColumn({ name: "order_id" })
+  @Exclude()
+  @Column()
+  productId: string;
+
+  @Exclude()
+  @Column()
+  orderId: string;
+
+  @ManyToOne(() => Order)
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderProducts, { eager: true })
-  @JoinColumn({ name: "product_id" })
+  @ManyToOne(() => Product, { eager: true })
   product: Product;
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @Exclude()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @Exclude()
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @AfterLoad()
-  getTotalPrice() {
-    this.totalPrice = this.product.price * this.quantity;
-  }
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
 
 export default OrderProduct;

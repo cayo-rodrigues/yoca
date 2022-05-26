@@ -1,69 +1,70 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  AfterLoad,
+  DeleteDateColumn,
 } from "typeorm";
 
 import Employee from "./Employee.model";
 
 import Bill from "./Bill.model";
 import OrderProduct from "./OrdersProducts.model";
-
-export enum OrderStatus {
-  PENDING = "pending",
-  READY = "ready",
-  SERVED = "served",
-}
+import { Exclude, Expose } from "class-transformer";
+import { IOrderProducts } from "../interfaces/Orders.interface";
 
 @Entity("orders")
 export default class Order {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ name: "table", type: "varchar", length: "3" })
+  @Column()
   table: string;
 
-  @Column({
-    name: "status",
-    type: "enum",
-    enum: OrderStatus,
-    default: OrderStatus.PENDING,
-  })
-  status: OrderStatus;
+  @Column()
+  status: string;
 
-  @Column({ name: "total", type: "decimal", precision: 8, scale: 2 })
+  @Column()
   total: number;
 
-  @ManyToOne(() => Employee, (employee) => employee, {
-    eager: true,
-  })
-  @JoinColumn({ name: "employee_id" })
+  @Exclude()
+  @Column()
+  employeeId: string;
+
+  @ManyToOne(() => Employee, { eager: true })
   employee: Employee;
 
-  @ManyToOne(() => Bill, (bill) => bill.orders)
-  @JoinColumn({ name: "bill_id" })
+  @Column()
+  billId: number;
+
+  @ManyToOne(() => Bill)
   bill: Bill;
 
-  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+  @Exclude()
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, {
+    eager: true,
+  })
   orderProducts: OrderProduct[];
 
-  @CreateDateColumn({ type: "timestamptz", name: "created_at" })
+  @Expose({ name: "products" })
+  getProducts(): IOrderProducts[] {
+    return this.orderProducts?.map(({ quantity, totalPrice, product }) => ({
+      quantity,
+      totalPrice,
+      product,
+    }));
+  }
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamptz", name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @AfterLoad()
-  getTotalPrice() {
-    this.total = this.orderProducts.reduce(
-      (acc, curr) => acc + curr.totalPrice,
-      0
-    );
-  }
+  @Exclude()
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

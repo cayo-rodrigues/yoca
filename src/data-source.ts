@@ -6,10 +6,16 @@ const host = process.env.IS_COMPOSE ? "host.docker.internal" : "localhost";
 const AppDataSource =
   process.env.NODE_ENV === "test"
     ? new DataSource({
-        type: "sqlite",
-        database: ":memory:",
+        type: "postgres",
+        username: process.env.DB_USER,
+        host,
+        database: process.env.DB_TESTS,
+        password: process.env.DB_PASSWORD,
+        port: 16543,
         entities: ["src/models/*.ts"],
-        synchronize: true,
+        migrations: ["src/migrations/*.ts"],
+        migrationsRun: true,
+        dropSchema: true
       })
     : new DataSource({
         type: "postgres",

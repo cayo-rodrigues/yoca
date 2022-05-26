@@ -1,24 +1,36 @@
 import { Router } from "express";
-import { expressYupMiddleware } from "express-yup-middleware";
 
 import IngredientController from "../controllers/Ingredient.controller";
-import normalizeIngredientMiddleware from "../middlewares/ingredients/normalizeIngredient.middleware";
+
+import validateBodyMiddleware from "../middlewares/validateBody.middleware";
+import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
+import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
+
 import createIngredientSchema from "../schemas/ingredients/createIngredient.schema";
-import validateUUIDSchema from "../schemas/validateUUID.schema";
+import updateIngredientSchema from "../schemas/ingredients/updateIngredient.schema";
 
 const ingredientsRoutes = Router();
 
+ingredientsRoutes.use(verifyAccessLevelMiddleware(2));
+
 ingredientsRoutes.post(
   "/",
-  expressYupMiddleware({ schemaValidator: createIngredientSchema }),
-  normalizeIngredientMiddleware,
+  validateBodyMiddleware(createIngredientSchema),
   IngredientController.store
 );
+
 ingredientsRoutes.get("/", IngredientController.index);
-ingredientsRoutes.get(
+
+ingredientsRoutes.use("/:id", validateUUIDMiddleware);
+
+ingredientsRoutes.get("/:id", IngredientController.show);
+
+ingredientsRoutes.patch(
   "/:id",
-  expressYupMiddleware({ schemaValidator: validateUUIDSchema }),
-  IngredientController.show
+  validateBodyMiddleware(updateIngredientSchema),
+  IngredientController.update
 );
+
+ingredientsRoutes.delete("/:id", IngredientController.delete);
 
 export default ingredientsRoutes;

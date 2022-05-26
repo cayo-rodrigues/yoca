@@ -3,17 +3,10 @@ import AppError from "../../errors/AppError";
 import Employee from "../../models/Employee.model";
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-interface AuthenticateServiceParams {
-  email: string;
-  password: string;
-}
+import { IAuthenticate } from "../../interfaces/Session.interface";
 
 class AuthenticateService {
-  static async execute({
-    email,
-    password,
-  }: AuthenticateServiceParams): Promise<any> {
+  static async execute({ email, password }: IAuthenticate): Promise<string> {
     const employeeRepository = AppDataSource.getRepository(Employee);
 
     const employee = await employeeRepository.findOne({ where: { email } });
