@@ -25,6 +25,12 @@ ordersRoutes.get(
   OrdersController.pending
 );
 
+ordersRoutes.get(
+  "/ready",
+  verifyAccessLevelMiddleware(4),
+  OrdersController.ready
+);
+
 ordersRoutes.get("", verifyAccessLevelMiddleware(4), OrdersController.index);
 
 ordersRoutes.get("/:id", verifyAccessLevelMiddleware(4), OrdersController.show);
