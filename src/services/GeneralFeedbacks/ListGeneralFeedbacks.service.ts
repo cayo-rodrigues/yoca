@@ -23,12 +23,12 @@ class ListGeneralFeedbacksService {
     const prev =
       page <= 1
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page - 1}`;
+        : `${getUrl()}/feedbacks/general?per_page=${per_page}&page=${page - 1}`;
 
     const next =
       page >= pages
         ? null
-        : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
+        : `${getUrl()}/feedbacks/general?per_page=${per_page}&page=${page + 1}`;
 
     const employees = await generalFeedbackRepository.find({
       skip: per_page * (page - 1),

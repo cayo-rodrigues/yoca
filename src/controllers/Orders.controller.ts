@@ -4,7 +4,10 @@ import { Request, Response } from "express";
 import { ICreateOrder } from "../interfaces/Orders.interface";
 import CreateOrderService from "../services/Orders/CreateOrder.service";
 import DeleteOrderService from "../services/Orders/DeleteOrder.service";
+import ListMyOrdersService from "../services/Orders/ListMyOrders.service";
 import ListOrdersService from "../services/Orders/ListOrders.service";
+import ListPendingOrdersService from "../services/Orders/listPendingOrders.service";
+import ListReadyOrdersService from "../services/Orders/listReadyOrders.service";
 import ShowOrderService from "../services/Orders/ShowOrder.service";
 import UpdateOrderStatusService from "../services/Orders/UpdateOrderStatus.service";
 
@@ -75,6 +78,44 @@ class OrdersController {
     await DeleteOrderService.execute({ id });
 
     res.status(204).json();
+  }
+
+  static async my(req: Request, res: Response) {
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+    const { id } = req.user;
+
+    const orders = await ListMyOrdersService.execute({
+      id,
+      per_page: +per_page,
+      page: +page,
+    });
+
+    return res.json(instanceToPlain(orders));
+  }
+
+  static async pending(req: Request, res: Response) {
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const orders = await ListPendingOrdersService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
+
+    return res.json(instanceToPlain(orders));
+  }
+
+  static async ready(req: Request, res: Response) {
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const orders = await ListReadyOrdersService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
+
+    return res.json(instanceToPlain(orders));
   }
 }
 
