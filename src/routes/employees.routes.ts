@@ -8,6 +8,7 @@ import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
 
 import createEmployeeSchema from "../schemas/employees/createEmployee.schema";
 import updateEmployeeSchema from "../schemas/employees/updateEmployee.schema";
+import validateEmptyRequestsMiddleware from "../middlewares/validateEmptyRequests.middleware";
 
 const employeesRoutes = Router();
 

@@ -40,9 +40,19 @@ class CreateOrderService {
       throw new AppError("Bill not found", 404);
     }
 
-    const productsIds = [
-      ...new Set(ordersProducts.map(({ productId }) => productId)),
-    ];
+    if (bill.paid) {
+      throw new AppError("Bill is already paid", 400);
+    }
+
+    const productsIds = ordersProducts.map(({ productId }) => productId);
+
+    const toFindDuplicates = productsIds.filter(
+      (item, index) => productsIds.indexOf(item) !== index
+    );
+
+    if (toFindDuplicates.length > 0) {
+      throw new AppError("Duplicate products id", 400);
+    }
 
     const products = await productsRepo.findBy({
       id: In(productsIds),
@@ -85,10 +95,12 @@ class CreateOrderService {
 
       const ingredient = productsingredients[i];
 
-      const orderProduct = ordersProducts[i];
+      for (let j = 0; j < ordersProducts.length; j++) {
+        const orderProduct = ordersProducts[j];
 
-      if (ingredient.amount < ingredientInfo.amount * orderProduct.quantity) {
-        throw new AppError("Insufficient stock for this order", 400);
+        if (ingredient.amount < ingredientInfo.amount * orderProduct.quantity) {
+          throw new AppError("Insufficient stock for this order", 400);
+        }
       }
     }
 
@@ -100,14 +112,16 @@ class CreateOrderService {
 
       const ingredient = productsingredients[i];
 
-      const orderProduct = ordersProducts[i];
+      for (let j = 0; j < ordersProducts.length; j++) {
+        const orderProduct = ordersProducts[j];
 
-      ingredient.amount =
-        +ingredient.amount - ingredientInfo.amount * orderProduct.quantity;
+        ingredient.amount =
+          +ingredient.amount - ingredientInfo.amount * orderProduct.quantity;
 
-      if (ingredient.amount <= +ingredient.amountMin) {
-        isWarning = true;
-        lowStockIngredients.push(ingredient.name);
+        if (ingredient.amount <= +ingredient.amountMin) {
+          isWarning = true;
+          lowStockIngredients.push(ingredient.name);
+        }
       }
     }
 

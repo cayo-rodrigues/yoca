@@ -30,10 +30,11 @@ export default class Order {
   @Column()
   total: number;
 
-  @Exclude()
+  
   @Column()
   employeeId: string;
 
+  @Exclude()
   @ManyToOne(() => Employee, { eager: true })
   employee: Employee;
 
