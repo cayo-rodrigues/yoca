@@ -15,7 +15,11 @@ class ListPendingOrdersService {
       page = 1;
     }
 
-    const count = await ordersRepo.count();
+    const count = await ordersRepo.count({
+      where: {
+        status: "pending",
+      },
+    });
 
     const pages = Math.ceil(count / per_page);
 
@@ -33,8 +37,8 @@ class ListPendingOrdersService {
       skip: per_page * (page - 1),
       take: per_page,
       where: {
-          status: "pending"
-      }
+        status: "pending",
+      },
     });
 
     return {

@@ -19,6 +19,12 @@ ordersRoutes.post(
 
 ordersRoutes.get("/me", verifyAccessLevelMiddleware(4), OrdersController.my);
 
+ordersRoutes.get(
+  "/pending",
+  verifyAccessLevelMiddleware(4),
+  OrdersController.pending
+);
+
 ordersRoutes.get("", verifyAccessLevelMiddleware(4), OrdersController.index);
 
 ordersRoutes.get("/:id", verifyAccessLevelMiddleware(4), OrdersController.show);
