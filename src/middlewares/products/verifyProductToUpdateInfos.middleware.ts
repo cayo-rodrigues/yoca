@@ -3,6 +3,7 @@ import { In, Not } from "typeorm";
 
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
+import { IUpdateProduct } from "../../interfaces/Products.interface";
 import Category from "../../models/Category.model";
 import Ingredient from "../../models/Ingredient.model";
 import Product from "../../models/Product.model";
@@ -16,7 +17,8 @@ const verifyProductToUpdateInfosMiddleware = async (
   const ingredientsRepo = AppDataSource.getRepository(Ingredient);
   const categoriesRepo = AppDataSource.getRepository(Category);
 
-  const { id, name, ingredients, categories } = req.updateProductInfos;
+  const { id } = req.params;
+  const { name, ingredients, categories }: IUpdateProduct = req.body;
 
   const nameUnavailable = await productsRepo.findOne({
     where: {

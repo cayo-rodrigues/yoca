@@ -18,7 +18,7 @@ describe(" POST - /super ", () => {
     name: "testaurant",
     email: "admin@email.com",
     phone: "999999999999",
-    password: "admin123",
+    password: "S3nh@F0rt3",
   };
 
   afterAll(async () => {
@@ -29,6 +29,9 @@ describe(" POST - /super ", () => {
     const createSuperResponse = await request(app)
       .post("/super")
       .send(mockSuper);
+
+    console.log({ mockSuper });
+    console.log({ createSuperResponse });
 
     expect(createSuperResponse.status).toBe(201);
     expect(createSuperResponse.body).toMatchObject({
@@ -48,7 +51,9 @@ describe(" POST - /super ", () => {
 
     expect(createSuperResponse.status).toBe(409);
     expect(createSuperResponse.body).toEqual(
-      expect.objectContaining({ message: "Super user already exists" })
+      expect.objectContaining({
+        message: "Super user has to be created before other users",
+      })
     );
   });
 });

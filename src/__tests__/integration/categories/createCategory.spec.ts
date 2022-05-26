@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe("POST - /categories", () => {
@@ -19,12 +18,8 @@ describe("POST - /categories", () => {
   });
 
   const mockCategory = {
-    name: "massas",
+    name: "bebidas",
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
@@ -38,13 +33,15 @@ describe("POST - /categories", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
+
+    console.log(adminLoginResponse);
 
     uuidSpy.mockReturnValueOnce("uuid");
     const categoryResponse = await request(app)
@@ -54,10 +51,10 @@ describe("POST - /categories", () => {
 
     expect(categoryResponse.status).toBe(201);
     expect(categoryResponse.body).toMatchObject({
-      message: "Category Created",
+      message: "Category created",
       category: {
-        id: "uuid",
-        name: "Bebidas",
+        ...categoryResponse.body.category,
+        name: "bebidas",
       },
     });
   });
@@ -66,7 +63,7 @@ describe("POST - /categories", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("uuid");
@@ -78,7 +75,7 @@ describe("POST - /categories", () => {
     expect(categoryResponse.status).toBe(409);
     expect(categoryResponse.body).toEqual(
       expect.objectContaining({
-        message: "Category with this name already exists",
+        message: "Category already exists",
       })
     );
   });
@@ -87,7 +84,7 @@ describe("POST - /categories", () => {
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("without-access-uuid");
@@ -98,19 +95,19 @@ describe("POST - /categories", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("uuid");
     const categoryResponse = await request(app)
       .post("/categories")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send({ name: "veganos" });
 
     expect(categoryResponse.status).toBe(401);

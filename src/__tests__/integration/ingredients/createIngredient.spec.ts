@@ -79,7 +79,7 @@ describe("POST - /ingredients", () => {
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
-        name: "John doe",
+        name: "john doe",
         email: "johndoe@email.com",
         phone: "999999999999",
         password: "12345678",
@@ -95,7 +95,7 @@ describe("POST - /ingredients", () => {
       .post("/ingredients")
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send({
-        name: "Batata",
+        name: "batata",
         measure: "kg",
         amount: 50,
         amountMax: 100,

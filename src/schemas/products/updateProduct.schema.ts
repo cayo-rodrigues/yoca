@@ -12,11 +12,11 @@ const updateProductSchema = yup.object().shape({
       MAX_DECIMAL,
       "Field amount cannot be longer than 10 characters (including decimal places)"
     )
-    .transform((value) => roundToTwo(value)),
+    .transform(roundToTwo),
   calories: yup
     .number()
     .positive("Field calories must be a positive number")
-    .transform((value) => roundToTwo(value)),
+    .transform(roundToTwo),
   ingredients: yup.array().of(
     yup.object().shape({
       id: yup
@@ -31,8 +31,7 @@ const updateProductSchema = yup.object().shape({
   ),
   categories: yup
     .array()
-    .of(yup.string().uuid("Field categories must be a valid array of UUID"))
-    .required("Field categories is required"),
+    .of(yup.string().uuid("Field categories must be a valid array of UUID")),
 });
 
 export default updateProductSchema;

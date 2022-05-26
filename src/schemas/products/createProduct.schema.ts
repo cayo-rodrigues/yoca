@@ -6,7 +6,7 @@ const createProductSchema = yup.object().shape({
     .string()
     .max(164, "Field name cannot be longer than 164 characters")
     .required("Field name is required")
-    .transform((value) => normalizeTextInput(value)),
+    .transform(normalizeTextInput),
   price: yup
     .number()
     .positive("Field price must be a positive number")
@@ -15,12 +15,12 @@ const createProductSchema = yup.object().shape({
       "Field amount cannot be longer than 10 characters (including decimal places)"
     )
     .required("Field price is required")
-    .transform((value) => roundToTwo(value)),
+    .transform(roundToTwo),
   calories: yup
     .number()
     .positive("Field calories must be a positive number")
     .required("Field calories is required")
-    .transform((value) => roundToTwo(value)),
+    .transform(roundToTwo),
   ingredients: yup
     .array()
     .of(

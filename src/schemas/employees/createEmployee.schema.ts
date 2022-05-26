@@ -20,7 +20,10 @@ const createEmployeeSchema = yup.object().shape({
     .transform((value) => normalizeTextInput(value)),
   password: yup
     .string()
-    .min(8, "Field password cannot be shorter than 8 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$&*]{8,}$/,
+      "Field password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number"
+    )
     .required("Field password is required"),
   accessLevel: yup
     .number()

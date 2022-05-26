@@ -1,8 +1,8 @@
 import AppDataSource from "../../data-source";
-import { ICreateProduct } from "../../interfaces/Products.interface";
 import Product from "../../models/Product.model";
 import ProductCategory from "../../models/ProductCategory.model";
 import ProductIngredient from "../../models/ProductsIngredients.model";
+import { ICreateProduct } from "../../interfaces/Products.interface";
 
 class CreateProductService {
   static async execute({
@@ -29,8 +29,6 @@ class CreateProductService {
         productId: product.id,
         amount: ingredient.amount,
       });
-
-      console.log(productIngredient);
 
       await productsIngredientsRepo.save(productIngredient);
     });

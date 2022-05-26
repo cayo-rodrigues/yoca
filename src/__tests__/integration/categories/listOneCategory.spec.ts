@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../../app";
 
 import * as uuid from "uuid";
-import { clearDB } from "../../connection";
 jest.mock("uuid");
 
 describe(" GET - /categories/:id ", () => {
@@ -22,10 +21,6 @@ describe(" GET - /categories/:id ", () => {
     name: "veganos",
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
@@ -38,12 +33,12 @@ describe(" GET - /categories/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     uuidSpy.mockReturnValueOnce("uuid");
@@ -54,12 +49,12 @@ describe(" GET - /categories/:id ", () => {
       .send(mockCategory);
 
     const listOneCategoryResponse = await request(app)
-      .get("/categories/uuid")
+      .get(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listOneCategoryResponse.status).toBe(200);
     expect(listOneCategoryResponse.body).toEqual(
-      expect.objectContaining({ id: "uuid", ...createCategoryResponse.body })
+      expect.objectContaining({ ...createCategoryResponse.body.category })
     );
   });
 
@@ -76,11 +71,20 @@ describe(" GET - /categories/:id ", () => {
   it("Should not be able to list one category with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
+    const createCategoryResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "cat eagle laugh" });
+
+    await request(app)
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const listOneCategoryResponse = await request(app)
-      .get("/categories/aleatory-uuid")
+      .get(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listOneCategoryResponse.status).toBe(404);

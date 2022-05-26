@@ -57,7 +57,7 @@ class IngredientController {
 
     return res.json({
       message: "Ingredient updated",
-      updatedIngredient: instanceToPlain(updatedIngredient),
+      ingredient: instanceToPlain(updatedIngredient),
     });
   }
 

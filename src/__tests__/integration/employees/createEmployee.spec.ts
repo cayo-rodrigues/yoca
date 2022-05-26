@@ -31,7 +31,7 @@ describe("POST - /employees", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
   });
 
@@ -39,7 +39,7 @@ describe("POST - /employees", () => {
     name: "John doe",
     email: "johndoe@email.com",
     phone: "999999999999",
-    password: "12345678",
+    password: "S3nh@F0rt3",
     accessLevel: 2,
   };
 
@@ -50,7 +50,7 @@ describe("POST - /employees", () => {
   it("Should be able to create an employee", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createEmployeeResponse = await request(app)
@@ -63,7 +63,7 @@ describe("POST - /employees", () => {
       message: "Employee created",
       employee: {
         ...createEmployeeResponse.body.employee,
-        name: "John doe",
+        name: "john doe",
         email: "johndoe@email.com",
         phone: "999999999999",
         accessLevel: 2,
@@ -73,7 +73,7 @@ describe("POST - /employees", () => {
   it("Should not be able to create an employee with repeated email", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createEmployeeResponse = await request(app)
@@ -93,13 +93,13 @@ describe("POST - /employees", () => {
       name: "John doe",
       email: "johndoe2@email.com",
       phone: "999999999999",
-      password: "12345678",
+      password: "S3nh@F0rt3",
       accessLevel: 2,
     };
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createEmployeeResponse = await request(app)
@@ -119,13 +119,13 @@ describe("POST - /employees", () => {
       name: "Jane doe",
       email: "janedoe@email.com",
       phone: "12345678910",
-      password: "12345678",
+      password: "S3nh@F0rt3",
       accessLevel: 3,
     };
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const withoutAccessEmployeeResponse = await request(app)
@@ -137,7 +137,7 @@ describe("POST - /employees", () => {
       .post("/sessions")
       .send({
         email: "janedoe@email.com",
-        password: "12345678",
+        password: "S3nh@F0rt3",
       });
 
     const newEmployeeResponse = await request(app)
@@ -147,7 +147,7 @@ describe("POST - /employees", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 4,
       });
 

@@ -70,6 +70,8 @@ describe(" PATCH - /ingredients/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(ingredientUpdates);
 
+    console.log(updateIngredientResponse);
+
     expect(updateIngredientResponse.status).toBe(200);
     expect(
       updateIngredientResponse.body
