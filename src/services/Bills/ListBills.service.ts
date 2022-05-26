@@ -33,33 +33,16 @@ class ListBillsService {
         ? null
         : `${getUrl()}/bills?per_page=${per_page}&page=${page + 1}`;
 
-    if (listUnpaid) {
-      const bills = await billsRepository.find({
-        skip: per_page * (page - 1),
-        take: per_page,
-        where: {
-          paid: false,
-        },
-      });
-
-      return {
-        results: bills,
-        info: {
-          count,
-          pages,
-          next,
-          prev,
-        },
-      };
-    }
-
     const bills = await billsRepository.find({
       skip: per_page * (page - 1),
       take: per_page,
+      where: {
+        paid: listUnpaid,
+      },
     });
 
     return {
-      bills,
+      results: bills,
       info: {
         count,
         pages,

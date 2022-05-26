@@ -53,17 +53,15 @@ describe(" DELETE - /bills/:id ", () => {
 
     const delOneBillResponse = await request(app)
       .delete("/bills/1")
-      .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    console.log(delOneBillResponse.body);
-
-    expect(delOneBillResponse.status).toBe(200);
+    expect(delOneBillResponse.status).toBe(204);
     expect(delOneBillResponse.body).toEqual({});
     expect(
       (
         await request(app)
           .delete("/bills/1")
-          .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`)
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });

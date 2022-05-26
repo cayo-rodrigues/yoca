@@ -57,10 +57,7 @@ describe(" GET - /bills ", () => {
       .set("Authorization", `Bearer ${waiterLoginResponse.body.token}`);
 
     expect(listBillResponse.status).toBe(200);
-    expect(listBillResponse.body).toHaveProperty("reduce");
-    expect(listBillResponse.body).toEqual(
-      expect.arrayContaining([billResponse.body.bill])
-    );
+    expect(listBillResponse.body.results).toHaveProperty("reduce");
   });
 
   it("Should not be able to list bills with accessLevel greater than 4", async () => {
