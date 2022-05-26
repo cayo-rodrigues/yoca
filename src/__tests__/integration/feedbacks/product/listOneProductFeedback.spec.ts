@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
+import { TESTS_PASSWORD } from "../../../../utils";
 
 describe("GET - /feedbacks/products/:id", () => {
   let connection: DataSource;
@@ -17,7 +18,7 @@ describe("GET - /feedbacks/products/:id", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -36,7 +37,7 @@ describe("GET - /feedbacks/products/:id", () => {
   it("Should be able to list one product feedback", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const categoriesResponse = await request(app)

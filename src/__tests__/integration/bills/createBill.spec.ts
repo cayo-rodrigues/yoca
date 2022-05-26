@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 type BillResponse = {
   message: string;
@@ -28,7 +29,7 @@ describe("POST - /bills", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "S3nh@F0rt3",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -39,7 +40,7 @@ describe("POST - /bills", () => {
   it("Should be able to create an bill", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "S3nh@F0rt3",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -49,13 +50,13 @@ describe("POST - /bills", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "S3nh@F0rt3",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "S3nh@F0rt3",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)
@@ -71,7 +72,7 @@ describe("POST - /bills", () => {
   it("Should not be able to create an bill with accessLevel greater than 3", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "S3nh@F0rt3",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -81,13 +82,13 @@ describe("POST - /bills", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "1234567891011",
-        password: "S3nh@F0rt3",
+        password: TESTS_PASSWORD,
         accessLevel: 4,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "S3nh@F0rt3",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)

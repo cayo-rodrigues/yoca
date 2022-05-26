@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe("GET - /orders", () => {
   let connection: DataSource;
@@ -17,7 +18,7 @@ describe("GET - /orders", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -36,7 +37,7 @@ describe("GET - /orders", () => {
   it("Should be able to list all orders", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -46,13 +47,13 @@ describe("GET - /orders", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)
@@ -108,6 +109,5 @@ describe("GET - /orders", () => {
 
     expect(listEmployeeOrders.status).toBe(200);
     expect(listEmployeeOrders.body).toHaveProperty("reduce");
-    
   });
 });
