@@ -31,7 +31,13 @@ class EmployeesController {
   }
 
   static async index(req: Request, res: Response) {
-    const employees = await ListEmployeesService.execute();
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const employees = await ListEmployeesService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     res.json(instanceToPlain(employees));
   }

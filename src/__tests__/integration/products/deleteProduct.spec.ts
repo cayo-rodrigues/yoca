@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe(" DELETE - /products/:id ", () => {
   let connection: DataSource;
@@ -12,30 +13,16 @@ describe(" DELETE - /products/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
-  const mockSuperUser = {
-    name: "testaurat",
-    email: "admin@email.com",
-    phone: "+55061940028922",
-    password: "Admin123",
-  };
-
-  const mockEmployee = {
-    name: "John doe",
-    email: "johndoe@email.com",
-    phone: "999999999999",
-    password: "Aa12345678",
-    accessLevel: 3,
-  };
-
-  const mockCategory = {
-    id: "uuid",
-    name: "massas",
-  };
-
   const mockIngredient = {
-    id: "uuid",
     name: "Cenoura",
     measure: "kg",
     amount: 50,
@@ -43,114 +30,107 @@ describe(" DELETE - /products/:id ", () => {
     amountMin: 15,
   };
 
-  const mockProduct = {
-    id: "uuid",
-    name: "Pizza",
-    price: 4.99,
-    calories: 300,
-    ingredients: [{ id: "uuid", amount: "100" }],
-    categories: ["uuid"],
-  };
-
-  interface IAttMocks {
-    idProduct?: string;
-    idIngredient?: string;
-    idCategory?: string;
-  }
-
-  const attMocks = ({ idProduct, idIngredient, idCategory }: IAttMocks) => {
-    mockProduct.id = idProduct ? idProduct : mockProduct.id;
-    mockIngredient.id = idIngredient ? idIngredient : mockIngredient.id;
-    mockCategory.id = idCategory ? idCategory : mockCategory.id;
-    mockProduct.ingredients[0].id = mockIngredient.id;
-    mockProduct.categories[0] = mockCategory.id;
-  };
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete an existing product", async () => {
-    await request(app).post("/super").send(mockSuperUser);
-
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send({
-      email: mockSuperUser.email,
-      password: mockSuperUser.password,
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
     });
 
-    await request(app)
+    const categoriesResponse = await request(app)
       .post("/categories")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockCategory)
-      .then(({ body: { category } }) => {
-        attMocks({ idCategory: category.id });
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "massas",
       });
 
-    await request(app)
+    const ingredientsResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockIngredient)
-      .then(({ body: { ingredient } }) => {
-        attMocks({ idIngredient: ingredient.id });
-      });
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockIngredient);
 
-    await request(app)
+    const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockProduct)
-      .then((res) => {
-        attMocks({ idProduct: res.body.product.id });
-        return res;
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
       });
 
     const delProductResponse = await request(app)
-      .delete(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${token}`);
+      .delete(`/products/${createProductResponse.body.product.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delProductResponse.status).toBe(204);
     expect(delProductResponse.body).toEqual({});
     expect(
       (
         await request(app)
-          .delete(`/products/${mockProduct.id}`)
-          .set("Authorization", `Bearer ${token}`)
+          .delete(`/products/${createProductResponse.body.product.id}`)
+          .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
-
   it("Should not be able to delete an existing product without sending accessLevel 1 or 2", async () => {
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send({
-      email: mockSuperUser.email,
-      password: mockSuperUser.password,
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
     });
 
-    await request(app)
+    const listCategories = await request(app)
+      .get("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const listIngredients = await request(app)
+      .get("/ingredients")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockProduct)
-      .then(({ body: { product } }) => {
-        attMocks({ idProduct: product.id });
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: listIngredients.body[0].id,
+            amount: "45",
+          },
+        ],
+        categories: [listCategories.body[0].id],
       });
 
-    await request(app)
+    const withoutAccessUser = await request(app)
       .post("/employees")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockEmployee);
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "999999999999",
+        password: TESTS_PASSWORD,
+        accessLevel: 3,
+      });
 
-    const {
-      body: { token: employeeToken },
-    } = await request(app).post("/sessions").send({
-      email: mockEmployee.email,
-      password: mockEmployee.password,
+    const withoutAccessLogin = await request(app).post("/sessions").send({
+      email: "johndoe@email.com",
+      password: TESTS_PASSWORD,
     });
 
     const delProductResponse = await request(app)
-      .delete(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${employeeToken}`);
+      .delete(`/products/${createProductResponse.body.product.id}`)
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delProductResponse.status).toBe(401);
     expect(delProductResponse.body).toEqual(

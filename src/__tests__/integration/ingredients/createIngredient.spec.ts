@@ -2,9 +2,21 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
+type IngredientResponse = {
+  message: string;
+  ingredient: {
+    id: string;
+    name: string;
+    measure: string;
+    amount: number;
+    amount_max: number;
+    amount_min: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe("POST - /ingredients", () => {
   let connection: DataSource;
@@ -15,6 +27,13 @@ describe("POST - /ingredients", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: TESTS_PASSWORD,
+    });
   });
 
   const mockIngredient = {
@@ -30,16 +49,9 @@ describe("POST - /ingredients", () => {
   });
 
   it("Should be able to create an ingredient", async () => {
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const createIngredientResponse = await request(app)
@@ -47,8 +59,10 @@ describe("POST - /ingredients", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
+    console.log("ingredient body: ", createIngredientResponse.body);
+
     expect(createIngredientResponse.status).toBe(201);
-    expect(createIngredientResponse.body).toMatchObject({
+    expect(createIngredientResponse.body).toMatchObject<IngredientResponse>({
       message: "Ingredient created",
       ingredient: {
         ...createIngredientResponse.body.ingredient,
@@ -57,12 +71,9 @@ describe("POST - /ingredients", () => {
     });
   });
   it("Should not be able to create an ingredient without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const withoutAccessUser = await request(app)
@@ -72,16 +83,14 @@ describe("POST - /ingredients", () => {
         name: "john doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
-
-    uuidSpy.mockReturnValueOnce("potato-uuid");
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
@@ -104,7 +113,7 @@ describe("POST - /ingredients", () => {
   it("Should not be able to create an ingredient with repeated name", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const createIngredientResponse = await request(app)

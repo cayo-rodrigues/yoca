@@ -3,9 +3,16 @@ import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
+type GenFeedbackResponse = {
+  message: string;
+  feedback: {
+    description: string;
+    rating: number;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe("POST - /feedbacks/general", () => {
   let connection: DataSource;
@@ -23,29 +30,22 @@ describe("POST - /feedbacks/general", () => {
     rating: 5,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to create an general feedback", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("gen-fb-uuid");
-
     const genFeedbackResponse = await request(app)
       .post("/feedbacks/general")
       .send(mockGeneralFeedback);
 
     expect(genFeedbackResponse.status).toBe(201);
-    expect(genFeedbackResponse.body).toMatchObject({
-        message: "Feedback created",
-        feedback: {
-            id: "gen-fb-uuid",
-            ...mockGeneralFeedback
-        }
-    })  
+    expect(genFeedbackResponse.body).toMatchObject<GenFeedbackResponse>({
+      message: "General feedback created",
+      feedback: {
+        ...genFeedbackResponse.body.feedback,
+        ...mockGeneralFeedback,
+      },
+    });
   });
 });

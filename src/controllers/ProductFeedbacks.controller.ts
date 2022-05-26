@@ -25,7 +25,13 @@ class ProductFeedbackController {
   }
 
   static async index(req: Request, res: Response) {
-    const feedbacks = await ListProductFeedbacksService.execute();
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const feedbacks = await ListProductFeedbacksService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     return res.json(instanceToPlain(feedbacks));
   }

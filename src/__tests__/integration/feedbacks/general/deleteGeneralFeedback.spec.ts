@@ -2,10 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
-
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
+import { TESTS_PASSWORD } from "../../../../utils";
 
 describe("DELETE - /feedbacks/general/:id", () => {
   let connection: DataSource;
@@ -16,6 +13,12 @@ describe("DELETE - /feedbacks/general/:id", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: TESTS_PASSWORD,
+    });
   });
 
   const mockGeneralFeedback = {
@@ -23,37 +26,21 @@ describe("DELETE - /feedbacks/general/:id", () => {
     rating: 5,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete one general feedback", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurat",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
-    const adminLoginResponse = await request(app).post("/sessions").send({
-      email: "admin@email.com",
-      password: "admin123",
-    });
-    uuidSpy.mockReturnValueOnce("gen-fb-uuid");
-
     const genFeedbackResponse = await request(app)
       .post("/feedbacks/general")
       .send(mockGeneralFeedback);
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
+    });
 
     const deleteGenFeedback = await request(app)
-      .delete("/feedbacks/general/gen-fb-uuid")
+      .delete(`/feedbacks/general/${genFeedbackResponse.body.feedback.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(deleteGenFeedback.status).toBe(204);
@@ -61,19 +48,17 @@ describe("DELETE - /feedbacks/general/:id", () => {
     expect(
       (
         await request(app)
-          .delete("/feedbacks/general/gen-fb-uuid")
+          .delete(`/feedbacks/general/${genFeedbackResponse.body.feedback.id}`)
           .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
   it("Should not be able to delete one general feedback without accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -81,23 +66,21 @@ describe("DELETE - /feedbacks/general/:id", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 4,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
-
-    uuidSpy.mockReturnValueOnce("gen-fb-uuid");
 
     const genFeedbackResponse = await request(app)
       .post("/feedbacks/general")
       .send(mockGeneralFeedback);
 
     const deleteGenFeedback = await request(app)
-      .delete("/feedbacks/general/gen-fb-uuid")
+      .delete(`/feedbacks/general/${genFeedbackResponse.body.feedback.id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(deleteGenFeedback.status).toBe(401);
@@ -109,7 +92,7 @@ describe("DELETE - /feedbacks/general/:id", () => {
   });
   it("Should not be able to delete one general feedback sending unexistent id", async () => {
     const deleteGenFeedback = await request(app).delete(
-      "/feedbacks/general/unex-gen-fb-uuid"
+      "/feedbacks/general/5cee5a5f-169d-423b-8c48-64d27d2c59ed"
     );
 
     expect(deleteGenFeedback.status).toBe(404);

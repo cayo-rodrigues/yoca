@@ -5,4 +5,6 @@ export interface IBillUpdateReq {
 
 export interface IListBills {
   listUnpaid: boolean;
+  per_page?: number;
+  page?: number;
 }

@@ -2,9 +2,23 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
-import * as uuid from "uuid";
-jest.mock("uuid");
+type ProductUpdatesResponse = {
+  message: string;
+  product: {
+    name: string;
+    price: number;
+    calories: number;
+    igredients: [
+      { id: string; amount: string },
+      { id: string; amount: string }
+    ];
+    categories: string[];
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" PATCH - /products/:id ", () => {
   let connection: DataSource;
@@ -15,35 +29,15 @@ describe(" PATCH - /products/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
-  const mockSuperUser = {
-    name: "testaurat",
-    email: "admin@email.com",
-    phone: "+55061940028922",
-    password: "Admin123",
-  };
-
-  const mockEmployee = {
-    name: "John doe",
-    email: "johndoe@email.com",
-    phone: "999999999999",
-    password: "Aa12345678",
-    accessLevel: 3,
-  };
-
-  const mockCategory = {
-    id: "uuid",
-    name: "massas",
-  };
-
-  const mockCategoryTwo = {
-    id: "uuid",
-    name: "veganos",
-  };
-
   const mockIngredient = {
-    id: "uuid",
     name: "Cenoura",
     measure: "kg",
     amount: 50,
@@ -51,77 +45,17 @@ describe(" PATCH - /products/:id ", () => {
     amountMin: 15,
   };
 
-  const mockIngredientTwo = {
-    id: "uuid",
-    name: "Batata Baroa",
-    measure: "kg",
-    amount: 70,
-    amountMax: 100,
-    amountMin: 15,
-  };
-
   const mockProduct = {
-    id: "uuid",
     name: "Pizza",
     price: 4.99,
     calories: 300,
-    ingredients: [{ id: "uuid", amount: "100" }],
-    categories: ["uuid"],
+    ingredients: [{ ingredientId: "uuid", amount: "100" }],
+    categories: ["massas"],
   };
 
-  const mockProductUpdate = {
+  const productUpdates = {
     name: "Pizza de cenoura",
     price: 10.99,
-    calories: 500,
-    ingredients: [
-      { id: "uuid", amount: "100" },
-      { id: "uuid", amount: "100" },
-    ],
-    categories: ["uuid", "uuid"],
-  };
-
-  type ProductUpdatesResponse = {
-    message: string;
-    product: {
-      id: string;
-      name: string;
-      price: number;
-      calories: number;
-      ingredients: { id: string; amount: string }[];
-      categories: string[];
-      createdAt: Date;
-      updatedAt: Date;
-    };
-  };
-
-  interface IAttMocks {
-    idProduct?: string;
-    idIngredient?: string;
-    idCategory?: string;
-    idIngredientTwo?: string;
-    idCategoryTwo?: string;
-  }
-
-  const attMocks = ({
-    idProduct,
-    idIngredient,
-    idCategory,
-    idCategoryTwo,
-    idIngredientTwo,
-  }: IAttMocks) => {
-    mockProduct.id = idProduct ? idProduct : mockProduct.id;
-    mockIngredient.id = idIngredient ? idIngredient : mockIngredient.id;
-    mockCategory.id = idCategory ? idCategory : mockCategory.id;
-    mockCategoryTwo.id = idCategoryTwo ? idCategoryTwo : mockCategoryTwo.id;
-    mockIngredientTwo.id = idIngredientTwo
-      ? idIngredientTwo
-      : mockIngredientTwo.id;
-    mockProduct.ingredients[0].id = mockIngredient.id;
-    mockProduct.categories[0] = mockCategory.id;
-    mockProductUpdate.ingredients[0].id = mockIngredient.id;
-    mockProductUpdate.categories[0] = mockCategory.id;
-    mockProductUpdate.ingredients[1].id = mockIngredientTwo.id;
-    mockProductUpdate.categories[1] = mockCategoryTwo.id;
   };
 
   afterAll(async () => {
@@ -129,93 +63,84 @@ describe(" PATCH - /products/:id ", () => {
   });
 
   it("Should be able to update an existing product", async () => {
-    await request(app).post("/super").send(mockSuperUser);
-
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send({
-      email: mockSuperUser.email,
-      password: mockSuperUser.password,
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
     });
 
-    await request(app)
+    const categoriesResponse = await request(app)
       .post("/categories")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockCategory)
-      .then(({ body: { category } }) => {
-        attMocks({ idCategory: category.id });
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "massas",
       });
 
-    await request(app)
-      .post("/categories")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockCategoryTwo)
-      .then(({ body: { category } }) => {
-        attMocks({ idCategoryTwo: category.id });
-      });
-
-    await request(app)
+    const ingredientsResponse = await request(app)
       .post("/ingredients")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockIngredient)
-      .then(({ body: { ingredient } }) => {
-        attMocks({ idIngredient: ingredient.id });
-      });
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockIngredient);
 
-    await request(app)
-      .post("/ingredients")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockIngredientTwo)
-      .then(({ body: { ingredient } }) => {
-        attMocks({ idIngredientTwo: ingredient.id });
-      });
-
-    const createProduct = await request(app)
+    const createProductResponse = await request(app)
       .post("/products")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockProduct)
-      .then((res) => {
-        attMocks({ idProduct: res.body.product.id });
-        return res;
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
       });
 
     const updateProductResponse = await request(app)
-      .patch(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockProductUpdate);
+      .patch(`/products/${createProductResponse.body.product.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(productUpdates);
 
     expect(updateProductResponse.status).toBe(200);
     expect(updateProductResponse.body).toMatchObject<ProductUpdatesResponse>({
       message: "Product updated",
       product: {
-        ...createProduct.body.product,
-        name: mockProductUpdate.name,
-        price: mockProductUpdate.price,
-        calories: mockProductUpdate.calories,
+        ...createProductResponse.body.product,
+        name: "Pizza de cenoura",
+        price: 10.99,
+        calories: "300.00",
       },
     });
   });
-
   it("Should not be able to update an existing product without sending accessLevel 1 or 2", async () => {
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send(mockSuperUser);
-
-    await request(app)
-      .post("/employees")
-      .set("Authorization", `Bearer ${token}`)
-      .send(mockEmployee);
-
-    const {
-      body: { token: tokenEmployee },
-    } = await request(app).post("/sessions").send({
-      email: mockEmployee.email,
-      password: mockEmployee.password,
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
     });
 
+    const withoutAccessUser = await request(app)
+      .post("/employees")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "John doe",
+        email: "johndoe@email.com",
+        phone: "999999999999",
+        password: TESTS_PASSWORD,
+        accessLevel: 3,
+      });
+
+    const withoutAccessLogin = await request(app).post("/sessions").send({
+      email: "johndoe@email.com",
+      password: TESTS_PASSWORD,
+    });
+
+    const listProducts = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const updateProductResponse = await request(app)
-      .patch(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${tokenEmployee}`)
+      .patch(`/products/${listProducts.body[0].id}`)
+      .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send(mockProduct);
 
     expect(updateProductResponse.status).toBe(401);
@@ -225,59 +150,64 @@ describe(" PATCH - /products/:id ", () => {
       })
     );
   });
-
   it("Should not be able to update a product sending unexistent ingredients", async () => {
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send({
-      email: mockSuperUser.email,
-      password: mockSuperUser.password,
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
     });
+    const listProducts = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const updateProductResponse = await request(app)
-      .patch(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${token}`)
+      .patch(`/products/${listProducts.body[0].id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "Batatão",
-        price: 4.99,
-        calories: 300,
         ingredients: [
-          { id: mockProduct.ingredients[0].id, amount: "100" },
-          { id: mockProduct.id, amount: "10" },
+          { id: "b646c6bb-b830-404e-94ee-3fb347b98d97", amount: "150" },
         ],
-        categories: [mockProductUpdate.categories[1]],
       });
 
-    expect(updateProductResponse.status).toBe(400);
+    console.log("ingredients doesnt exists: ", updateProductResponse.body);
+
+    expect(updateProductResponse.status).toBe(404);
     expect(updateProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Invalid list of ingredients ids",
+        message: "Ingredients does not exist",
       })
     );
   });
-
   it("Should not be able to update a product sending unexistent categories", async () => {
-    const {
-      body: { token },
-    } = await request(app).post("/sessions").send({
-      email: mockSuperUser.email,
-      password: mockSuperUser.password,
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
     });
 
+    const listProducts = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const listIngredients = await request(app)
+      .get("/ingredients")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const updateProductResponse = await request(app)
-      .patch(`/products/${mockProduct.id}`)
-      .set("Authorization", `Bearer ${token}`)
+      .patch(`/products/${listProducts.body[0].id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "Batatão",
         price: 4.99,
         calories: 300,
-        categories: [mockProduct.id],
+        ingredients: [{ id: listIngredients.body[0].id, amount: "100" }],
+        categories: [listIngredients.body[0].id],
       });
+    console.log("categories doesnt exists: ", updateProductResponse.body);
 
-    expect(updateProductResponse.status).toBe(400);
+    expect(updateProductResponse.status).toBe(404);
     expect(updateProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Invalid list of categories ids",
+        message: "Categories does not exist",
       })
     );
   });

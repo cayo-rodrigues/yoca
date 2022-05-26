@@ -3,10 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
-
 describe(" DELETE - /categories/:id ", () => {
   let connection: DataSource;
 
@@ -16,37 +12,28 @@ describe(" DELETE - /categories/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
   const mockCategory = {
     name: "veganos",
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete one category", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
-
-    uuidSpy.mockReturnValueOnce("uuid");
 
     const createCategoryResponse = await request(app)
       .post("/categories")
@@ -54,28 +41,26 @@ describe(" DELETE - /categories/:id ", () => {
       .send(mockCategory);
 
     const delOneCategoryResponse = await request(app)
-      .delete("/categories/uuid")
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(delOneCategoryResponse.status).toBe(200);
-    expect(delOneCategoryResponse.body).toHaveLength(0);
+    expect(delOneCategoryResponse.status).toBe(204);
+    expect(delOneCategoryResponse.body).toMatchObject({});
     expect(
       (
         await request(app)
-          .delete("/categories/uuid")
+          .delete(`/categories/${createCategoryResponse.body.category.id}`)
           .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
 
   it("Should not be able to delete category without accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -83,17 +68,22 @@ describe(" DELETE - /categories/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
+    const createCategoryResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockCategory);
+
     const delCategoriesResponse = await request(app)
-      .delete("/categories/uuid")
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delCategoriesResponse.status).toBe(401);
@@ -104,11 +94,20 @@ describe(" DELETE - /categories/:id ", () => {
   it("Should not be able to delete one category with unexistent id", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
+    const createCategoryResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({ name: "cat eagle laugh" });
+
+    await request(app)
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const delOneCategoryResponse = await request(app)
-      .delete("/categories/aleatory-uuid")
+      .delete(`/categories/${createCategoryResponse.body.category.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(delOneCategoryResponse.status).toBe(404);
