@@ -54,8 +54,8 @@ describe(" GET - /employees ", () => {
     console.log({ listEmployeesResponse });
 
     expect(listEmployeesResponse.status).toBe(200);
-    expect(listEmployeesResponse.body).toHaveProperty("reduce");
-    expect(listEmployeesResponse.body).toEqual(
+    expect(listEmployeesResponse.body.results).toHaveProperty("reduce");
+    expect(listEmployeesResponse.body.results).toEqual(
       expect.arrayContaining([createEmployeeResponse.body.employee])
     );
   });

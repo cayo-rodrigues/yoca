@@ -71,7 +71,7 @@ describe(" GET - /products ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listProductsResponse.status).toBe(200);
-    expect(listProductsResponse.body).toHaveProperty("reduce");
+    expect(listProductsResponse.body.results).toHaveProperty("reduce");
   });
 
   it("Should not be able to list products being unregistered user", async () => {

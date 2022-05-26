@@ -182,16 +182,16 @@ describe("POST - /products", () => {
         ingredients: [
           {
             id: "5cee5a5f-169d-423b-8c48-64d27d2c59ed",
-            amount: "100",
+            amount: 100,
           },
         ],
         categories: ["5cee5a5f-169d-423b-8c48-64d27d2c59ed"],
       });
 
-    expect(createProductResponse.status).toBe(404);
+    expect(createProductResponse.status).toBe(400);
     expect(createProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Ingredients does not exist",
+        message: "Invalid list of ingredients ids",
       })
     );
   });
