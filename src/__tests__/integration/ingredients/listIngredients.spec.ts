@@ -2,7 +2,6 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
 
 describe(" GET - /ingredients ", () => {
   let connection: DataSource;
@@ -13,32 +12,27 @@ describe(" GET - /ingredients ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-  });
-
-  const mockIngredient = {
-    name: "Cenoura",
-    measure: "kg",
-    amount: 50,
-    amountMax: 100,
-    amountMin: 15,
-  };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
-  afterAll(async () => {
-    await connection.destroy();
-  });
-
-  it("Should be able to list all ingredients", async () => {
     await request(app).post("/super").send({
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
       password: "admin123",
     });
+  });
 
+  const mockIngredient = {
+    name: "cenoura",
+    measure: "kg",
+    amount: 50,
+    amountMax: 100,
+    amountMin: 15,
+  };
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
+  it("Should be able to list all ingredients", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -55,7 +49,14 @@ describe(" GET - /ingredients ", () => {
     expect(listIngredientsResponse.status).toBe(200);
     expect(listIngredientsResponse.body).toHaveProperty("reduce");
     expect(listIngredientsResponse.body).toEqual(
-      expect.arrayContaining([createIngredientResponse.body.ingredient])
+      expect.arrayContaining([
+        {
+          ...createIngredientResponse.body.ingredient,
+          amount: "50.00",
+          amountMax: "100.00",
+          amountMin: "15.00",
+        },
+      ])
     );
   });
 

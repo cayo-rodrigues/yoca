@@ -3,9 +3,19 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
+type IngredientResponse = {
+  message: string;
+  ingredient: {
+    id: string;
+    name: string;
+    measure: string;
+    amount: number;
+    amount_max: number;
+    amount_min: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe("POST - /ingredients", () => {
   let connection: DataSource;
@@ -16,27 +26,6 @@ describe("POST - /ingredients", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
-  });
-
-  const mockIngredient = {
-    name: "Cenoura",
-    measure: "kg",
-    amount: 50,
-    amountMax: 100,
-    amountMin: 15,
-  };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
-  afterAll(async () => {
-    await connection.destroy();
-  });
-
-  it("Should be able to create an ingredient", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
 
     await request(app).post("/super").send({
       name: "testaurant",
@@ -44,31 +33,43 @@ describe("POST - /ingredients", () => {
       phone: "+55061940028922",
       password: "admin123",
     });
+  });
 
+  const mockIngredient = {
+    name: "cenoura",
+    measure: "kg",
+    amount: 50,
+    amountMax: 100,
+    amountMin: 15,
+  };
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
+  it("Should be able to create an ingredient", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
 
-    uuidSpy.mockReturnValueOnce("uuid");
     const createIngredientResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
+    console.log("ingredient body: ", createIngredientResponse.body);
+
     expect(createIngredientResponse.status).toBe(201);
-    expect(createIngredientResponse.body).toMatchObject({
+    expect(createIngredientResponse.body).toMatchObject<IngredientResponse>({
       message: "Ingredient created",
       ingredient: {
-        id: "uuid",
+        ...createIngredientResponse.body.ingredient,
         ...mockIngredient,
       },
     });
   });
   it("Should not be able to create an ingredient without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
@@ -89,8 +90,6 @@ describe("POST - /ingredients", () => {
       email: "johndoe@email.com",
       password: "12345678",
     });
-
-    uuidSpy.mockReturnValueOnce("potato-uuid");
 
     const createIngredientResponse = await request(app)
       .post("/ingredients")
