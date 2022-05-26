@@ -26,11 +26,11 @@ class OrdersController {
             warning:
               lowStockIngredients.join(" is below amount min, ") +
               " is below amount min",
-            message: "Order created!",
+            message: "Order created",
             order,
           }
         : {
-            message: "Order created!",
+            message: "Order created",
             order,
           }
     );
