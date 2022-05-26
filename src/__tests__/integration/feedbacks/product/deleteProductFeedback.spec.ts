@@ -39,7 +39,6 @@ describe("DELETE - /feedbacks/products/:id", () => {
       password: TESTS_PASSWORD,
     });
 
-    console.log("admin login: ", adminLoginResponse.body);
     const categoriesResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)

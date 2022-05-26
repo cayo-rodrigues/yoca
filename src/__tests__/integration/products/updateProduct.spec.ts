@@ -169,8 +169,6 @@ describe(" PATCH - /products/:id ", () => {
         ],
       });
 
-    console.log("ingredients doesnt exists: ", updateProductResponse);
-
     expect(updateProductResponse.status).toBe(400);
     expect(updateProductResponse.body).toEqual(
       expect.objectContaining({

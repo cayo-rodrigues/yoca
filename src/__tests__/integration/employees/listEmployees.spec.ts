@@ -38,20 +38,14 @@ describe(" GET - /employees ", () => {
       password: "S3nh@F0rt3",
     });
 
-    console.log({ adminLoginResponse });
-
     const createEmployeeResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockEmployee);
 
-    console.log({ createEmployeeResponse });
-
     const listEmployeesResponse = await request(app)
       .get("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
-
-    console.log({ listEmployeesResponse });
 
     expect(listEmployeesResponse.status).toBe(200);
     expect(listEmployeesResponse.body.results).toHaveProperty("reduce");

@@ -59,8 +59,6 @@ describe("POST - /ingredients", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    console.log("ingredient body: ", createIngredientResponse.body);
-
     expect(createIngredientResponse.status).toBe(201);
     expect(createIngredientResponse.body).toMatchObject<IngredientResponse>({
       message: "Ingredient created",
