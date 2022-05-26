@@ -3,11 +3,7 @@ import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
-
-describe("DELETE - /feedbacks/product/:id", () => {
+describe("DELETE - /feedbacks/products/:id", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -16,66 +12,89 @@ describe("DELETE - /feedbacks/product/:id", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "admin123",
+    });
   });
 
-  const mockProductFeedback = {
-    product: "Pizza",
-    description:
-      "Massa muito grossa, não consegui bater meu recorde de 45 fatias :(",
-    rating: 2,
+  const mockIngredient = {
+    name: "Cenoura",
+    measure: "kg",
+    amount: 50,
+    amountMax: 100,
+    amountMin: 15,
   };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete one product feedback", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurat",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
-    uuidSpy.mockReturnValueOnce("prod-fb-uuid");
+    const categoriesResponse = await request(app)
+      .post("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "massas",
+      });
+
+    const ingredientsResponse = await request(app)
+      .post("/ingredients")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send(mockIngredient);
+
+    const productResponse = await request(app)
+      .post("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
+      });
 
     const prodFeedbackResponse = await request(app)
-      .post("/feedbacks/product")
-      .send(mockProductFeedback);
+      .post("/feedbacks/products")
+      .send({
+        description: "A pizza estava perfeita!",
+        rating: 5,
+        productId: productResponse.body.product.id,
+      });
 
-    const deleteGenFeedback = await request(app)
-      .delete("/feedbacks/product/prod-fb-uuid")
+    const deleteProdFeedback = await request(app)
+      .delete(`/feedbacks/products/${prodFeedbackResponse.body.feedback.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(deleteGenFeedback.status).toBe(204);
-    expect(deleteGenFeedback.body).toHaveLength(0);
+    expect(deleteProdFeedback.status).toBe(204);
+    expect(deleteProdFeedback.body).toEqual({});
     expect(
       (
         await request(app)
-          .delete("/feedbacks/product/prod-fb-uuid")
+          .delete(
+            `/feedbacks/products/${prodFeedbackResponse.body.feedback.id}`
+          )
           .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
   it("Should not be able to delete one product feedback without accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
       password: "admin123",
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessResponse = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -92,32 +111,38 @@ describe("DELETE - /feedbacks/product/:id", () => {
       password: "12345678",
     });
 
-    uuidSpy.mockReturnValueOnce("prod-fb-uuid");
+    const listProductsResponse = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const prodFeedbackResponse = await request(app)
-      .post("/feedbacks/product")
-      .send(mockProductFeedback);
+      .post("/feedbacks/products")
+      .send({
+        description: "A pizza estava perfeita!",
+        rating: 5,
+        productId: listProductsResponse.body[0].product.id,
+      });
 
-    const deleteGenFeedback = await request(app)
-      .delete("/feedbacks/product/prod-fb-uuid")
+    const deleteProdFeedback = await request(app)
+      .delete(`/feedbacks/products/${prodFeedbackResponse.body.feedback.id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
-    expect(deleteGenFeedback.status).toBe(401);
-    expect(deleteGenFeedback.body).toEqual(
+    expect(deleteProdFeedback.status).toBe(401);
+    expect(deleteProdFeedback.body).toEqual(
       expect.objectContaining({
         message: "Unauthorized",
       })
     );
   });
   it("Should not be able to delete one product feedback sending unexistent id", async () => {
-    const deleteGenFeedback = await request(app).delete(
-      "/feedbacks/product/unex-prod-fb-uuid"
+    const deleteProdFeedback = await request(app).delete(
+      "/feedbacks/products/5cee5a5f-169d-423b-8c48-64d27d2c59ed"
     );
 
-    expect(deleteGenFeedback.status).toBe(404);
-    expect(deleteGenFeedback.body).toEqual(
+    expect(deleteProdFeedback.status).toBe(404);
+    expect(deleteProdFeedback.body).toEqual(
       expect.objectContaining({
-        message: "Feedback not found",
+        message: "Product feedback not found",
       })
     );
   });

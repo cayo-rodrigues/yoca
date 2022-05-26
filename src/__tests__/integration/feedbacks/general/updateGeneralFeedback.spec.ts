@@ -3,10 +3,6 @@ import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
-
 describe("UPDATE - /feedbacks/general/:id", () => {
   let connection: DataSource;
 
@@ -29,31 +25,23 @@ describe("UPDATE - /feedbacks/general/:id", () => {
     rating: 4.5,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to update one general feedback", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("gen-fb-uuid");
-
     const genFeedbackResponse = await request(app)
       .post("/feedbacks/general")
       .send(mockGeneralFeedback);
 
     const updateGenFeedback = await request(app)
-      .patch("/feedbacks/general/gen-fb-uuid")
+      .patch(`/feedbacks/general/${genFeedbackResponse.body.feedback.id}`)
       .send(mockGeneralFeedbackUpdates);
 
     expect(updateGenFeedback.status).toBe(200);
     expect(updateGenFeedback.body).toMatchObject({
-      message: "Feedback updated",
+      message: "General feedback updated",
       feedback: {
-        id: "gen-fb-uuid",
         ...mockGeneralFeedbackUpdates,
       },
     });

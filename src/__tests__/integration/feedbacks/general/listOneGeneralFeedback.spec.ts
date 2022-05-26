@@ -3,10 +3,6 @@ import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../../connection";
-jest.mock("uuid");
-
 describe("GET - /feedbacks/general/:id", () => {
   let connection: DataSource;
 
@@ -23,41 +19,31 @@ describe("GET - /feedbacks/general/:id", () => {
     rating: 5,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to list one general feedback", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("gen-fb-uuid");
-
     const genFeedbackResponse = await request(app)
       .post("/feedbacks/general")
       .send(mockGeneralFeedback);
 
     const listOneGenFeedback = await request(app).get(
-      "/feedbacks/general/gen-fb-uuid"
+      `/feedbacks/general/${genFeedbackResponse.body.feedback.id}`
     );
 
     expect(listOneGenFeedback.status).toBe(200);
-    expect(listOneGenFeedback.body).toMatchObject({
-      id: "gen-fb-uuid",
-      ...mockGeneralFeedback,
-    });
+    expect(listOneGenFeedback.body).toEqual(genFeedbackResponse.body.feedback);
   });
   it("Should not be able to list one general feedback sending unexistent id", async () => {
     const listOneGenFeedback = await request(app).get(
-      "/feedbacks/general/unex-gen-fb-uuid"
+      "/feedbacks/general/5cee5a5f-169d-423b-8c48-64d27d2c59ed"
     );
 
     expect(listOneGenFeedback.status).toBe(404);
     expect(listOneGenFeedback.body).toEqual(
       expect.objectContaining({
-        message: "Feedback not found",
+        message: "General feedback not found",
       })
     );
   });
