@@ -15,7 +15,7 @@ const AppDataSource =
         entities: ["src/models/*.ts"],
         migrations: ["src/migrations/*.ts"],
         migrationsRun: true,
-        dropSchema: true
+        dropSchema: true,
       })
     : new DataSource({
         type: "postgres",
@@ -38,7 +38,6 @@ const AppDataSource =
           process.env.NODE_ENV === "production"
             ? ["dist/src/migrations/*.js"]
             : ["src/migrations/*.ts"],
-        migrationsRun: true,
       });
 
 export default AppDataSource;
