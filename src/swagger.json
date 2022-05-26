@@ -11,11 +11,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000/",
-      "description": "YOCA API"
+      "url": "http://localhost:3000",
+      "description": "development"
     },
     {
-      "url": "http://localhost:3000/server"
+      "url": "https://cayoca.herokuapp.com",
+      "description": "production"
     }
   ],
   "paths": {
