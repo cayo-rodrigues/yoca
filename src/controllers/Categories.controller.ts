@@ -24,7 +24,13 @@ class CategoriesController {
   }
 
   static async index(req: Request, res: Response) {
-    const categories = await ListCategoriesService.execute();
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const categories = await ListCategoriesService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     res.json(instanceToPlain(categories));
   }

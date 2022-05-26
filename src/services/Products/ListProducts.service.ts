@@ -1,13 +1,47 @@
 import AppDataSource from "../../data-source";
+import { IList } from "../../interfaces/List.interface";
 import Product from "../../models/Product.model";
 
 class ListProductsService {
-  static async execute(): Promise<Product[]> {
+  static async execute({ per_page, page }: IList): Promise<any> {
     const productsRepo = AppDataSource.getRepository(Product);
 
-    const products = await productsRepo.find();
+    if (!per_page) {
+      per_page = 20;
+    }
 
-    return products;
+    if (!page) {
+      page = 1;
+    }
+
+    const count = await productsRepo.count();
+
+    const pages = Math.ceil(count / per_page);
+
+    const prev =
+      page <= 1
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+
+    const next =
+      page >= pages
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+
+    const products = await productsRepo.find({
+      skip: per_page * (page - 1),
+      take: per_page,
+    });
+
+    return {
+      products,
+      info: {
+        count,
+        pages,
+        next,
+        prev,
+      },
+    };
   }
 }
 

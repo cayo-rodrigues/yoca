@@ -3,14 +3,69 @@ import { IListBills } from "../../interfaces/Bill.interface";
 import Bill from "../../models/Bill.model";
 
 class ListBillsService {
-  static async execute({ listUnpaid }: IListBills): Promise<Bill[]> {
+  static async execute({
+    listUnpaid,
+    per_page,
+    page,
+  }: IListBills): Promise<any> {
     const billsRepository = AppDataSource.getRepository(Bill);
 
-    if (listUnpaid) {
-      return await billsRepository.findBy({ paid: false });
+    if (!per_page) {
+      per_page = 20;
     }
 
-    return await billsRepository.find();
+    if (!page) {
+      page = 1;
+    }
+
+    const count = await billsRepository.count();
+
+    const pages = Math.ceil(count / per_page);
+
+    const prev =
+      page <= 1
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page - 1}`;
+
+    const next =
+      page >= pages
+        ? null
+        : `urlDoHeroku/bills?per_page=${per_page}&page=${page + 1}`;
+
+    if (listUnpaid) {
+      const bills = await billsRepository.find({
+        skip: per_page * (page - 1),
+        take: per_page,
+        where: {
+          paid: false,
+        },
+      });
+
+      return {
+        bills,
+        info: {
+          count,
+          pages,
+          next,
+          prev,
+        },
+      };
+    }
+
+    const bills = await billsRepository.find({
+      skip: per_page * (page - 1),
+      take: per_page,
+    });
+
+    return {
+      bills,
+      info: {
+        count,
+        pages,
+        next,
+        prev,
+      },
+    };
   }
 }
 

@@ -24,7 +24,13 @@ class GeneralFeedbackController {
   }
 
   static async index(req: Request, res: Response) {
-    const feedbacks = await ListGeneralFeedbackService.execute();
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const feedbacks = await ListGeneralFeedbackService.execute({
+      per_page: +per_page,
+      page: +page,
+    });
 
     return res.json(instanceToPlain(feedbacks));
   }
