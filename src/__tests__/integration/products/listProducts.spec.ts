@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
-import { clearDB } from "../../connection";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe(" GET - /products ", () => {
   let connection: DataSource;
@@ -23,10 +23,6 @@ describe(" GET - /products ", () => {
     amountMin: 15,
   };
 
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
@@ -36,12 +32,12 @@ describe(" GET - /products ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const ingredientResponse = await request(app)
@@ -85,7 +81,7 @@ describe(" GET - /products ", () => {
   it("Should not be able to list products without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const withoutAccessUser = await request(app)
@@ -95,13 +91,13 @@ describe(" GET - /products ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const listProductsResponse = await request(app)

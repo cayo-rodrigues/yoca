@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
+import { TESTS_PASSWORD } from "../../../../utils";
 
 type GenProductResponse = {
   message: string;
@@ -27,7 +28,7 @@ describe("POST - /feedbacks/products", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -46,7 +47,7 @@ describe("POST - /feedbacks/products", () => {
   it("Should be able to create an product feedback", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const categoriesResponse = await request(app)

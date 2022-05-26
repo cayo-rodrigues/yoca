@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 type IngredientUpdatesResponse = {
   message: string;
@@ -10,8 +11,8 @@ type IngredientUpdatesResponse = {
     name: string;
     measure: string;
     amount: number;
-    amount_max: number;
-    amount_min: number;
+    amountMax: number;
+    amountMin: number;
     createdAt: Date;
     updatedAt: Date;
   };
@@ -30,12 +31,12 @@ describe(" PATCH - /ingredients/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
   const mockIngredient = {
-    name: "Batata",
+    name: "batata",
     measure: "kg",
     amount: 50,
     amountMax: 100,
@@ -43,7 +44,7 @@ describe(" PATCH - /ingredients/:id ", () => {
   };
 
   const ingredientUpdates = {
-    name: "Batata Baroa",
+    name: "batata baroa",
     measure: "kg",
     amount: 70,
     amountMax: 100,
@@ -57,7 +58,7 @@ describe(" PATCH - /ingredients/:id ", () => {
   it("Should be able to update an existing ingredient", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const createIngredientResponse = await request(app)
@@ -70,8 +71,6 @@ describe(" PATCH - /ingredients/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(ingredientUpdates);
 
-    console.log(updateIngredientResponse);
-
     expect(updateIngredientResponse.status).toBe(200);
     expect(
       updateIngredientResponse.body
@@ -80,13 +79,16 @@ describe(" PATCH - /ingredients/:id ", () => {
       ingredient: {
         ...updateIngredientResponse.body.updatedIngredient,
         ...ingredientUpdates,
+        amount: ingredientUpdates.amount.toFixed(2),
+        amountMin: ingredientUpdates.amountMin.toFixed(2),
+        amountMax: ingredientUpdates.amountMax.toFixed(2),
       },
     });
   });
   it("Should not be able to update an existing ingredient without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const withoutAccessUser = await request(app)
@@ -96,13 +98,13 @@ describe(" PATCH - /ingredients/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const updateIngredientResponse = await request(app)

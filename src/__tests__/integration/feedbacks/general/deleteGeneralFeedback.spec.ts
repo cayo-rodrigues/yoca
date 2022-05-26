@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../../data-source";
 import app from "../../../../app";
 import request from "supertest";
+import { TESTS_PASSWORD } from "../../../../utils";
 
 describe("DELETE - /feedbacks/general/:id", () => {
   let connection: DataSource;
@@ -16,7 +17,7 @@ describe("DELETE - /feedbacks/general/:id", () => {
       name: "testaurat",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -35,7 +36,7 @@ describe("DELETE - /feedbacks/general/:id", () => {
       .send(mockGeneralFeedback);
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const deleteGenFeedback = await request(app)
@@ -57,7 +58,7 @@ describe("DELETE - /feedbacks/general/:id", () => {
   it("Should not be able to delete one general feedback without accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const withoutAccessResponse = await request(app)
@@ -67,13 +68,13 @@ describe("DELETE - /feedbacks/general/:id", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 4,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const genFeedbackResponse = await request(app)

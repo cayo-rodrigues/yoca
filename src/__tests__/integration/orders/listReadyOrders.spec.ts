@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe("GET - /orders/ready", () => {
   let connection: DataSource;
@@ -16,7 +17,7 @@ describe("GET - /orders/ready", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -27,7 +28,7 @@ describe("GET - /orders/ready", () => {
     amountMax: 100,
     amountMin: 15,
   };
-  
+
   afterAll(async () => {
     await connection.destroy();
   });
@@ -35,7 +36,7 @@ describe("GET - /orders/ready", () => {
   it("Should be able to list all pending orders", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -45,13 +46,13 @@ describe("GET - /orders/ready", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)
@@ -112,7 +113,7 @@ describe("GET - /orders/ready", () => {
   it("Should not be able to list ready orders with accessLevel greater than 4", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -122,13 +123,13 @@ describe("GET - /orders/ready", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 5,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
     const mockOrder = {
       table: "100",

@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe("GET - /orders/pending", () => {
   let connection: DataSource;
@@ -16,7 +17,7 @@ describe("GET - /orders/pending", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -26,7 +27,7 @@ describe("GET - /orders/pending", () => {
     amount: 50,
     amountMax: 100,
     amountMin: 15,
-  }
+  };
 
   afterAll(async () => {
     await connection.destroy();
@@ -35,7 +36,7 @@ describe("GET - /orders/pending", () => {
   it("Should be able to list all pending orders", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const waiterResponse = await request(app)
@@ -45,13 +46,13 @@ describe("GET - /orders/pending", () => {
         name: "Johnny doe",
         email: "johnnydoe@email.com",
         phone: "1234567891011",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const waiterLoginResponse = await request(app).post("/sessions").send({
       email: "johnnydoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
 
     const billResponse = await request(app)

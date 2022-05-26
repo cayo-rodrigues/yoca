@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
+import { TESTS_PASSWORD } from "../../../utils";
 
 describe(" GET - /ingredients/:id ", () => {
   let connection: DataSource;
@@ -16,7 +17,7 @@ describe(" GET - /ingredients/:id ", () => {
       name: "testaurant",
       email: "admin@email.com",
       phone: "+55061940028922",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
   });
 
@@ -35,7 +36,7 @@ describe(" GET - /ingredients/:id ", () => {
   it("Should be able to list one ingredient", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     const createIngredientResponse = await request(app)
@@ -60,7 +61,7 @@ describe(" GET - /ingredients/:id ", () => {
   it("Should not be able to list one ingredient without sending accessLevel 1 or 2", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: TESTS_PASSWORD,
     });
 
     await request(app)
@@ -70,13 +71,13 @@ describe(" GET - /ingredients/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: TESTS_PASSWORD,
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: TESTS_PASSWORD,
     });
     const listOneIngredientResponse = await request(app)
       .get(`/ingredients/25d3ece6-c84f-4182-a23e-d4e7ca117cc5`)
