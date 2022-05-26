@@ -88,7 +88,7 @@ class CreateOrderService {
       const orderProduct = ordersProducts[i];
 
       if (ingredient.amount < ingredientInfo.amount * orderProduct.quantity) {
-        throw new AppError("Insufficient stock for this order!", 400);
+        throw new AppError("Insufficient stock for this order", 400);
       }
     }
 

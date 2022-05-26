@@ -44,7 +44,7 @@ describe("DELETE - /feedbacks/general/:id", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(deleteGenFeedback.status).toBe(204);
-    expect(deleteGenFeedback.body).toHaveLength(0);
+    expect(deleteGenFeedback.body).toMatchObject({});
     expect(
       (
         await request(app)
@@ -91,14 +91,21 @@ describe("DELETE - /feedbacks/general/:id", () => {
     );
   });
   it("Should not be able to delete one general feedback sending unexistent id", async () => {
-    const deleteGenFeedback = await request(app).delete(
-      "/feedbacks/general/5cee5a5f-169d-423b-8c48-64d27d2c59ed"
-    );
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
+    });
+
+    const deleteGenFeedback = await request(app)
+      .delete("/feedbacks/general/5cee5a5f-169d-423b-8c48-64d27d2c59ed")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    console.log(deleteGenFeedback.body);
 
     expect(deleteGenFeedback.status).toBe(404);
     expect(deleteGenFeedback.body).toEqual(
       expect.objectContaining({
-        message: "Feedback not found",
+        message: "General feedback not found",
       })
     );
   });

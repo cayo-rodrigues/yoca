@@ -139,7 +139,7 @@ describe(" PATCH - /products/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const updateProductResponse = await request(app)
-      .patch(`/products/${listProducts.body[0].id}`)
+      .patch(`/products/${listProducts.body.results[0].id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send(mockProduct);
 
@@ -160,7 +160,7 @@ describe(" PATCH - /products/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const updateProductResponse = await request(app)
-      .patch(`/products/${listProducts.body[0].id}`)
+      .patch(`/products/${listProducts.body.results[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "Batatão",
@@ -169,12 +169,12 @@ describe(" PATCH - /products/:id ", () => {
         ],
       });
 
-    console.log("ingredients doesnt exists: ", updateProductResponse.body);
+    console.log("ingredients doesnt exists: ", updateProductResponse);
 
-    expect(updateProductResponse.status).toBe(404);
+    expect(updateProductResponse.status).toBe(400);
     expect(updateProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Ingredients does not exist",
+        message: "Invalid list of ingredients ids",
       })
     );
   });
@@ -193,21 +193,22 @@ describe(" PATCH - /products/:id ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const updateProductResponse = await request(app)
-      .patch(`/products/${listProducts.body[0].id}`)
+      .patch(`/products/${listProducts.body.results[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "Batatão",
         price: 4.99,
         calories: 300,
-        ingredients: [{ id: listIngredients.body[0].id, amount: "100" }],
-        categories: [listIngredients.body[0].id],
+        ingredients: [
+          { id: listIngredients.body.results[0].id, amount: "100" },
+        ],
+        categories: [listIngredients.body.results[0].id],
       });
-    console.log("categories doesnt exists: ", updateProductResponse.body);
 
-    expect(updateProductResponse.status).toBe(404);
+    expect(updateProductResponse.status).toBe(400);
     expect(updateProductResponse.body).toEqual(
       expect.objectContaining({
-        message: "Categories does not exist",
+        message: "Invalid list of categories ids",
       })
     );
   });

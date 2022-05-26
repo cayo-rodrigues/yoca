@@ -105,11 +105,11 @@ describe(" DELETE - /products/:id ", () => {
         calories: 300,
         ingredients: [
           {
-            id: listIngredients.body[0].id,
+            id: listIngredients.body.results[0].id,
             amount: "45",
           },
         ],
-        categories: [listCategories.body[0].id],
+        categories: [listCategories.body.results[0].id],
       });
 
     const withoutAccessUser = await request(app)

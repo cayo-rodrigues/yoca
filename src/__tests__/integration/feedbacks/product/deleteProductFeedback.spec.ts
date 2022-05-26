@@ -123,7 +123,7 @@ describe("DELETE - /feedbacks/products/:id", () => {
       .send({
         description: "A pizza estava perfeita!",
         rating: 5,
-        productId: listProductsResponse.body[0].product.id,
+        productId: listProductsResponse.body.results[0].id,
       });
 
     const deleteProdFeedback = await request(app)
@@ -138,9 +138,14 @@ describe("DELETE - /feedbacks/products/:id", () => {
     );
   });
   it("Should not be able to delete one product feedback sending unexistent id", async () => {
-    const deleteProdFeedback = await request(app).delete(
-      "/feedbacks/products/5cee5a5f-169d-423b-8c48-64d27d2c59ed"
-    );
+    const adminLoginResponse = await request(app).post("/sessions").send({
+      email: "admin@email.com",
+      password: TESTS_PASSWORD,
+    });
+
+    const deleteProdFeedback = await request(app)
+      .delete("/feedbacks/products/5cee5a5f-169d-423b-8c48-64d27d2c59ed")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(deleteProdFeedback.status).toBe(404);
     expect(deleteProdFeedback.body).toEqual(

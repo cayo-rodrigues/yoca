@@ -3,6 +3,16 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
+type CategoryUpdatesResponse = {
+  message: string;
+  category: {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
+
 describe(" PATCH - /categories/:id ", () => {
   let connection: DataSource;
 
@@ -49,11 +59,13 @@ describe(" PATCH - /categories/:id ", () => {
       .send(categoryUpdates);
 
     expect(updateOneCategoryResponse.status).toBe(200);
-    expect(updateOneCategoryResponse.body).toMatchObject({
+    expect(
+      updateOneCategoryResponse.body
+    ).toMatchObject<CategoryUpdatesResponse>({
       message: "Category updated",
       category: {
         ...updateOneCategoryResponse.body.category,
-        name: categoryUpdates.name,
+        ...categoryUpdates,
       },
     });
   });

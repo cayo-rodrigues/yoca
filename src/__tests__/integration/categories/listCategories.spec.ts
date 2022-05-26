@@ -45,8 +45,8 @@ describe(" GET - /categories ", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     expect(listCategoriesResponse.status).toBe(200);
-    expect(listCategoriesResponse.body).toHaveProperty("reduce");
-    expect(listCategoriesResponse.body).toEqual(
+    expect(listCategoriesResponse.body.results).toHaveProperty("reduce");
+    expect(listCategoriesResponse.body.results).toEqual(
       expect.arrayContaining([categoryResponse.body.category])
     );
   });
