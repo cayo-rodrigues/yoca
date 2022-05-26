@@ -3,9 +3,21 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
+type ProductUpdatesResponse = {
+  message: string;
+  product: {
+    name: string;
+    price: number;
+    calories: number;
+    igredients: [
+      { id: string; amount: string },
+      { id: string; amount: string }
+    ];
+    categories: string[];
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe(" PATCH - /products/:id ", () => {
   let connection: DataSource;
@@ -16,6 +28,12 @@ describe(" PATCH - /products/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
   const mockIngredient = {
@@ -37,100 +55,68 @@ describe(" PATCH - /products/:id ", () => {
   const productUpdates = {
     name: "Pizza de cenoura",
     price: 10.99,
-    calories: 500,
-    ingredients: [
-      { ingredientId: "uuid", amount: "100" },
-      { ingredientId: "uuid2", amount: "100" },
-    ],
-    categories: ["massas", "veganos"],
   };
-  
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
 
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to update an existing product", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("massas-uuid");
-    await request(app)
+    const categoriesResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "massas",
       });
 
-    uuidSpy.mockReturnValueOnce("veganos-uuid");
-    await request(app)
-      .post("/categories")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({
-        name: "veganos-uuid",
-      });
-
-    uuidSpy.mockReturnValueOnce("uuid");
-    await request(app)
+    const ingredientsResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    uuidSpy.mockReturnValueOnce("uuid2");
-    await request(app)
-      .post("/ingredients")
-      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send({
-        name: "Batata Baroa",
-        measure: "kg",
-        amount: 70,
-        amountMax: 100,
-        amountMin: 15,
-      });
-
-    uuidSpy.mockReturnValueOnce("uuid");
     const createProductResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockProduct);
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
+      });
 
     const updateProductResponse = await request(app)
-      .patch("/products/uuid")
+      .patch(`/products/${createProductResponse.body.product.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(productUpdates);
 
     expect(updateProductResponse.status).toBe(200);
-    expect(updateProductResponse.body).toMatchObject({
+    expect(updateProductResponse.body).toMatchObject<ProductUpdatesResponse>({
       message: "Product updated",
       product: {
-        id: "uuid",
-        ...productUpdates,
+        ...createProductResponse.body.product,
+        name: "Pizza de cenoura",
+        price: 10.99,
+        calories: "300.00",
       },
     });
   });
   it("Should not be able to update an existing product without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("some-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -138,17 +124,21 @@ describe(" PATCH - /products/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
+    const listProducts = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const updateProductResponse = await request(app)
-      .patch("/products/uuid")
+      .patch(`/products/${listProducts.body[0].id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`)
       .send(mockProduct);
 
@@ -162,19 +152,23 @@ describe(" PATCH - /products/:id ", () => {
   it("Should not be able to update a product sending unexistent ingredients", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
+    const listProducts = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
     const updateProductResponse = await request(app)
-      .patch("/products/uuid")
+      .patch(`/products/${listProducts.body[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "Batatão",
-        price: 4.99,
-        calories: 300,
-        ingredients: [{ ingredientId: "uuid-batata", amount: "100" }],
-        categories: ["massas"],
+        ingredients: [
+          { id: "b646c6bb-b830-404e-94ee-3fb347b98d97", amount: "150" },
+        ],
       });
+
+    console.log("ingredients doesnt exists: ", updateProductResponse.body);
 
     expect(updateProductResponse.status).toBe(404);
     expect(updateProductResponse.body).toEqual(
@@ -186,19 +180,28 @@ describe(" PATCH - /products/:id ", () => {
   it("Should not be able to update a product sending unexistent categories", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
+    const listProducts = await request(app)
+      .get("/products")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
+    const listIngredients = await request(app)
+      .get("/ingredients")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
+
     const updateProductResponse = await request(app)
-      .patch("/products/uuid")
+      .patch(`/products/${listProducts.body[0].id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "Batatão",
         price: 4.99,
         calories: 300,
-        ingredients: [{ ingredientId: "uuid", amount: "100" }],
-        categories: ["iguarias"],
+        ingredients: [{ id: listIngredients.body[0].id, amount: "100" }],
+        categories: [listIngredients.body[0].id],
       });
+    console.log("categories doesnt exists: ", updateProductResponse.body);
 
     expect(updateProductResponse.status).toBe(404);
     expect(updateProductResponse.body).toEqual(

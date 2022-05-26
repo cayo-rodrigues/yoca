@@ -3,10 +3,6 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
-
 describe(" DELETE - /products/:id ", () => {
   let connection: DataSource;
 
@@ -16,6 +12,13 @@ describe(" DELETE - /products/:id ", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
   const mockIngredient = {
@@ -26,93 +29,88 @@ describe(" DELETE - /products/:id ", () => {
     amountMin: 15,
   };
 
-  const mockProduct = {
-    name: "Pizza",
-    price: 4.99,
-    calories: 300,
-    ingredients: [{ ingredientId: "uuid", amount: "100" }],
-    categories: ["massas"],
-  };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to delete an existing product", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurant",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("massas-uuid");
-    await request(app)
+    const categoriesResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "massas",
       });
 
-    uuidSpy.mockReturnValueOnce("uuid");
-    await request(app)
+    const ingredientsResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    uuidSpy.mockReturnValueOnce("uuid");
     const createProductResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockProduct);
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
+      });
 
     const delProductResponse = await request(app)
-      .delete("/products/uuid")
+      .delete(`/products/${createProductResponse.body.product.id}`)
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    expect(delProductResponse.status).toBe(200);
-    expect(delProductResponse.body).toHaveLength(0);
+    expect(delProductResponse.status).toBe(204);
+    expect(delProductResponse.body).toEqual({});
     expect(
       (
         await request(app)
-          .delete("/products/uuid")
+          .delete(`/products/${createProductResponse.body.product.id}`)
           .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       ).status
     ).toBe(404);
   });
   it("Should not be able to delete an existing product without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("some-uuid");
+    const listCategories = await request(app)
+      .get("/categories")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
 
-    await request(app)
+    const listIngredients = await request(app)
+      .get("/ingredients")
+      .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
+
+    const createProductResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
-        name: "Batatão",
+        name: "Pizza",
         price: 4.99,
         calories: 300,
-        ingredients: [{ ingredientId: "uuid", amount: "100" }],
-        categories: ["iguarias"],
+        ingredients: [
+          {
+            id: listIngredients.body[0].id,
+            amount: "45",
+          },
+        ],
+        categories: [listCategories.body[0].id],
       });
 
-    uuidSpy.mockReturnValueOnce("some-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -120,17 +118,17 @@ describe(" DELETE - /products/:id ", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
 
     const delProductResponse = await request(app)
-      .delete("/products/some-uuid")
+      .delete(`/products/${createProductResponse.body.product.id}`)
       .set("Authorization", `Bearer ${withoutAccessLogin.body.token}`);
 
     expect(delProductResponse.status).toBe(401);

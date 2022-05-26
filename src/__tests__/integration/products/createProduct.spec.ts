@@ -3,9 +3,21 @@ import AppDataSource from "../../../data-source";
 import request from "supertest";
 import app from "../../../app";
 
-import * as uuid from "uuid";
-import { clearDB } from "../../connection";
-jest.mock("uuid");
+type ProductResponse = {
+  message: string;
+  product: {
+    name: string;
+    price: number;
+    calories: number;
+    igredients: [
+      { id: string; amount: string },
+      { id: string; amount: string }
+    ];
+    categories: string[];
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
 describe("POST - /products", () => {
   let connection: DataSource;
@@ -16,6 +28,13 @@ describe("POST - /products", () => {
       .catch((err) => {
         console.error("Error during Data Source initialization", err);
       });
+
+    await request(app).post("/super").send({
+      name: "testaurant",
+      email: "admin@email.com",
+      phone: "+55061940028922",
+      password: "S3nh@F0rt3",
+    });
   });
 
   const mockIngredient = {
@@ -26,76 +45,61 @@ describe("POST - /products", () => {
     amountMin: 15,
   };
 
-  const mockProduct = {
-    name: "Pizza",
-    price: 4.99,
-    calories: 300,
-    ingredients: [{ ingredientId: "uuid", amount: "100" }],
-    categories: ["massas"],
-  };
-
-  afterEach(async ()=>{
-    await clearDB(connection);
-  })
-
   afterAll(async () => {
     await connection.destroy();
   });
 
   it("Should be able to create a product", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-    uuidSpy.mockReturnValueOnce("super-uuid");
-
-    await request(app).post("/super").send({
-      name: "testaurat",
-      email: "admin@email.com",
-      phone: "+55061940028922",
-      password: "admin123",
-    });
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("massas-uuid");
-    await request(app)
+    const categoriesResponse = await request(app)
       .post("/categories")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send({
         name: "massas",
       });
 
-    uuidSpy.mockReturnValueOnce("uuid");
-    await request(app)
+    const ingredientsResponse = await request(app)
       .post("/ingredients")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    uuidSpy.mockReturnValueOnce("uuid");
     const createProductResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockProduct);
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: ingredientsResponse.body.ingredient.id,
+            amount: "45",
+          },
+        ],
+        categories: [categoriesResponse.body.category.id],
+      });
 
     expect(createProductResponse.status).toBe(201);
-    expect(createProductResponse.body).toMatchObject({
+    expect(createProductResponse.body).toMatchObject<ProductResponse>({
       message: "Product created",
       product: {
-        id: "uuid",
-        ...mockProduct,
+        ...createProductResponse.body.product,
+        name: "pizza",
+        price: 4.99,
+        calories: 300,
       },
     });
   });
   it("Should not be able to create a product without sending accessLevel 1 or 2", async () => {
-    const uuidSpy = jest.spyOn(uuid, "v4");
-
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
-    uuidSpy.mockReturnValueOnce("without-access-uuid");
     const withoutAccessUser = await request(app)
       .post("/employees")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
@@ -103,16 +107,14 @@ describe("POST - /products", () => {
         name: "John doe",
         email: "johndoe@email.com",
         phone: "999999999999",
-        password: "12345678",
+        password: "S3nh@F0rt3",
         accessLevel: 3,
       });
 
     const withoutAccessLogin = await request(app).post("/sessions").send({
       email: "johndoe@email.com",
-      password: "12345678",
+      password: "S3nh@F0rt3",
     });
-
-    uuidSpy.mockReturnValueOnce("potato-uuid");
 
     const createProductResponse = await request(app)
       .post("/products")
@@ -121,8 +123,10 @@ describe("POST - /products", () => {
         name: "Batatão recheado com cenoura",
         price: 4.99,
         calories: 300,
-        ingredients: [{ ingredientId: "uuid", amount: "100" }],
-        categories: ["massas"],
+        ingredients: [
+          { id: withoutAccessUser.body.employee.id, amount: "100" },
+        ],
+        categories: [withoutAccessUser.body.employee.id],
       });
 
     expect(createProductResponse.status).toBe(401);
@@ -135,13 +139,24 @@ describe("POST - /products", () => {
   it("Should not be able to create a product with repeated name", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createProductResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
-      .send(mockProduct);
+      .send({
+        name: "Pizza",
+        price: 4.99,
+        calories: 300,
+        ingredients: [
+          {
+            id: "5cee5a5f-169d-423b-8c48-64d27d2c59ed",
+            amount: "45",
+          },
+        ],
+        categories: ["5cee5a5f-169d-423b-8c48-64d27d2c59ed"],
+      });
 
     expect(createProductResponse.status).toBe(409);
     expect(createProductResponse.body).toEqual(
@@ -153,7 +168,7 @@ describe("POST - /products", () => {
   it("Should not be able to create a product with unexistent ingredient", async () => {
     const adminLoginResponse = await request(app).post("/sessions").send({
       email: "admin@email.com",
-      password: "admin123",
+      password: "S3nh@F0rt3",
     });
 
     const createProductResponse = await request(app)
@@ -163,8 +178,13 @@ describe("POST - /products", () => {
         name: "Batatão",
         price: 4.99,
         calories: 300,
-        ingredients: [{ ingredientId: "uuid-batata", amount: "100" }],
-        categories: ["massas"],
+        ingredients: [
+          {
+            id: "5cee5a5f-169d-423b-8c48-64d27d2c59ed",
+            amount: "100",
+          },
+        ],
+        categories: ["5cee5a5f-169d-423b-8c48-64d27d2c59ed"],
       });
 
     expect(createProductResponse.status).toBe(404);
