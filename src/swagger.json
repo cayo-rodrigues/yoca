@@ -1688,6 +1688,417 @@
         }
       }
     },
+    "/orders": {
+      "post": {
+        "summary": "Criação de Orders",
+        "description": "Rota para a criação de orders.",
+        "tags": ["Orders"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Orders"
+              },
+              "examples": {
+                "order": {
+                  "value": {
+                    "table": "47",
+                    "ordersProducts": [
+                      {
+                        "productId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
+                        "quantity": 1
+                      }
+                    ],
+                    "employeeId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
+                    "billId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "table": "47",
+                    "status": "pending",
+                    "total": 39.99,
+                    "billId": "2",
+                    "id": "25587b57-bbb5-4ac0-8c8a-6eb3d1a76372",
+                    "createdAt": "2022-05-27T11:48:27.862Z",
+                    "updatedAt": "2022-05-27T11:48:27.862Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "You need to be an admin to access this route"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order already exists"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listagem de Orders",
+        "description": "Rota para a listagem de orders.",
+        "tags": ["Orders"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "id": "25587b57-bbb5-4ac0-8c8a-6eb3d1a76372",
+                      "table": "47",
+                      "status": "pending",
+                      "total": "39.99",
+                      "billId": "2",
+                      "createdAt": "2022-05-27T11:48:27.862Z",
+                      "updatedAt": "2022-05-27T11:48:27.862Z",
+                      "employee": {
+                        "id": "4ab641f8-58a8-45bc-9036-2299daabb1bb",
+                        "name": "super",
+                        "phone": "000000000001",
+                        "email": "super@super.com",
+                        "accessLevel": 1,
+                        "createdAt": "2022-05-27T11:47:25.741Z",
+                        "updatedAt": "2022-05-27T11:47:25.741Z"
+                      },
+                      "products": [
+                        {
+                          "quantity": 1,
+                          "totalPrice": "39.99",
+                          "product": {
+                            "id": "3fba72ab-1ede-477c-a55e-c6fee3c1f4f2",
+                            "name": "Pizza de Queijo",
+                            "price": "39.99",
+                            "calories": "500.00",
+                            "createdAt": "2022-05-27T11:47:59.792Z",
+                            "updatedAt": "2022-05-27T11:47:59.792Z",
+                            "ingredients": [
+                              {
+                                "id": "0362b057-8db7-4a5d-aad5-cdb7bd8adf3c",
+                                "amount": "100.00",
+                                "productId": "3fba72ab-1ede-477c-a55e-c6fee3c1f4f2",
+                                "ingredientId": "4c69c1fd-515c-4468-a4cf-31a9e4b326b2",
+                                "createdAt": "2022-05-27T11:47:59.804Z",
+                                "updatedAt": "2022-05-27T11:47:59.804Z",
+                                "deletedAt": null
+                              }
+                            ],
+                            "feedbacks": []
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "summary": "Listagem de order pelo id",
+        "description": "Rota para a listagem de order pelo id.",
+        "tags": ["Orders"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid da order",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "id": "25587b57-bbb5-4ac0-8c8a-6eb3d1a76372",
+                    "table": "47",
+                    "status": "pending",
+                    "total": "39.99",
+                    "billId": "2",
+                    "createdAt": "2022-05-27T11:48:27.862Z",
+                    "updatedAt": "2022-05-27T11:48:27.862Z",
+                    "employee": {
+                      "id": "4ab641f8-58a8-45bc-9036-2299daabb1bb",
+                      "name": "super",
+                      "phone": "000000000001",
+                      "email": "super@super.com",
+                      "accessLevel": 1,
+                      "createdAt": "2022-05-27T11:47:25.741Z",
+                      "updatedAt": "2022-05-27T11:47:25.741Z"
+                    },
+                    "products": [
+                      {
+                        "quantity": 1,
+                        "totalPrice": "39.99",
+                        "product": {
+                          "id": "3fba72ab-1ede-477c-a55e-c6fee3c1f4f2",
+                          "name": "Pizza de Queijo",
+                          "price": "39.99",
+                          "calories": "500.00",
+                          "createdAt": "2022-05-27T11:47:59.792Z",
+                          "updatedAt": "2022-05-27T11:47:59.792Z",
+                          "ingredients": [
+                            {
+                              "id": "0362b057-8db7-4a5d-aad5-cdb7bd8adf3c",
+                              "amount": "100.00",
+                              "productId": "3fba72ab-1ede-477c-a55e-c6fee3c1f4f2",
+                              "ingredientId": "4c69c1fd-515c-4468-a4cf-31a9e4b326b2",
+                              "createdAt": "2022-05-27T11:47:59.804Z",
+                              "updatedAt": "2022-05-27T11:47:59.804Z",
+                              "deletedAt": null
+                            }
+                          ],
+                          "feedbacks": []
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Atualização de Order",
+        "description": "Rota para a atualização de order",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid da order",
+            "required": true
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Orders"
+              },
+              "examples": {
+                "status": "served"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order updated",
+                    "order": {
+                      "id": "25587b57-bbb5-4ac0-8c8a-6eb3d1a76372",
+                      "table": "47",
+                      "status": "served",
+                      "total": "39.99",
+                      "billId": "2",
+                      "createdAt": "2022-05-27T11:48:27.862Z",
+                      "updatedAt": "2022-05-27T11:48:27.862Z",
+                      "employee": {
+                        "id": "4ab641f8-58a8-45bc-9036-2299daabb1bb",
+                        "name": "super",
+                        "phone": "000000000001",
+                        "email": "super@super.com",
+                        "accessLevel": 1,
+                        "createdAt": "2022-05-27T11:47:25.741Z",
+                        "updatedAt": "2022-05-27T11:47:25.741Z"
+                      },
+                      "products": [
+                        {
+                          "quantity": 1,
+                          "totalPrice": "39.99",
+                          "product": {
+                            "id": "3fba72ab-1ede-477c-a55e-c6fee3c1f4f2",
+                            "name": "Pizza de Queijo",
+                            "price": "39.99",
+                            "calories": "500.00",
+                            "createdAt": "2022-05-27T11:47:59.792Z",
+                            "updatedAt": "2022-05-27T11:47:59.792Z",
+                            "ingredients": [
+                              {
+                                "id": "0362b057-8db7-4a5d-aad5-cdb7bd8adf3c",
+                                "amount": "100.00",
+                                "productId": "3fba72ab-1ede-477c-a55e-c6fee3c1f4f2",
+                                "ingredientId": "4c69c1fd-515c-4468-a4cf-31a9e4b326b2",
+                                "createdAt": "2022-05-27T11:47:59.804Z",
+                                "updatedAt": "2022-05-27T11:47:59.804Z",
+                                "deletedAt": null
+                              }
+                            ],
+                            "feedbacks": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleção de Order",
+        "description": "Rota para deletar order.",
+        "tags": ["Orders"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Uuid da order",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Missing authorization headers"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Order not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/feedbacks/products": {
       "post": {
         "summary": "Criação de Feedbacks de Produtos",
@@ -2292,6 +2703,32 @@
             "type": "number"
           },
           "description": {
+            "type": "string"
+          }
+        }
+      },
+      "Orders": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string"
+          },
+          "ordersProducts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "productId": {
+                  "type": "string"
+                },
+                "quantity": "number"
+              }
+            }
+          },
+          "employeeId": {
+            "type": "string"
+          },
+          "billId": {
             "type": "string"
           }
         }
