@@ -20,9 +20,8 @@ const listAvailablesProductsService = async ({ per_page, page }: IList) => {
   const allProducts = await productsRepo.find();
 
   const allIngredientsInProducts = allProducts.map(
-    ({ ingredients, id: productId, name }) => ({
+    ({ ingredients, id: productId }) => ({
       productId,
-      name,
       ingredients: ingredients.map(({ ingredientId, amount }) => ({
         ingredientId,
         amount,
@@ -41,7 +40,7 @@ const listAvailablesProductsService = async ({ per_page, page }: IList) => {
   let unavailable = false;
 
   for (let i = 0; i < allIngredientsInProducts.length; i++) {
-    const { productId, ingredients, name } = allIngredientsInProducts[i];
+    const { productId, ingredients } = allIngredientsInProducts[i];
 
     for (let j = 0; j < ingredients.length; j++) {
       const { ingredientId, amount } = ingredients[j];
