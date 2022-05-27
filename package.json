@@ -6,7 +6,6 @@
   "author": "<cayo.rodrigues1914@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "reload": "pm2 reload dist/src/server.js",
     "monit": "pm2 monit",
