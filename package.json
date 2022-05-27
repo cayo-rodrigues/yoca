@@ -1,6 +1,6 @@
 {
   "name": "capstone",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "src/server.ts",
   "repository": "git@github.com:cayo-rodrigues/capstone-m4.git",
   "author": "<cayo.rodrigues1914@gmail.com>",
