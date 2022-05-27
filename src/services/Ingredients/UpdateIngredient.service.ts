@@ -1,3 +1,4 @@
+import { Not } from "typeorm";
 import AppDataSource from "../../data-source";
 import AppError from "../../errors/AppError";
 import { IBaseIngredientFull } from "../../interfaces/Ingredient.interface";
@@ -15,7 +16,7 @@ class UpdateIngredientService {
     const ingredientRepo = AppDataSource.getRepository(Ingredient);
 
     const ingredientAlreadyExists = await ingredientRepo.findOne({
-      where: { name },
+      where: { name, id: Not(id) },
     });
 
     if (ingredientAlreadyExists) {
