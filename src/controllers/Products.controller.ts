@@ -73,9 +73,15 @@ class ProductsController {
   }
 
   static async available(req: Request, res: Response) {
-    const products = await listAvailablesProductsService();
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
 
-    return res.json(products);
+    const availableProducts = await listAvailablesProductsService({
+      per_page: +per_page,
+      page: +page,
+    });
+
+    return res.json(instanceToPlain(availableProducts));
   }
 }
 
