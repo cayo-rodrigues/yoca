@@ -6,6 +6,7 @@ import ListProductsService from "../services/Products/ListProducts.service";
 import ListOneProductService from "../services/Products/ShowProduct.service";
 import DeleteProductService from "../services/Products/DeleteProduct.service";
 import UpdateProductService from "../services/Products/UpdateProduct.service";
+import listAvailablesProductsService from "../services/Products/listAvailablesProducts.service";
 
 class ProductsController {
   static async store(req: Request, res: Response) {
@@ -69,6 +70,18 @@ class ProductsController {
     await DeleteProductService.execute({ id });
 
     return res.status(204).json();
+  }
+
+  static async available(req: Request, res: Response) {
+    const per_page = req.query.per_page as string;
+    const page = req.query.page as string;
+
+    const availableProducts = await listAvailablesProductsService({
+      per_page: +per_page,
+      page: +page,
+    });
+
+    return res.json(instanceToPlain(availableProducts));
   }
 }
 
