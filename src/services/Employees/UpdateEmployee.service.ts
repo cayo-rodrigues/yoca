@@ -43,13 +43,15 @@ class UpdateEmployeeService {
       }
     }
 
+    employee.name = updateData.name ? updateData.name : employee.name;
+    employee.email = updateData.email ? updateData.email : employee.email;
+    employee.phone = updateData.phone ? updateData.phone : employee.phone;
+
     if (updateData.password) {
-      updateData.password = await hash(updateData.password, 8);
+      employee.password = await hash(updateData.password, 8);
     }
-    const updatedEmployee = await employeeRepository.save({
-      ...employee,
-      ...updateData,
-    });
+
+    const updatedEmployee = await employeeRepository.save(employee);
 
     const employeeWithoutPassword = plainToInstance(Employee, updatedEmployee);
 

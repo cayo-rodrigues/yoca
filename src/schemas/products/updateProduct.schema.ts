@@ -1,10 +1,11 @@
 import * as yup from "yup";
-import { MAX_DECIMAL, roundToTwo } from "../../utils";
+import { MAX_DECIMAL, normalizeTextInput, roundToTwo } from "../../utils";
 
 const updateProductSchema = yup.object().shape({
   name: yup
     .string()
-    .max(164, "Field name cannot be longer than 164 characters"),
+    .max(164, "Field name cannot be longer than 164 characters")
+    .transform((value) => normalizeTextInput(value)),
   price: yup
     .number()
     .positive("Field price must be a positive number")

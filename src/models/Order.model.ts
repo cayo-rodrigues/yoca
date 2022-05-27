@@ -58,6 +58,14 @@ export default class Order {
     }));
   }
 
+  @Expose({ name: "employee" })
+  showEmployee(): Partial<Employee> {
+    return {
+      id: this.employee.id,
+      name: this.employee.name,
+    };
+  }
+
   @CreateDateColumn()
   createdAt: Date;
 

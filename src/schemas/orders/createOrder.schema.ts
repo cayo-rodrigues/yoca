@@ -1,8 +1,12 @@
 import * as yup from "yup";
-import { MAX_INT } from "../../utils";
+import { MAX_BIGINT, MAX_INT } from "../../utils";
 
 const createOrderSchema = yup.object().shape({
-  billId: yup.number().required("billId field is required"),
+  billId: yup
+    .number()
+    .max(MAX_BIGINT, `Field billId cannot be longer than ${MAX_BIGINT}`)
+    .integer("Field billId must be an integer")
+    .required("billId field is required"),
   employeeId: yup
     .string()
     .uuid("Field employeeId must have a valid UUID")

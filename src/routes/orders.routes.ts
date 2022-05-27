@@ -4,6 +4,7 @@ import OrdersController from "../controllers/Orders.controller";
 
 import validateBodyMiddleware from "../middlewares/validateBody.middleware";
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
+import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
 
 import createOrderSchema from "../schemas/orders/createOrder.schema";
 import updateOrderSchema from "../schemas/orders/updateOrder.schema";
@@ -33,15 +34,22 @@ ordersRoutes.get(
 
 ordersRoutes.get("", verifyAccessLevelMiddleware(4), OrdersController.index);
 
-ordersRoutes.get("/:id", verifyAccessLevelMiddleware(4), OrdersController.show);
+ordersRoutes.get(
+  "/:id",
+  validateUUIDMiddleware,
+  verifyAccessLevelMiddleware(4),
+  OrdersController.show
+);
 
 ordersRoutes.patch(
   "/:id",
+  validateUUIDMiddleware,
   validateBodyMiddleware(updateOrderSchema),
   OrdersController.update
 );
 ordersRoutes.delete(
   "/:id",
+  validateUUIDMiddleware,
   verifyAccessLevelMiddleware(4),
   OrdersController.delete
 );
