@@ -3,6 +3,7 @@ import { Router } from "express";
 import IngredientController from "../controllers/Ingredient.controller";
 
 import validateBodyMiddleware from "../middlewares/validateBody.middleware";
+import validateEmptyRequestsMiddleware from "../middlewares/validateEmptyRequests.middleware";
 import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
 import verifyAccessLevelMiddleware from "../middlewares/verifyAccessLevel.middleware";
 
