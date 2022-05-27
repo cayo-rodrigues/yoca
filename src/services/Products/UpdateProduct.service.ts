@@ -29,11 +29,11 @@ class UpdateProductService {
         AppDataSource.getRepository(ProductIngredient);
 
       const productOldIngredients = await productsIngredientsRepo.findBy({
-        id: In(product.ingredients.map(({ ingredientId }) => ingredientId)),
+        id: In(product.ingredients.map(({ id }) => id)),
       });
 
       productOldIngredients.forEach(async ({ id }) => {
-        await productsIngredientsRepo.delete(id);
+        await productsIngredientsRepo.delete({ id });
       });
 
       ingredients.forEach(async ({ id, amount }) => {
@@ -52,11 +52,11 @@ class UpdateProductService {
         AppDataSource.getRepository(ProductCategory);
 
       const productOldCategories = await productsCategoriesRepo.findBy({
-        id: In(product.categories.map(({ categoryId }) => categoryId)),
+        id: In(product.categories.map(({ id }) => id)),
       });
 
       productOldCategories.forEach(async ({ id }) => {
-        await productsCategoriesRepo.delete(id);
+        await productsCategoriesRepo.delete({ id });
       });
 
       categories.forEach(async (categoryId) => {
