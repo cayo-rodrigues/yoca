@@ -1,13 +1,15 @@
 # Yoca - Gerenciador de Restaurantes
 
-URL base da API -> https://cayoca.herokuapp.com
+**URL base da API** -> https://cayoca.herokuapp.com
 
 ## Sobre o projeto
 
 Restaurantes enfrentam muitas demandas e precisam administrar/gerenciar seus produtos e funcionários todos os dias, para tornar todos esses processos mais simples e centralizar suas informações desenvolvemos um sistema de administração com objetivo de gerenciar pedidos, funcionários e estoque.
 Com o Yoca você pode cadastrar seus funcionários, cadastrar novos produtos com suas respectivas informações, assim como cadastrar novos ingredientes e administrar o estoque desses ingredientes, além de registrar novos pedidos assim como editar seus respectivos status e relacioná-los com uma comanda para pagamento por parte do cliente. Também temos um endpoint para caso o cliente queira deixar um feedback sobre o restaurante ou sobre um produto em específico.
 
-Link para a documentação -> https://cayoca.herokuapp.com/api/docs
+**Link para a documentação** -> https://cayoca.herokuapp.com/api/docs
+
+Arquivo `json` para usar no **insomnia** -> [Clique aqui](https://drive.google.com/file/d/1FB88eVzbDHfkmrzHgcJbIEoOqEf_M9N5/view)
 
 ## Rodando o projeto
 
