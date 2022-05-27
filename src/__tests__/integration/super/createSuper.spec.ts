@@ -30,9 +30,6 @@ describe(" POST - /super ", () => {
       .post("/super")
       .send(mockSuper);
 
-    console.log({ mockSuper });
-    console.log({ createSuperResponse });
-
     expect(createSuperResponse.status).toBe(201);
     expect(createSuperResponse.body).toMatchObject({
       message: "Super user created",

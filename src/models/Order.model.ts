@@ -30,11 +30,10 @@ export default class Order {
   @Column()
   total: number;
 
-  
+  @Exclude()
   @Column()
   employeeId: string;
 
-  @Exclude()
   @ManyToOne(() => Employee, { eager: true })
   employee: Employee;
 
@@ -57,6 +56,14 @@ export default class Order {
       totalPrice,
       product,
     }));
+  }
+
+  @Expose({ name: "employee" })
+  showEmployee(): Partial<Employee> {
+    return {
+      id: this.employee.id,
+      name: this.employee.name,
+    };
   }
 
   @CreateDateColumn()

@@ -31,11 +31,11 @@ class OrdersController {
               lowStockIngredients.join(" is below amount min, ") +
               " is below amount min",
             message: "Order created",
-            order,
+            order: instanceToPlain(order),
           }
         : {
             message: "Order created",
-            order,
+            order: instanceToPlain(order),
           }
     );
   }

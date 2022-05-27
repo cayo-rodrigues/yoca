@@ -100,8 +100,6 @@ describe("DELETE - /feedbacks/general/:id", () => {
       .delete("/feedbacks/general/5cee5a5f-169d-423b-8c48-64d27d2c59ed")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`);
 
-    console.log(deleteGenFeedback.body);
-
     expect(deleteGenFeedback.status).toBe(404);
     expect(deleteGenFeedback.body).toEqual(
       expect.objectContaining({

@@ -10,7 +10,6 @@ import verifyProductToUpdateInfosMiddleware from "../middlewares/products/verify
 
 import createProductSchema from "../schemas/products/createProduct.schema";
 import updateProductSchema from "../schemas/products/updateProduct.schema";
-import validateEmptyRequestsMiddleware from "../middlewares/validateEmptyRequests.middleware";
 
 const productsRoutes = Router();
 

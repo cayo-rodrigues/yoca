@@ -8,7 +8,6 @@ import validateUUIDMiddleware from "../middlewares/validateUUID.middleware";
 
 import createOrderSchema from "../schemas/orders/createOrder.schema";
 import updateOrderSchema from "../schemas/orders/updateOrder.schema";
-import validateEmptyRequestsMiddleware from "../middlewares/validateEmptyRequests.middleware";
 
 const ordersRoutes = Router();
 

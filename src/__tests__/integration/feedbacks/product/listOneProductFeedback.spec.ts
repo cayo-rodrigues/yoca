@@ -52,8 +52,6 @@ describe("GET - /feedbacks/products/:id", () => {
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)
       .send(mockIngredient);
 
-    console.log(ingredientsResponse.body);
-
     const productResponse = await request(app)
       .post("/products")
       .set("Authorization", `Bearer ${adminLoginResponse.body.token}`)

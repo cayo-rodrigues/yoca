@@ -21,7 +21,6 @@ describe("POST - /employees", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
-    console.log("BEFORE ALL");
     await AppDataSource.initialize()
       .then((res) => (connection = res))
       .catch((err) => {
