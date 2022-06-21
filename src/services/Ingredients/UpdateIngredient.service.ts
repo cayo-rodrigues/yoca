@@ -15,15 +15,17 @@ class UpdateIngredientService {
   }: IBaseIngredientFull): Promise<Ingredient> {
     const ingredientRepo = AppDataSource.getRepository(Ingredient);
 
-    const ingredientAlreadyExists = await ingredientRepo.findOne({
-      where: { name, id: Not(id) },
-    });
+    if (name) {
+      const ingredientAlreadyExists = await ingredientRepo.findOne({
+        where: { name, id: Not(id) },
+      });
 
-    if (ingredientAlreadyExists) {
-      throw new AppError(
-        "Ingredient already exists, add to its amount instead",
-        409
-      );
+      if (ingredientAlreadyExists) {
+        throw new AppError(
+          "Ingredient already exists, add to its amount instead",
+          409
+        );
+      }
     }
 
     const updatedIngredient = await ingredientRepo

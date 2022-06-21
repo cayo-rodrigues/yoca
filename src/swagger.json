@@ -809,11 +809,11 @@
                   "example": {
                     "message": "Ingredient created",
                     "ingredient": {
-                      "name": "cheese",
+                      "name": "batata",
                       "measure": "kg",
-                      "amount": 100,
-                      "amountMin": 25,
-                      "amountMax": 150,
+                      "amount": 150,
+                      "amountMin": 10,
+                      "amountMax": 200,
                       "id": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
                       "createdAt": "2022-05-24T15:38:15.160Z",
                       "updatedAt": "2022-05-24T15:38:15.160Z"
@@ -830,7 +830,7 @@
                 "schema": {
                   "type": "object",
                   "example": {
-                    "message": "You need to be an admin to access this route"
+                    "message": "Unauthorized"
                   }
                 }
               }
@@ -843,7 +843,7 @@
                 "schema": {
                   "type": "object",
                   "example": {
-                    "message": "Ingredient already exists"
+                    "message": "Ingredient already exists, add to its amount instead"
                   }
                 }
               }
@@ -863,18 +863,36 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "example": [
-                    {
-                      "id": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
-                      "name": "cheese",
-                      "measure": "kg",
-                      "amount": "100.00",
-                      "amountMin": "25.00",
-                      "amountMax": "150.00",
-                      "createdAt": "2022-05-24T15:38:15.160Z",
-                      "updatedAt": "2022-05-24T15:38:15.160Z"
+                  "example": {
+                    "results": [
+                      {
+                        "id": "c757840c-b645-4169-b529-e8c81dbb8adf",
+                        "name": "cheese",
+                        "measure": "kg",
+                        "amount": "100.00",
+                        "amountMin": "25.00",
+                        "amountMax": "150.00",
+                        "createdAt": "2022-05-27T11:31:45.006Z",
+                        "updatedAt": "2022-05-27T11:31:45.006Z"
+                      },
+                      {
+                        "id": "92513ab7-45e4-4d80-9e81-b976ccdbfbd8",
+                        "name": "bread",
+                        "measure": "kg",
+                        "amount": "70.00",
+                        "amountMin": "15.00",
+                        "amountMax": "180.00",
+                        "createdAt": "2022-06-21T11:15:10.640Z",
+                        "updatedAt": "2022-06-21T11:15:10.640Z"
+                      }
+                    ],
+                    "info": {
+                      "count": 2,
+                      "pages": 1,
+                      "next": null,
+                      "prev": null
                     }
-                  ]
+                  }
                 }
               }
             }
@@ -960,7 +978,7 @@
       },
       "patch": {
         "summary": "Atualização de Ingredients",
-        "description": "Rota para a atualização de ingredients",
+        "description": "Rota para a atualização de ingredients. Os campos \"amountMax\" e \"amountMin\" são sempre obrigatórios. Não é possível alterar o nome de um ingrediente para o nome de um ingrediente que já existe, isso levantaria um erro 409.",
         "tags": ["Ingredients"],
         "parameters": [
           {
@@ -1034,6 +1052,19 @@
                   "type": "object",
                   "example": {
                     "message": "Ingredient not found"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "message": "Ingredient already exists, add to its amount instead"
                   }
                 }
               }
