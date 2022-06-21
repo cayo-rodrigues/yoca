@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "YOCA API Documentation",
-    "description": "API para gerenciamento de restaurante.",
+    "description": "Uma API para gerenciamento de restaurante. Abaixo seguem as rotas da aplicação juntamente com exemplos de requisições.",
     "termsOfService": "",
     "contact": {
       "email": "yoca@gmail.com"
@@ -11,12 +11,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "development"
-    },
-    {
       "url": "https://cayoca.herokuapp.com",
       "description": "production"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "development"
     }
   ],
   "paths": {
@@ -34,10 +34,10 @@
               "examples": {
                 "super": {
                   "value": {
-                    "name": "admin",
-                    "email": "admin@email.com",
-                    "phone": "0194002-8922",
-                    "password": "admin123456"
+                    "name": "super",
+                    "email": "super@super.com",
+                    "phone": "01940028922",
+                    "password": "S3nh@F0rT3"
                   }
                 }
               }
@@ -52,21 +52,15 @@
                 "schema": {
                   "type": "object",
                   "example": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "Super user created"
-                      },
-                      "superUser": {
-                        "type": "object",
-                        "example": {
-                          "name": "admin",
-                          "email": "admin@email.com",
-                          "phone": "0194002-8922",
-                          "password": "admin123456"
-                        }
-                      }
+                    "message": "Super user created",
+                    "superUser": {
+                      "name": "super",
+                      "phone": "01940028922",
+                      "email": "super@super.com",
+                      "accessLevel": 1,
+                      "id": "28cb7a34-4648-45e2-a33e-ba56fc3031c6",
+                      "createdAt": "2022-05-27T11:31:37.407Z",
+                      "updatedAt": "2022-05-27T11:31:37.407Z"
                     }
                   }
                 }
@@ -80,12 +74,7 @@
                 "schema": {
                   "type": "object",
                   "example": {
-                    "body": [
-                      {
-                        "message": "Field password is required",
-                        "propertyPath": "password"
-                      }
-                    ]
+                    "message": "Field password is required"
                   }
                 }
               }
@@ -122,7 +111,7 @@
                 "user": {
                   "value": {
                     "email": "super@super.com",
-                    "password": "password"
+                    "password": "S3nh@F0rT3"
                   }
                 }
               }
@@ -139,17 +128,6 @@
                   "example": {
                     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MzVjY2YyLWNkZDMtNDgxNi05YzNlLWE2MzM3NGQxNTUxNCIsImlhdCI6MTY1MzM5NzY1NCwiZXhwIjoxNjUzNDg0MDU0fQ.-dtiBbFp0nWKrL_k7SuOL-WD0O0kHqcSCbKVYqJwV1w"
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "BAD REQUEST",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "$ref": "#/components/schemas/SuperBadRequest"
                 }
               }
             }
@@ -172,8 +150,8 @@
     },
     "/employees": {
       "post": {
-        "summary": "Criação de Usuários para Employees",
-        "description": "Rota para a criação de usuários.",
+        "summary": "Criação de Funcionários (Employees)",
+        "description": "Rota para a criação de funcionários. O campo access_level pode variar de 2 a 5, cada valor representando um cargo do funcionário. 2 - Gerente, 3 - Caixa, 4 - Garçom, 5 - Cozinheiro.",
         "tags": ["Employees"],
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
@@ -185,10 +163,10 @@
               "examples": {
                 "employee": {
                   "value": {
-                    "name": "employee",
-                    "email": "employee@email.com",
-                    "phone": "0194002-8922",
-                    "password": "admin123456",
+                    "name": "manager",
+                    "email": "manager@manager.com",
+                    "phone": "01940028922",
+                    "password": "S3nh@F0rT3",
                     "accessLevel": 2
                   }
                 }
@@ -206,26 +184,15 @@
                   "example": {
                     "message": "Employee created",
                     "employee": {
-                      "name": "testaurant",
-                      "phone": "4124002-8922",
-                      "email": "admin@email.com",
+                      "name": "manager",
+                      "phone": "01940028922",
+                      "email": "manager@manager.com",
                       "accessLevel": 2,
                       "id": "904b8c97-91d4-4d44-8687-f94be0945d8e",
                       "createdAt": "2022-05-24T12:29:09.457Z",
                       "updatedAt": "2022-05-24T12:29:09.457Z"
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "BAD REQUEST",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "$ref": "#/components/schemas/SuperBadRequest"
                 }
               }
             }
@@ -247,7 +214,7 @@
       },
       "get": {
         "summary": "Listagem de Employees",
-        "description": "Rota para a listagem de usuários.",
+        "description": "Rota para a listagem de usuários. Você pode passar query params (page, per_page) para organizar a paginação de acordo com a necessidade.",
         "tags": ["Employees"],
         "security": [{ "bearerAuth": [] }],
         "responses": {
@@ -257,17 +224,43 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "example": [
-                    {
-                      "name": "employee",
-                      "phone": "4124002-8922",
-                      "email": "employee@email.com",
-                      "accessLevel": 2,
-                      "id": "904b8c97-91d4-4d44-8687-f94be0945d8e",
-                      "createdAt": "2022-05-24T12:29:09.457Z",
-                      "updatedAt": "2022-05-24T12:29:09.457Z"
-                    }
-                  ]
+                  "example": {
+                    "info": {
+                      "count": 12,
+                      "pages": 4,
+                      "next": "http://localhost:3000/employees?per_page=3&page=2",
+                      "prev": null
+                    },
+                    "results": [
+                      {
+                        "id": "28cb7a34-4648-45e2-a33e-ba56fc3031c6",
+                        "name": "super",
+                        "phone": "000000000001",
+                        "email": "super@super.com",
+                        "accessLevel": 1,
+                        "createdAt": "2022-05-27T11:31:37.407Z",
+                        "updatedAt": "2022-05-27T11:31:37.407Z"
+                      },
+                      {
+                        "id": "ec5539b9-6f49-4783-91a4-f5b964abb40a",
+                        "name": "manager",
+                        "phone": "000000000002",
+                        "email": "manager@manager.com",
+                        "accessLevel": 2,
+                        "createdAt": "2022-06-21T01:33:11.238Z",
+                        "updatedAt": "2022-06-21T01:33:11.238Z"
+                      },
+                      {
+                        "id": "90beec90-0187-4122-b7b6-8d5cc8691622",
+                        "name": "cashier",
+                        "phone": "000000000003",
+                        "email": "cashier@cashier.com",
+                        "accessLevel": 3,
+                        "createdAt": "2022-06-21T01:33:35.705Z",
+                        "updatedAt": "2022-06-21T01:33:35.705Z"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -374,7 +367,7 @@
                   "name": "xxxxtest",
                   "email": "xxxxtest@test.com",
                   "phone": "987654321999",
-                  "password": "password"
+                  "password": "P4ssw0rd"
                 }
               }
             }
@@ -390,8 +383,7 @@
                   "example": {
                     "name": "xxxxtest",
                     "email": "xxxxtest@test.com",
-                    "phone": "987654321999",
-                    "password": "password"
+                    "phone": "987654321999"
                   }
                 }
               }
@@ -503,7 +495,7 @@
                   "example": {
                     "message": "Category created",
                     "category": {
-                      "name": "Bebidas",
+                      "name": "bebidas",
                       "id": "c9f2f718-3a9b-42ce-b524-ed73f5fa2dfd",
                       "createdAt": "2022-05-24T15:05:10.960Z",
                       "updatedAt": "2022-05-24T15:05:10.960Z"
@@ -543,7 +535,7 @@
       },
       "get": {
         "summary": "Listagem de Categories",
-        "description": "Rota para a listagem de categories.",
+        "description": "Rota para a listagem de categories. Você pode passar query params (page, per_page) para organizar a paginação de acordo com a necessidade.",
         "tags": ["Categories"],
         "security": [{ "bearerAuth": [] }],
         "responses": {
@@ -553,14 +545,34 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "example": [
-                    {
-                      "id": "2662ebe5-f584-4ff5-953c-2ac7cb46dbc1",
-                      "name": "Bebidas",
-                      "createdAt": "2022-05-24T15:28:07.521Z",
-                      "updatedAt": "2022-05-24T15:28:07.521Z"
+                  "example": {
+                    "results": [
+                      {
+                        "id": "ba7ac05b-6693-48b5-8932-6528c26ba4bf",
+                        "name": "pizzas",
+                        "createdAt": "2022-05-27T11:31:42.635Z",
+                        "updatedAt": "2022-05-27T11:31:42.635Z"
+                      },
+                      {
+                        "id": "7fd8633a-cd6b-4508-ac12-087d2aaa4456",
+                        "name": "bebidas",
+                        "createdAt": "2022-06-21T01:48:38.239Z",
+                        "updatedAt": "2022-06-21T01:48:38.239Z"
+                      },
+                      {
+                        "id": "ef6a5345-be01-4e1b-8f79-4f4fe42c9ee7",
+                        "name": "laticíneos",
+                        "createdAt": "2022-06-21T01:50:12.546Z",
+                        "updatedAt": "2022-06-21T01:50:12.546Z"
+                      }
+                    ],
+                    "info": {
+                      "count": 3,
+                      "pages": 1,
+                      "next": null,
+                      "prev": null
                     }
-                  ]
+                  }
                 }
               }
             }
@@ -604,7 +616,7 @@
                   "type": "object",
                   "example": {
                     "id": "2662ebe5-f584-4ff5-953c-2ac7cb46dbc1",
-                    "name": "Bebidas",
+                    "name": "bebidas",
                     "createdAt": "2022-05-24T15:28:07.521Z",
                     "updatedAt": "2022-05-24T15:28:07.521Z"
                   }
@@ -678,7 +690,7 @@
                     "message": "Category updated",
                     "category": {
                       "id": "2662ebe5-f584-4ff5-953c-2ac7cb46dbc1",
-                      "name": "Pizza",
+                      "name": "pizza",
                       "createdAt": "2022-05-24T15:28:07.521Z",
                       "updatedAt": "2022-05-24T15:31:11.415Z"
                     }
