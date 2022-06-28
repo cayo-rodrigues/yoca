@@ -1159,7 +1159,7 @@
                   "example": {
                     "message": "Product created",
                     "product": {
-                      "name": "Pizza de Queijo",
+                      "name": "pizza de queijo",
                       "price": 39.99,
                       "calories": 500,
                       "id": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
@@ -1211,28 +1211,63 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "example": [
-                    {
-                      "id": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
-                      "name": "Pizza de Queijo",
-                      "price": "39.99",
-                      "calories": "500.00",
-                      "createdAt": "2022-05-24T15:57:46.065Z",
-                      "updatedAt": "2022-05-24T15:57:46.065Z",
-                      "ingredients": [
-                        {
-                          "id": "57e41e94-757f-40b1-b56a-b3eef2be59a2",
-                          "amount": "100.00",
-                          "productId": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
-                          "ingredientId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
-                          "createdAt": "2022-05-24T15:57:46.084Z",
-                          "updatedAt": "2022-05-24T15:57:46.084Z",
-                          "deletedAt": null
-                        }
-                      ],
-                      "feedbacks": []
-                    }
-                  ]
+                  "example": {
+                    "info": {
+                      "count": 1,
+                      "pages": 1,
+                      "next": null,
+                      "prev": null
+                    },
+                    "results": [
+                      {
+                        "id": "459312d1-f9ac-456f-9682-d513b684dfe6",
+                        "name": "pizza de queijo",
+                        "price": "39.99",
+                        "calories": "5000.00",
+                        "createdAt": "2022-05-26T23:58:56.013Z",
+                        "updatedAt": "2022-05-27T11:21:48.301Z",
+                        "ingredients": [
+                          {
+                            "amount": "100.00",
+                            "ingredient": {
+                              "id": "2c3908c4-79d2-4984-a791-f43a7297513c",
+                              "name": "cheese",
+                              "measure": "kg",
+                              "amount": "0.00",
+                              "amountMin": "25.00",
+                              "amountMax": "150.00",
+                              "createdAt": "2022-05-26T23:58:50.161Z",
+                              "updatedAt": "2022-05-26T23:59:04.383Z"
+                            }
+                          },
+                          {
+                            "amount": "100.00",
+                            "ingredient": {
+                              "id": "2c3908c4-79d2-4984-a791-f43a7297513c",
+                              "name": "cheese",
+                              "measure": "kg",
+                              "amount": "0.00",
+                              "amountMin": "25.00",
+                              "amountMax": "150.00",
+                              "createdAt": "2022-05-26T23:58:50.161Z",
+                              "updatedAt": "2022-05-26T23:59:04.383Z"
+                            }
+                          }
+                        ],
+                        "categories": [
+                          {
+                            "category": {
+                              "id": "087252cc-dc31-4740-a060-34547a0a933f",
+                              "name": "pizzas",
+                              "createdAt": "2022-05-26T23:58:46.212Z",
+                              "updatedAt": "2022-05-26T23:58:46.212Z"
+                            }
+                          }
+                        ],
+                        "feedbacks": []
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -1275,21 +1310,48 @@
                 "schema": {
                   "type": "object",
                   "example": {
-                    "id": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
-                    "name": "Pizza de Queijo",
+                    "id": "459312d1-f9ac-456f-9682-d513b684dfe6",
+                    "name": "pizza de queijo",
                     "price": "39.99",
-                    "calories": "500.00",
-                    "createdAt": "2022-05-24T15:57:46.065Z",
-                    "updatedAt": "2022-05-24T15:57:46.065Z",
+                    "calories": "5000.00",
+                    "createdAt": "2022-05-26T23:58:56.013Z",
+                    "updatedAt": "2022-05-27T11:21:48.301Z",
                     "ingredients": [
                       {
-                        "id": "57e41e94-757f-40b1-b56a-b3eef2be59a2",
                         "amount": "100.00",
-                        "productId": "80a195b2-459c-466a-b0b2-cb6a13e9cfcb",
-                        "ingredientId": "7fe5b009-b1fc-45e0-8557-733c77aceaa2",
-                        "createdAt": "2022-05-24T15:57:46.084Z",
-                        "updatedAt": "2022-05-24T15:57:46.084Z",
-                        "deletedAt": null
+                        "ingredient": {
+                          "id": "2c3908c4-79d2-4984-a791-f43a7297513c",
+                          "name": "cheese",
+                          "measure": "kg",
+                          "amount": "0.00",
+                          "amountMin": "25.00",
+                          "amountMax": "150.00",
+                          "createdAt": "2022-05-26T23:58:50.161Z",
+                          "updatedAt": "2022-05-26T23:59:04.383Z"
+                        }
+                      },
+                      {
+                        "amount": "100.00",
+                        "ingredient": {
+                          "id": "2c3908c4-79d2-4984-a791-f43a7297513c",
+                          "name": "cheese",
+                          "measure": "kg",
+                          "amount": "0.00",
+                          "amountMin": "25.00",
+                          "amountMax": "150.00",
+                          "createdAt": "2022-05-26T23:58:50.161Z",
+                          "updatedAt": "2022-05-26T23:59:04.383Z"
+                        }
+                      }
+                    ],
+                    "categories": [
+                      {
+                        "category": {
+                          "id": "087252cc-dc31-4740-a060-34547a0a933f",
+                          "name": "pizzas",
+                          "createdAt": "2022-05-26T23:58:46.212Z",
+                          "updatedAt": "2022-05-26T23:58:46.212Z"
+                        }
                       }
                     ],
                     "feedbacks": []
