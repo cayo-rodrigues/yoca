@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const Categories_controller_1 = __importDefault(require("../controllers/Categories.controller"));
+const validateBody_middleware_1 = __importDefault(require("../middlewares/validateBody.middleware"));
+const validateUUID_middleware_1 = __importDefault(require("../middlewares/validateUUID.middleware"));
+const verifyAccessLevel_middleware_1 = __importDefault(require("../middlewares/verifyAccessLevel.middleware"));
+const createCategory_schema_1 = __importDefault(require("../schemas/categories/createCategory.schema"));
+const updateCategory_schema_1 = __importDefault(require("../schemas/categories/updateCategory.schema"));
+const categoriesRoutes = (0, express_1.Router)();
+categoriesRoutes.get("/", Categories_controller_1.default.index);
+categoriesRoutes.get("/:id", validateUUID_middleware_1.default, Categories_controller_1.default.show);
+categoriesRoutes.use((0, verifyAccessLevel_middleware_1.default)(2));
+categoriesRoutes.post("/", (0, validateBody_middleware_1.default)(createCategory_schema_1.default), Categories_controller_1.default.store);
+categoriesRoutes.use("/:id", validateUUID_middleware_1.default);
+categoriesRoutes.patch("/:id", (0, validateBody_middleware_1.default)(updateCategory_schema_1.default), Categories_controller_1.default.update);
+categoriesRoutes.delete("/:id", Categories_controller_1.default.delete);
+exports.default = categoriesRoutes;

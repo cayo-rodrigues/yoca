@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const Products_controller_1 = __importDefault(require("../controllers/Products.controller"));
+const validateUUID_middleware_1 = __importDefault(require("../middlewares/validateUUID.middleware"));
+const validateBody_middleware_1 = __importDefault(require("../middlewares/validateBody.middleware"));
+const verifyAccessLevel_middleware_1 = __importDefault(require("../middlewares/verifyAccessLevel.middleware"));
+const verifyProductInfos_middleware_1 = __importDefault(require("../middlewares/products/verifyProductInfos.middleware"));
+const verifyProductToUpdateInfos_middleware_1 = __importDefault(require("../middlewares/products/verifyProductToUpdateInfos.middleware"));
+const createProduct_schema_1 = __importDefault(require("../schemas/products/createProduct.schema"));
+const updateProduct_schema_1 = __importDefault(require("../schemas/products/updateProduct.schema"));
+const productsRoutes = (0, express_1.Router)();
+productsRoutes.get("/", Products_controller_1.default.index);
+productsRoutes.get("/:id", validateUUID_middleware_1.default, Products_controller_1.default.show);
+productsRoutes.use((0, verifyAccessLevel_middleware_1.default)(2));
+productsRoutes.post("/", (0, validateBody_middleware_1.default)(createProduct_schema_1.default), verifyProductInfos_middleware_1.default, Products_controller_1.default.store);
+productsRoutes.use("/:id", validateUUID_middleware_1.default);
+productsRoutes.patch("/:id", (0, validateBody_middleware_1.default)(updateProduct_schema_1.default), verifyProductToUpdateInfos_middleware_1.default, Products_controller_1.default.update);
+productsRoutes.delete("/:id", (0, verifyAccessLevel_middleware_1.default)(2), Products_controller_1.default.delete);
+exports.default = productsRoutes;
