@@ -12,7 +12,6 @@
     "stop": "pm2 stop server",
     "delete": "pm2 delete server",
     "dev": "ts-node-dev src/server.ts --ignore-watch ./node_modules",
-    "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
