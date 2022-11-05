@@ -6,13 +6,17 @@
   "author": "<cayo.rodrigues1914@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "pm2-runtime start ecosystem.config.js --env production",
-    "reload": "pm2 reload dist/src/server.js",
-    "monit": "pm2 monit",
-    "stop": "pm2 stop server",
-    "delete": "pm2 delete server",
+    "start-node": "NODE_ENV=production node ./dist/src/server.js",
+    "start-pm2": "pm2-runtime start ecosystem.config.js --env production",
+    "reload-pm2": "pm2 reload dist/src/server.js",
+    "monit-pm2": "pm2 monit",
+    "stop-pm2": "pm2 stop server",
+    "delete-pm2": "pm2 delete server",
     "dev": "ts-node-dev src/server.ts --ignore-watch ./node_modules",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migrate-dev": "yarn typeorm:migration run -d src/data-source.ts",
+    "migrate-prd": "yarn typeorm:migration run -d dist/src/data-source.js",
+    "build": "tsc && yarn migrate-prd"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
