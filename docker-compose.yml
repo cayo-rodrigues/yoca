@@ -4,7 +4,8 @@ services:
   api:
     container_name: api_capstone
     image: api_capstone
-    build: .
+    build: 
+      dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
     env_file:
