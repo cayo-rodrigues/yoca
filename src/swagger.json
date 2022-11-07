@@ -1,17 +1,17 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "YOCA API Documentation",
+    "title": "YOCA API Docs",
     "description": "Uma API para gerenciamento de restaurante. Abaixo seguem as rotas da aplicação juntamente com exemplos de requisições.",
     "termsOfService": "",
     "contact": {
       "email": "yoca@gmail.com"
     },
-    "version": "1.0.0"
+    "version": "2.2.1"
   },
   "servers": [
     {
-      "url": "https://cayoca.herokuapp.com",
+      "url": "https://cayoca.up.railway.app",
       "description": "production"
     },
     {
